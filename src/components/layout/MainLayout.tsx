@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import utils from "../utils";
 
-const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const MainLayout: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false); 
   const location = useLocation(); 
   const [hideSideBar, setHideSidebar] = useState(false);
@@ -53,7 +53,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <div className={`flex flex-col transition-all duration-300 ${ (isMobile || isOpen || hideSideBar) ? "md:ml-0 w-full" : "md:ml-64 w-full" }`} >
       <Header isOpen={isOpen} toggleSidebar={toggleSidebar} />
       <main className="flex-grow p-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 mt-2">
-        {children}
+      <Outlet />
       </main>
       <Footer />
     </div>
