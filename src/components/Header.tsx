@@ -26,7 +26,7 @@ const Header: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   };
 
   return (
-    <header className="w-full h-16 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-md flex justify-between items-center px-4 sm:px-6 lg:px-8">
+    <header className="w-full h-16 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-md flex justify-between items-center px-4 sm:px-6 lg:px-8 mt-2">
       <div className="flex items-center">
         <AiOutlineMenu className="text-3xl cursor-pointer" onClick={toggleSidebar} />
       </div>

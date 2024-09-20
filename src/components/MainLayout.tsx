@@ -52,7 +52,7 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     {!hideSideBar && <Sidebar isMobile={isMobile} isOpen={isOpen} closeSidebar={closeSidebar} />}
     <div className={`flex flex-col transition-all duration-300 ${ (isMobile || isOpen || hideSideBar) ? "md:ml-0 w-full" : "md:ml-64 w-full" }`} >
       <Header isOpen={isOpen} toggleSidebar={toggleSidebar} />
-      <main className="flex-grow p-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <main className="flex-grow p-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 mt-2">
         {children}
       </main>
       <Footer />
