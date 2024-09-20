@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import MainLayout from "./components/MainLayout";
 import Dashboard from "./components/Dashboard";
 import Users from "./components/Users";
@@ -14,7 +14,8 @@ const App: React.FC = () => {
     <Router>
       <MainLayout>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/users" element={<Users />} />
           <Route path="/ecommerce" element={<Ecommerce />} />
           <Route path="/reports" element={<Reports />} />
