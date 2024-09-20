@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import MainLayout from "./components/MainLayout";
-import Dashboard from "./components/Dashboard";
-import Users from "./components/Users";
+import MainLayout from "./components/layout/MainLayout";
+import Dashboard from "./components/layout/Dashboard";
 import Ecommerce from "./components/Ecommerce";
 import Reports from "./components/Reports";
-import Notifications from "./components/Notifications";
-import { DarkModeProvider } from './components/DarkModeContext';
+import { DarkModeProvider } from './components/common/DarkModeContext';
+import Notifications from "./components/Notifications/index";
+import Users from "./components/Users/index";
 
 const App: React.FC = () => {
   return (
