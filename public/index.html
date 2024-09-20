@@ -39,5 +39,71 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      // Function to set manifest dynamically based on the theme
+      function setManifest(themeColor) {
+        const manifestLink = document.querySelector('link[rel="manifest"]');
+        const manifest = {
+          short_name: "Zao",
+          name: "Zao",
+          icons: [
+            {
+              src: "logo.svg",
+              sizes: "64x64 32x32 24x24 16x16",
+              type: "image/svg+xml",
+              purpose: "any",
+            },
+            {
+              src: "logo.svg",
+              type: "image/svg+xml",
+              sizes: "192x192",
+              purpose: "maskable",
+            },
+            {
+              src: "logo.svg",
+              type: "image/svg+xml",
+              sizes: "512x512",
+              purpose: "any",
+            },
+          ],
+          start_url: ".",
+          display: "standalone",
+          background_color: "#ffffff",
+          theme_color: themeColor, // Set theme_color dynamically
+        };
+
+        // Create a blob from the manifest JSON object
+        const manifestBlob = new Blob([JSON.stringify(manifest)], {
+          type: "application/json",
+        });
+        const manifestUrl = URL.createObjectURL(manifestBlob);
+
+        // Set the new manifest URL
+        manifestLink.href = manifestUrl;
+      }
+
+      // Function to detect theme mode
+      function detectTheme() {
+        const darkModeEnabled =
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+        if (darkModeEnabled) {
+          // Dark mode: Update manifest theme_color
+          setManifest("#000000");
+        } else {
+          // Light mode: Update manifest theme_color
+          setManifest("#ffffff");
+        }
+      }
+
+      // Detect theme on page load
+      detectTheme();
+
+      // Listen for changes in the theme
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", detectTheme);
+    </script>
   </body>
 </html>

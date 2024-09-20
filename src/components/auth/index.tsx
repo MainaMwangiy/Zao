@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import logo from '../../assets/logo.svg';
+import logo from "../../assets/logo.svg";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +15,9 @@ const Login: React.FC = () => {
       rememberMe: false,
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email address").required("Email is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
     onSubmit: (values) => {
@@ -26,22 +28,25 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-white dark:bg-gray-900 m-4">
-    {/* Left side (Logo) */}
-    <div className="hidden md:flex md:w-1/2 justify-center items-center">
-      <img src={logo} alt="Logo" className="h-32" />
-    </div>
+      {/* Left side (Logo) */}
+      <div className="hidden md:flex md:w-1/2 justify-center items-center">
+        <img src={logo} alt="Logo" className="h-44" />
+      </div>
       <div className="w-full max-w-6xl mt-10 flex justify-center">
-
         {/* Right side (Form) */}
         <div className="w-full md:w-1/2 max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
           <div className="flex justify-center mb-6 md:hidden">
             <img src={logo} alt="Logo" className="h-12" />
           </div>
-          <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-4">Sign in to platform</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-4">
+            Sign in to platform
+          </h2>
           <form onSubmit={formik.handleSubmit}>
             {/* Email Field */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Your email</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Your email
+              </label>
               <input
                 name="email"
                 type="email"
@@ -51,13 +56,17 @@ const Login: React.FC = () => {
                 onBlur={formik.handleBlur}
               />
               {formik.touched.email && formik.errors.email ? (
-                <div className="text-red-500 text-sm">{formik.errors.email}</div>
+                <div className="text-red-500 text-sm">
+                  {formik.errors.email}
+                </div>
               ) : null}
             </div>
 
             {/* Password Field */}
             <div className="mb-4 relative">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Your password</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Your password
+              </label>
               <div className="flex">
                 <input
                   name="password"
@@ -80,7 +89,9 @@ const Login: React.FC = () => {
                 </button>
               </div>
               {formik.touched.password && formik.errors.password ? (
-                <div className="text-red-500 text-sm">{formik.errors.password}</div>
+                <div className="text-red-500 text-sm">
+                  {formik.errors.password}
+                </div>
               ) : null}
             </div>
 
@@ -95,11 +106,17 @@ const Login: React.FC = () => {
                   onChange={formik.handleChange}
                   className="h-4 w-4 text-blue-600 border-gray-300 rounded"
                 />
-                <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                <label
+                  htmlFor="rememberMe"
+                  className="ml-2 text-sm text-gray-700 dark:text-gray-300"
+                >
                   Remember me
                 </label>
               </div>
-              <a href="#" className="text-sm text-blue-600 hover:underline dark:text-blue-400">
+              <a
+                href="#"
+                className="text-sm text-blue-600 hover:underline dark:text-blue-400"
+              >
                 Lost Password?
               </a>
             </div>
