@@ -1,46 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../common/Card";
+import utils from "../utils";
+import axios from "axios";
+import { useSnackbar } from "notistack";
+
+interface ProjectsProps {
+  name: string;
+  location: string;
+  size: string;
+  status: string;
+  projectplan: boolean;
+  imagesurl: string;
+}
 
 const Dashboard: React.FC = () => {
-  const projectsData = [
-    {
-      title: "Mashuru Capsicum Phase I",
-      addedBy: "Maina",
-      location: "Mashuru, Kenya",
-      price: 1497,
-      size: "3 acres",
-      status: "Ongoing",
-      projectPlanIncluded: true,
-    },
-    {
-      title: "Nyeri French Beans",
-      addedBy: "Dominic",
-      location: "Nyeri, Kenya",
-      price: 199,
-      size: "5 acres",
-      status: "Not Started",
-      projectPlanIncluded: false,
-    },
-    {
-      title: "Kiambu Cabbage Phase II",
-      addedBy: "Maiko",
-      location: "Kiambu, Kenya",
-      price: 149,
-      size: "6.25 acrea",
-      status: "Not Started",
-      projectPlanIncluded: false,
-    },
-    {
-      title: "Tomato Phase I",
-      addedBy: "Maiko",
-      location: "Imaroro, Kenya",
-      price: 149,
-      size: "20 acrea",
-      status: "Not Started",
-      projectPlanIncluded: false,
-    }
-  ];
+  const [projects, setProjects] = useState<ProjectsProps[]>([]);
+  const { enqueueSnackbar } = useSnackbar();
 
+  const fetchData = async () => {
+    try {
+      const url = `${utils.baseUrl}/api/projects/list`;
+      const response = await axios.post(url, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const projects = response.data.data;
+      setProjects(projects)
+      // enqueueSnackbar("Users Loading successful!", { variant: "success" });
+      localStorage.setItem('projects', JSON.stringify(projects));
+    } catch (error) {
+      enqueueSnackbar("User Loading Failed. Please try again.", { variant: "error" });
+    }
+  }
+  useEffect(() => {
+    fetchData();
+  }, [])
   return (
     <div className="p-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 mt-2">
@@ -71,16 +64,15 @@ const Dashboard: React.FC = () => {
         {/* Responsive Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Dynamically load cards from projectsData */}
-          {projectsData.map((item, index) => (
+          {projects.map((item, index) => (
             <Card
               key={index}
-              title={item.title}
-              addedBy={item.addedBy}
+              title={item.name}
+              addedBy={'Maina'}
               location={item.location}
-              price={item.price}
               size={item.size}
               status={item.status}
-              projectPlanIncluded={item.projectPlanIncluded}
+              projectPlanIncluded={item.projectplan}
             />
           ))}
         </div>
