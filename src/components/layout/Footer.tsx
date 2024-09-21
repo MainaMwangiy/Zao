@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
           </ul>
         </div> */}
         <div className="text-center md:text-right">
-          <span>© 2024 YourWebsite. All rights reserved.</span>
+          <span>© 2024 Zao. All rights reserved.</span>
         </div>
       </div>
     </footer>
