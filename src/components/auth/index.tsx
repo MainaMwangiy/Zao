@@ -30,6 +30,8 @@ const Login: React.FC = () => {
     onSubmit: async (values) => {
       try {
         const url = `${utils.baseUrl}/api/v1/auth/login`;
+        console.log("process.env.NODE_ENV", process.env.NODE_ENV)
+        console.log("url", url)
         const response = await axios.post(url, { email: values.email, password: values.password }, {
           headers: { 'Content-Type': 'application/json' },
         });
@@ -53,7 +55,7 @@ const Login: React.FC = () => {
       <div className="w-full max-w-6xl mt-10 flex justify-center">
         <div className="w-full md:w-1/2 max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-none">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Sign in to your account
+            Sign in to your account `${process.env.REACT_APP_PROD_BACKEND_URL}`
           </h2>
           <form onSubmit={formik.handleSubmit}>
             {/* Email Field */}
@@ -128,7 +130,7 @@ const Login: React.FC = () => {
                 </label>
               </div>
               <a
-                href="/forgot-password"
+                href="/login"
                 className="text-sm text-blue-600 hover:underline dark:text-blue-400"
               >
                 Forgot Password?
