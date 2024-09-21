@@ -1,221 +1,246 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import utils from "../utils";
+import axios from "axios";
+import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 // Define the initial values for Formik form
 const initialValues = {
-  firstName: "",
-  lastName: "",
+  name: "",
   email: "",
   phoneNumber: "",
-  farmerOrBuyer: "",
   location: "",
   status: "",
-  role: "",
+  role: 0,
+  password: "",
+  roleid: 0
 };
 
 // Define the validation schema using Yup
 const validationSchema = Yup.object({
-  firstName: Yup.string().required("First Name is required"),
-  lastName: Yup.string().required("Last Name is required"),
+  name: Yup.string().required("First Name is required"),
   email: Yup.string().email("Invalid email format").required("Email is required"),
-  phoneNumber: Yup.string().required("Phone Number is required"),
-  farmerOrBuyer: Yup.string().required("Farmer/Buyer selection is required"),
   location: Yup.string().required("Location is required"),
   status: Yup.string().required("Status is required"),
   role: Yup.string().required("Role is required"),
+  password: Yup.string().required("Password is required"),
 });
 
 interface AddUserModalProps {
-    showModal: boolean;
-    setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  }
+  showModal: boolean;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-  const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) => {
+const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
-  // Using useFormik hook for managing the form state and validation
-  const formik = useFormik({
+  const formik = useFormik<{
+    name: string;
+    email: string;
+    phoneNumber: string;
+    location: string;
+    status: string;
+    role: string | number;
+    password: string;
+    roleid: number;
+  }>({
     initialValues,
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Form values: ", values); // Log the form data
-      setShowModal(false); // Close the modal on form submission
+    onSubmit: async (values) => {
+      try {
+        const url = `${utils.baseUrl}/api/auth/createUpdate`
+        const roleid = utils.getRolesId(values.role as string);
+        if (roleid) {
+          values.roleid = roleid;
+        }
+        const response = await axios.post(url, { values }, {
+          headers: { 'Content-Type': 'application/json' },
+        });
+        console.log("response", response)
+        enqueueSnackbar("User Creation successful!", { variant: "success" });
+        navigate('/users');
+      } catch (error) {
+        enqueueSnackbar("User Creation failed. Please try again.", { variant: "error" });
+      }
+      setShowModal(false);
     },
   });
 
   return (
-<div>
-  {/* Button to open the modal */}
-  <button
-    onClick={() => setShowModal(true)}
-    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow-md transition duration-300"
-  >
-    Add User
-  </button>
+    <div>
+      {/* Button to open the modal */}
+      <button
+        onClick={() => setShowModal(true)}
+        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md shadow-md transition duration-300"
+      >
+        Add User
+      </button>
 
-  {/* Modal */}
-  {showModal && (
-    <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg p-6 relative">
-        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Add New User</h2>
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg p-6 relative">
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Add New User</h2>
 
-        {/* Form */}
-        <form onSubmit={formik.handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">First Name</label>
-              <input
-                name="firstName"
-                type="text"
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                value={formik.values.firstName}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.firstName && formik.errors.firstName && (
-                <div className="text-red-500 text-sm">{formik.errors.firstName}</div>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Last Name</label>
-              <input
-                name="lastName"
-                type="text"
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                value={formik.values.lastName}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.lastName && formik.errors.lastName && (
-                <div className="text-red-500 text-sm">{formik.errors.lastName}</div>
-              )}
-            </div>
+            {/* Form */}
+            <form onSubmit={formik.handleSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Name</label>
+                  <input
+                    name="name"
+                    type="text"
+                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.touched.name && formik.errors.name && (
+                    <div className="text-red-500 text-sm">{formik.errors.name}</div>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Email</label>
+                  <input
+                    name="email"
+                    type="email"
+                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.touched.email && formik.errors.email && (
+                    <div className="text-red-500 text-sm">{formik.errors.email}</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Phone Number</label>
+                  <input
+                    name="phoneNumber"
+                    type="text"
+                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                    value={formik.values.phoneNumber}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.touched.phoneNumber && formik.errors.phoneNumber && (
+                    <div className="text-red-500 text-sm">{formik.errors.phoneNumber}</div>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Location</label>
+                  <input
+                    name="location"
+                    type="text"
+                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                    value={formik.values.location}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.touched.location && formik.errors.location && (
+                    <div className="text-red-500 text-sm">{formik.errors.location}</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Status</label>
+                  <select
+                    name="status"
+                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                    value={formik.values.status}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  >
+                    <option value="">Select</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                  {formik.touched.status && formik.errors.status && (
+                    <div className="text-red-500 text-sm">{formik.errors.status}</div>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Role</label>
+                  <select
+                    name="role"
+                    className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                    value={formik.values.role}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  >
+                    <option value="">Select</option>
+                    <option value="Superadmin">Superadmin</option>
+                    <option value="Admin">Admin</option>
+                    <option value="User">User</option>
+                  </select>
+                  {formik.touched.role && formik.errors.role && (
+                    <div className="text-red-500 text-sm">{formik.errors.role}</div>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="relative">
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Password</label>
+                  <div className="relative w-full">
+                    <input
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      className="w-full px-4 py-2 mt-1 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 pr-10"
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <AiOutlineEyeInvisible className="text-gray-600 dark:text-gray-400" />
+                      ) : (
+                        <AiOutlineEye className="text-gray-600 dark:text-gray-400" />
+                      )}
+                    </button>
+                  </div>
+                  {formik.touched.password && formik.errors.password ? (
+                    <div className="text-red-500 text-sm mt-1">
+                      {formik.errors.password}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  className="mr-4 px-4 py-2 border rounded-md dark:text-gray-300 dark:border-gray-600"
+                  onClick={() => setShowModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  // onClick={() => formik.handleSubmit()}
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300"
+                >
+                  Add User
+                </button>
+              </div>
+            </form>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Email</label>
-              <input
-                name="email"
-                type="email"
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.email && formik.errors.email && (
-                <div className="text-red-500 text-sm">{formik.errors.email}</div>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Phone Number</label>
-              <input
-                name="phoneNumber"
-                type="text"
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                value={formik.values.phoneNumber}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.phoneNumber && formik.errors.phoneNumber && (
-                <div className="text-red-500 text-sm">{formik.errors.phoneNumber}</div>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Farmer/Buyer</label>
-              <select
-                name="farmerOrBuyer"
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                value={formik.values.farmerOrBuyer}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              >
-                <option value="">Select</option>
-                <option value="Farmer">Farmer</option>
-                <option value="Buyer">Buyer</option>
-              </select>
-              {formik.touched.farmerOrBuyer && formik.errors.farmerOrBuyer && (
-                <div className="text-red-500 text-sm">{formik.errors.farmerOrBuyer}</div>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Location</label>
-              <input
-                name="location"
-                type="text"
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                value={formik.values.location}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.location && formik.errors.location && (
-                <div className="text-red-500 text-sm">{formik.errors.location}</div>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Status</label>
-              <select
-                name="status"
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                value={formik.values.status}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              >
-                <option value="">Select</option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-              {formik.touched.status && formik.errors.status && (
-                <div className="text-red-500 text-sm">{formik.errors.status}</div>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Role</label>
-              <select
-                name="role"
-                className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                value={formik.values.role}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              >
-                <option value="">Select</option>
-                <option value="Superadmin">Superadmin</option>
-                <option value="Admin">Admin</option>
-                <option value="User">User</option>
-              </select>
-              {formik.touched.role && formik.errors.role && (
-                <div className="text-red-500 text-sm">{formik.errors.role}</div>
-              )}
-            </div>
-          </div>
-
-          <div className="flex justify-end">
-            <button
-              type="button"
-              className="mr-4 px-4 py-2 border rounded-md dark:text-gray-300 dark:border-gray-600"
-              onClick={() => setShowModal(false)}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              onClick={()=> formik.handleSubmit()}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300"
-            >
-              Add User
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+      )}
     </div>
-  )}
-</div>
 
   );
 };

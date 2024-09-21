@@ -8,10 +8,9 @@ import { useSnackbar } from "notistack";
 interface UsersProps {
   name: string;
   email: string;
-  farmerOrBuyer: string;
   location: string;
-  status: "Active" | "Inactive";
-  role: string;
+  status: string;
+  role: string | number;
 }
 
 const Users: React.FC = () => {
@@ -28,7 +27,7 @@ const Users: React.FC = () => {
       const updatedUsers = utils.updateData(user);
       console.log("updatedUsers", updatedUsers)
       setUsers(updatedUsers)
-      enqueueSnackbar("Users Loading successful!", { variant: "success" });
+      // enqueueSnackbar("Users Loading successful!", { variant: "success" });
       localStorage.setItem('user', JSON.stringify(updatedUsers));
     } catch (error) {
       enqueueSnackbar("User Loading Failed. Please try again.", { variant: "error" });
@@ -36,7 +35,7 @@ const Users: React.FC = () => {
   }
   useEffect(() => {
     fetchData();
-  }, [])
+  }, [showModal])
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -60,7 +59,6 @@ const Users: React.FC = () => {
           <thead>
             <tr className="border-b dark:border-gray-700">
               <th className="px-4 py-2 text-left text-sm font-semibold">NAME</th>
-              <th className="px-4 py-2 text-left text-sm font-semibold">FARMER/BUYER</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">LOCATION</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">STATUS</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">ROLE</th>
@@ -73,7 +71,6 @@ const Users: React.FC = () => {
                 key={index}
                 name={user.name}
                 email={user.email}
-                farmerOrBuyer={user.farmerOrBuyer}
                 location={user.location}
                 status={user.status}
                 role={user.role}

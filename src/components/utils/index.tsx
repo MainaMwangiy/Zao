@@ -24,6 +24,19 @@ const utils = {
         break;
     }
   },
+  getRolesId: (role: string): number | undefined => {
+    const srole = role.toLowerCase();
+    switch (srole) {
+      case 'superadmin':
+        return 1;
+      case 'admin':
+        return 2;
+      case 'user':
+        return 3;
+      default:
+        break;
+    }
+  },
   updateData: (data: UserData[]): UserData[] => {
     return data.map((dt) => ({
       ...dt,
