@@ -4,10 +4,13 @@ import * as Yup from "yup";
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import logo from "../../assets/logo.svg";
+import axios from "axios";
+import utils from "../utils";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -20,9 +23,18 @@ const Login: React.FC = () => {
         .required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log("Form data:", values);
-      // Handle form submission here
+      console.log("utils.baseUrl", utils.baseUrl)
+      const url = `${utils.baseUrl}/api/v1/auth/login`;
+      const response = await axios.post(url, { email: values.email, password: values.password }, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const token = response.data.token;
+      if (values.rememberMe) {
+        localStorage.setItem('token', token)
+      }
+      navigate('/dashboard')
     },
   });
 
