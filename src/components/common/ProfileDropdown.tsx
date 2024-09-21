@@ -1,13 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ProfileDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const closeMenu = () => {
     setIsOpen(false);
   };
+
+  const clearCookies = () => {
+    const cookies = document.cookie.split(";");
+    cookies.forEach((cookie) => {
+      const cookieName = cookie.split("=")[0].trim();
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    });
+  };
+
+  const LogOut = () => {
+    clearCookies();
+    localStorage.clear();
+    sessionStorage.clear();
+    navigate('/login');
+  }
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -48,10 +64,7 @@ const ProfileDropdown: React.FC = () => {
           {/* Logout Button */}
           <button
             className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-            onClick={() => {
-              console.log('Logged out');
-            }}
-          >
+            onClick={() => LogOut()}   >
             Logout
           </button>
         </div>

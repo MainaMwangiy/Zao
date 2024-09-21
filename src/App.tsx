@@ -24,8 +24,8 @@ const App: React.FC = () => {
               <Route path="/reports" element={<Reports />} />
               <Route path="/notifications" element={<Notifications />} />
             </Route>
+            <Route path="/" element={<Navigate to="/dashboard" />} />
           </Route>
-          <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>
       </Router>
     </DarkModeProvider>

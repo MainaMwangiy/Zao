@@ -4,9 +4,16 @@ import * as Yup from "yup";
 import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import logo from "../../assets/logo.svg";
+import axios from "axios";
+import utils from "../utils";
+import { useNavigate } from "react-router-dom";
+import { FaFacebook } from "react-icons/fa";
+import { useSnackbar } from "notistack";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -20,26 +27,33 @@ const Login: React.FC = () => {
         .required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
-    onSubmit: (values) => {
-      console.log("Form data:", values);
-      // Handle form submission here
-    },
+    onSubmit: async (values) => {
+      try {
+        const url = `${utils.baseUrl}/api/v1/auth/login`;
+        const response = await axios.post(url, { email: values.email, password: values.password }, {
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const token = response.data.token;
+        enqueueSnackbar("Login successful!", { variant: "success" });
+        if (values.rememberMe) {
+          localStorage.setItem('token', token);
+        }
+        navigate('/dashboard');
+      } catch (error) {
+        enqueueSnackbar("Login failed. Please try again.", { variant: "error" });
+      }
+    }
   });
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-white dark:bg-gray-900 m-4">
-      {/* Left side (Logo) */}
-      <div className="hidden md:flex md:w-1/2 justify-center items-center">
-        <img src={logo} alt="Logo" className="h-44" />
+      <div className="md:flex md:w-1/2 justify-center items-center">
+        <img src={logo} alt="Logo" className="h-32 sm:h-44 md:h-44" />
       </div>
       <div className="w-full max-w-6xl mt-10 flex justify-center">
-        {/* Right side (Form) */}
-        <div className="w-full md:w-1/2 max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-          <div className="flex justify-center mb-6 md:hidden">
-            <img src={logo} alt="Logo" className="h-12" />
-          </div>
-          <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-4">
-            Sign in to platform
+        <div className="w-full md:w-1/2 max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-none">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            Sign in to your account
           </h2>
           <form onSubmit={formik.handleSubmit}>
             {/* Email Field */}
@@ -114,10 +128,10 @@ const Login: React.FC = () => {
                 </label>
               </div>
               <a
-                href="#"
+                href="/forgot-password"
                 className="text-sm text-blue-600 hover:underline dark:text-blue-400"
               >
-                Lost Password?
+                Forgot Password?
               </a>
             </div>
 
@@ -136,6 +150,13 @@ const Login: React.FC = () => {
             >
               <FcGoogle className="mr-2" />
               Sign in with Google
+            </button>
+            <button
+              type="button"
+              className="w-full flex justify-center items-center py-2 mb-4 bg-white border rounded-md shadow-md text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600 transition duration-300"
+            >
+              <FaFacebook className="text-blue-600 mr-2" />
+              Sign in with Facebook
             </button>
 
             {/* Register Link */}
