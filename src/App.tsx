@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import MainLayout from "./components/layout/MainLayout";
 import Dashboard from "./components/layout/Dashboard";
-import Ecommerce from "./components/Ecommerce";
+import Expenses from "./components/Expenses/Expenses";
 import Reports from "./components/Reports";
 import { DarkModeProvider } from './components/common/DarkModeContext';
 import Notifications from "./components/Notifications/index";
@@ -20,7 +20,7 @@ const App: React.FC = () => {
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/users" element={<Users />} />
-              <Route path="/ecommerce" element={<Ecommerce />} />
+              <Route path="/expenses" element={<Expenses />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/notifications" element={<Notifications />} />
             </Route>
