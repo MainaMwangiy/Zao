@@ -58,10 +58,9 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
         if (roleid) {
           values.roleid = roleid;
         }
-        const response = await axios.post(url, { values }, {
+        await axios.post(url, { values }, {
           headers: { 'Content-Type': 'application/json' },
         });
-        console.log("response", response)
         enqueueSnackbar("User Creation successful!", { variant: "success" });
         navigate('/users');
       } catch (error) {

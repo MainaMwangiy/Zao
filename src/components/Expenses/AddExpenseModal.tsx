@@ -40,10 +40,9 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({ showExpenseModal, set
         onSubmit: async (values) => {
             try {
                 const url = `${utils.baseUrl}/api/expenses/create`;
-                const response = await axios.post(url, { values }, {
+                await axios.post(url, { values }, {
                     headers: { 'Content-Type': 'application/json' },
                 });
-                console.log("response", response);
                 enqueueSnackbar("Expense added successfully!", { variant: "success" });
             } catch (error) {
                 enqueueSnackbar("Expense creation failed. Please try again.", { variant: "error" });

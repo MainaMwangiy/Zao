@@ -25,7 +25,6 @@ const Users: React.FC = () => {
       });
       const user = response.data.data;
       const updatedUsers = utils.updateData(user);
-      console.log("updatedUsers", updatedUsers)
       setUsers(updatedUsers)
       // enqueueSnackbar("Users Loading successful!", { variant: "success" });
       localStorage.setItem('user', JSON.stringify(updatedUsers));

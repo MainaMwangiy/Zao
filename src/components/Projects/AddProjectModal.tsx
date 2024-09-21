@@ -43,10 +43,9 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ showProjectseModal, s
         onSubmit: async (values) => {
             try {
                 const url = `${utils.baseUrl}/api/projects/create`;
-                const response = await axios.post(url, { values }, {
+                await axios.post(url, { values }, {
                     headers: { 'Content-Type': 'application/json' },
                 });
-                console.log("response", response);
                 enqueueSnackbar("Project added successfully!", { variant: "success" });
             } catch (error) {
                 enqueueSnackbar("Project creation failed. Please try again.", { variant: "error" });
