@@ -3,6 +3,7 @@ import Card from "../common/Card";
 import utils from "../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
+import AddProjectModal from "../Projects/AddProjectModal";
 
 interface ProjectsProps {
   name: string;
@@ -16,7 +17,7 @@ interface ProjectsProps {
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
   const { enqueueSnackbar } = useSnackbar();
-
+  const [showProjectseModal, setProjectshowModal] = useState(false);
   const fetchData = async () => {
     try {
       const url = `${utils.baseUrl}/api/projects/list`;
@@ -33,7 +34,9 @@ const Dashboard: React.FC = () => {
   }
   useEffect(() => {
     fetchData();
-  }, [])
+  }, [showProjectseModal])
+
+  const isProjects = projects.length > 0;
   return (
     <div className="p-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 mt-2">
@@ -52,8 +55,9 @@ const Dashboard: React.FC = () => {
         {/* Recent Projects */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-2">My Recent Projects</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400">No ongoing projects available</p>
-          <button className="mt-4 bg-pink-500 text-white px-4 py-2 rounded">Add Project</button>
+          {isProjects && <p className="text-sm text-gray-600 dark:text-gray-400">{projects.length} projects available</p>}
+          {!isProjects && <p className="text-sm text-gray-600 dark:text-gray-400">No ongoing projects available</p>}
+          <button className="mt-4 bg-pink-500 text-white px-4 py-2 rounded" onClick={() => setProjectshowModal(true)}>Add Project</button>
         </div>
       </div>
 
@@ -77,6 +81,12 @@ const Dashboard: React.FC = () => {
           ))}
         </div>
       </div>
+      {showProjectseModal && (
+        <AddProjectModal
+          showProjectseModal={showProjectseModal}
+          setProjectshowModal={setProjectshowModal}
+        />
+      )}
     </div>
   );
 };
