@@ -56,8 +56,6 @@ const Login: React.FC = () => {
         <div className="w-full md:w-1/2 max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-none">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Sign in to your account
-            {process.env.REACT_APP_PROD_BACKEND_URL}
-            {url}
           </h2>
           <form onSubmit={formik.handleSubmit}>
             {/* Email Field */}
