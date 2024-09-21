@@ -15,7 +15,6 @@ const Login: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  const url = `${utils.baseUrl}/api/v1/auth/login`;
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -30,8 +29,7 @@ const Login: React.FC = () => {
     }),
     onSubmit: async (values) => {
       try {
-        console.log("process.env.NODE_ENV", process.env.NODE_ENV)
-        console.log("url", url)
+        const url = `${utils.baseUrl}/api/auth/login`;
         const response = await axios.post(url, { email: values.email, password: values.password }, {
           headers: { 'Content-Type': 'application/json' },
         });
