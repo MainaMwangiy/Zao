@@ -33,7 +33,47 @@ const Expenses: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-  }, [showExpenseModal]);
+  }, [showExpenseModal, expenses]);
+
+  const uploadExpensesFile = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const url = `${utils.baseUrl}/api/import-expenses`;
+      const response = await axios.post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 200) {
+        const analyzedData: ExpensesProps[] = response.data;
+        setExpenses(analyzedData);
+      } else {
+        alert('Error importing expenses');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Failed to upload expenses');
+    }
+  };
+
+  const handleImportExpenses = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.csv, .xlsx';
+
+    fileInput.onchange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const file = target.files ? target.files[0] : null;
+      if (file) {
+        uploadExpensesFile(file);
+      }
+    };
+    fileInput.click();
+  };
+
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -41,6 +81,7 @@ const Expenses: React.FC = () => {
         <h1 className="text-2xl font-semibold">All Expenses</h1>
         <div className="flex items-center space-x-2">
           <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => setExpenseShowModal(true)}>Add Expense</button>
+          <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={() => handleImportExpenses()}  >   Import Expenses  </button>
           <button className="bg-gray-200 text-black px-4 py-2 rounded">Export</button>
         </div>
       </div>
@@ -65,7 +106,7 @@ const Expenses: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {expenses.map((expense, index) => (
+            {expenses && expenses.map((expense, index) => (
               <ExpenseRow
                 key={index}
                 name={expense.name}
