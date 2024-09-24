@@ -18,6 +18,8 @@ const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
   const { enqueueSnackbar } = useSnackbar();
   const [showProjectseModal, setProjectshowModal] = useState(false);
+  const [totalExpenses, setTotalExpenses] = useState<string>('');
+
   const fetchData = async () => {
     try {
       const url = `${utils.baseUrl}/api/projects/list`;
@@ -32,8 +34,22 @@ const Dashboard: React.FC = () => {
       enqueueSnackbar("User Loading Failed. Please try again.", { variant: "error" });
     }
   }
+  const fetchTotalExpenses = async () => {
+    try {
+      const url = `${utils.baseUrl}/api/expenses/total`;
+      const response = await axios.post(url, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const projects = response.data.data[0].totalexpenses;
+      setTotalExpenses(projects)
+    } catch (error) {
+      enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
+    }
+  }
+
   useEffect(() => {
     fetchData();
+    fetchTotalExpenses();
   }, [showProjectseModal])
 
   const isProjects = projects.length > 0;
@@ -43,8 +59,8 @@ const Dashboard: React.FC = () => {
         {/* Welcome Message */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-2">Welcome Root!</h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-2">My Earnings</p>
-          <p className="text-red-500 text-2xl font-semibold">KES 0.00</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-2">Total Expenses</p>
+          <p className="text-red-500 text-2xl font-semibold">KES {Number(totalExpenses) || 0}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400">Settlement Number NA</p>
           <div className="flex items-center mt-4">
             <button className="bg-red-500 text-white px-4 py-2 mr-2 rounded">Withdraw To Mpesa</button>
