@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaBell, FaMoon, FaSun } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useDarkMode } from "../common/DarkModeContext"; 
+import { useDarkMode } from "../common/DarkModeContext";
 import ProfileDropdown from "../common/ProfileDropdown";
 import { AiOutlineMenu } from "react-icons/ai";
 
@@ -12,17 +12,17 @@ interface SidebarProps {
 
 const Header: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
-  const { toggleDarkMode, darkMode } = useDarkMode(); 
+  const { toggleDarkMode, darkMode } = useDarkMode();
 
   const [isDarkMode, setISDarkMode] = useState(darkMode);
 
   useEffect(() => {
-    setISDarkMode(isDarkMode); 
+    setISDarkMode(isDarkMode);
   }, [isDarkMode]);
 
   const handleToggleDarkMode = () => {
-    toggleDarkMode(); 
-    setISDarkMode(!darkMode); 
+    toggleDarkMode();
+    setISDarkMode(!darkMode);
   };
 
   return (

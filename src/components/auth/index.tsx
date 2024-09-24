@@ -29,7 +29,7 @@ const Login: React.FC = () => {
     }),
     onSubmit: async (values) => {
       try {
-        const url = `${utils.baseUrl}/api/v1/auth/login`;
+        const url = `${utils.baseUrl}/api/auth/login`;
         const response = await axios.post(url, { email: values.email, password: values.password }, {
           headers: { 'Content-Type': 'application/json' },
         });
@@ -128,7 +128,7 @@ const Login: React.FC = () => {
                 </label>
               </div>
               <a
-                href="/forgot-password"
+                href="/login"
                 className="text-sm text-blue-600 hover:underline dark:text-blue-400"
               >
                 Forgot Password?

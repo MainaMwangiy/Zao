@@ -3,13 +3,12 @@ import React from "react";
 interface UserRowProps {
   name: string;
   email: string;
-  farmerOrBuyer: string;
   location: string;
-  status: "Active" | "Inactive";
-  role: "Superadmin" | "Admin" | "User";
+  status: string;
+  role: string | number;
 }
 
-const UserRow: React.FC<UserRowProps> = ({ name, email, farmerOrBuyer, location, status, role }) => {
+const UserRow: React.FC<UserRowProps> = ({ name, email, location, status, role }) => {
   return (
     <tr className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
       <td className="px-4 py-4">
@@ -22,16 +21,12 @@ const UserRow: React.FC<UserRowProps> = ({ name, email, farmerOrBuyer, location,
         </div>
       </td>
       <td className="px-4 py-4">
-        <p>{farmerOrBuyer}</p>
-      </td>
-      <td className="px-4 py-4">
         <p>{location}</p>
       </td>
       <td className="px-4 py-4">
         <span
-          className={`px-2 py-1 rounded-full text-xs ${
-            status === "Active" ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"
-          }`}
+          className={`px-2 py-1 rounded-full text-xs ${status.toLowerCase() === "active" ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"
+            }`}
         >
           {status}
         </span>
