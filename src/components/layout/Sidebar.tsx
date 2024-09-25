@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTachometerAlt, FaUsers, FaShoppingCart, FaFileAlt } from "react-icons/fa";
+import { FaTachometerAlt, FaUsers, FaShoppingCart, FaFileAlt, FaSeedling } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import logo from '../../assets/logo.svg';
 interface SidebarProps {
@@ -35,6 +35,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen }) => {
               Epenses
             </Link>
           </li>
+          <li className="mb-4">
+            <Link to="/harvests" className="flex items-center text-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+              <FaSeedling className="mr-3" />
+              Harvests
+            </Link>
+          </li>
+
           {/* <li className="mb-4">
             <Link to="/reports" className="flex items-center text-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
               <FaFileAlt className="mr-3" />

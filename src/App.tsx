@@ -9,6 +9,7 @@ import Notifications from "./components/Notifications/index";
 import Users from "./components/Users/Users";
 import Login from "./components/auth";
 import PrivateRoute from "./components/common/PrivateRoute";
+import Harvests from "./components/Harvests/Harvests";
 
 const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
               <Route path="/users" element={<Users />} />
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/reports" element={<Reports />} />
+              <Route path="/harvests" element={<Harvests />} />
               <Route path="/notifications" element={<Notifications />} />
             </Route>
             <Route path="/" element={<Navigate to="/dashboard" />} />
