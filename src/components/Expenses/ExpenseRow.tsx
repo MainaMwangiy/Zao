@@ -5,9 +5,10 @@ interface ExpenseRowProps {
     amount: string;
     status: string;
     notes: string;
+    paidby: string;
 }
 
-const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes }) => {
+const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes, paidby }) => {
     return (
         <tr className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
             <td className="px-4 py-4">
@@ -15,6 +16,9 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes }) 
             </td>
             <td className="px-4 py-4">
                 <p>Ksh {amount}</p>
+            </td>
+            <td className="px-4 py-4">
+                <p>{paidby}</p>
             </td>
             <td className="px-4 py-4">
                 <span
