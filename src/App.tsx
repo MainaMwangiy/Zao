@@ -10,6 +10,7 @@ import Users from "./components/Users/Users";
 import Login from "./components/auth";
 import PrivateRoute from "./components/common/PrivateRoute";
 import Harvests from "./components/Harvests/Harvests";
+import Transactions from "./components/Transactions/Transactions";
 
 const App: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ const App: React.FC = () => {
               <Route path="/expenses" element={<Expenses />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/harvests" element={<Harvests />} />
+              <Route path="/transactions" element={<Transactions />} />
               <Route path="/notifications" element={<Notifications />} />
             </Route>
             <Route path="/" element={<Navigate to="/dashboard" />} />
