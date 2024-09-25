@@ -10,6 +10,8 @@ interface ExpensesProps {
   amount: string;
   status: string;
   notes: string;
+  paidby: string;
+  clientusername: string;
 }
 
 const Expenses: React.FC = () => {
@@ -33,7 +35,7 @@ const Expenses: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-  }, [showExpenseModal, expenses]);
+  }, [showExpenseModal]);
 
   const uploadExpensesFile = async (file: File) => {
     const formData = new FormData();
@@ -100,6 +102,7 @@ const Expenses: React.FC = () => {
             <tr className="border-b dark:border-gray-700">
               <th className="px-4 py-2 text-left text-sm font-semibold">NAME</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">AMOUNT</th>
+              <th className="px-4 py-2 text-left text-sm font-semibold">PAIDBY</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">STATUS</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">NOTES</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">ACTIONS</th>
@@ -113,6 +116,7 @@ const Expenses: React.FC = () => {
                 amount={expense.amount}
                 status={expense.status}
                 notes={expense.notes}
+                paidby={expense.clientusername}
               />
             ))}
           </tbody>
