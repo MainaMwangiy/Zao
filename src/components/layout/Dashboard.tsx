@@ -4,6 +4,7 @@ import utils from "../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import AddProjectModal from "../Projects/AddProjectModal";
+import { useNavigate } from "react-router-dom";
 
 interface ProjectsProps {
   name: string;
@@ -20,6 +21,7 @@ const Dashboard: React.FC = () => {
   const [showProjectseModal, setProjectshowModal] = useState(false);
   const [totalExpenses, setTotalExpenses] = useState<string>('');
   const [totalHarvestEarnings, setTotalHarvestEarnings] = useState<string>('');
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
@@ -99,7 +101,10 @@ const Dashboard: React.FC = () => {
             <button className="bg-red-500 text-white px-4 py-2 mr-2 rounded">
               Withdraw To Mpesa
             </button>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">
+            <button
+              onClick={() => navigate('/transactions')}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
               View Transactions
             </button>
           </div>

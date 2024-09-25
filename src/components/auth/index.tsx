@@ -35,6 +35,7 @@ const Login: React.FC = () => {
         });
         const token = response.data.token;
         enqueueSnackbar("Login successful!", { variant: "success" });
+        localStorage.setItem('clientuserid', response?.data?.clientuserid);
         if (values.rememberMe) {
           localStorage.setItem('token', token);
         }
