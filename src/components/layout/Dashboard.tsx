@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [showProjectseModal, setProjectshowModal] = useState(false);
   const [totalExpenses, setTotalExpenses] = useState<string>('');
-  const [totalEarnings, setTotalEarnings] = useState<string>('83250');
+  const [totalHarvestEarnings, setTotalHarvestEarnings] = useState<string>('');
 
   const fetchData = async () => {
     try {
@@ -48,9 +48,23 @@ const Dashboard: React.FC = () => {
     }
   }
 
+  const fetchTotalEarningsFromHarvest = async () => {
+    try {
+      const url = `${utils.baseUrl}/api/harvests/totalharvestearnings`;
+      const response = await axios.post(url, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const projects = response.data.data[0].totalharvests;
+      setTotalHarvestEarnings(projects)
+    } catch (error) {
+      enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
+    }
+  }
+
   useEffect(() => {
     fetchData();
     fetchTotalExpenses();
+    fetchTotalEarningsFromHarvest();
   }, [showProjectseModal])
 
   const isProjects = projects.length > 0;
@@ -74,7 +88,7 @@ const Dashboard: React.FC = () => {
             <div>
               <p className="text-gray-600 dark:text-gray-400 mb-1">Total Earnings</p>
               <p className="text-green-500 text-2xl font-semibold">
-                KES {Number(totalEarnings) || 0}
+                KES {Number(totalHarvestEarnings) || 0}
               </p>
             </div>
           </div>
