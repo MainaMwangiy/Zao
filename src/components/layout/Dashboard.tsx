@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [showProjectseModal, setProjectshowModal] = useState(false);
   const [totalExpenses, setTotalExpenses] = useState<string>('');
-  const [totalEarnings, setTotalEarnings] = useState<string>('53250');
+  const [totalEarnings, setTotalEarnings] = useState<string>('83250');
 
   const fetchData = async () => {
     try {
