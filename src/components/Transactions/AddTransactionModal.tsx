@@ -8,7 +8,6 @@ import utils from "../utils";
 const initialValues = {
     name: "",
     amount: "",
-    status: "",
     notes: "",
     clientuserid: "",
     recipientuserid: ""
@@ -17,7 +16,6 @@ const initialValues = {
 const validationSchema = Yup.object({
     name: Yup.string().required("Name is required"),
     amount: Yup.number().typeError("Amount must be a number").required("Amount is required"),
-    status: Yup.string().required("Status is required"),
     notes: Yup.string(),
     recipientuserid: Yup.string().required("Recipient is required")
 });
@@ -30,9 +28,6 @@ interface User {
     clientuserid: number;
     name: string;
     email: string;
-    location: string;
-    status: string;
-    role: string;
 }
 
 const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransactionModal, setTransactionShowModal }) => {
@@ -66,7 +61,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
                     return;
                 }
 
-                const url = `/api/transactions/create`;
+                const url = `${utils.baseUrl}/api/transactions/create`;
                 await axios.post(url, { values }, {
                     headers: { "Content-Type": "application/json" },
                 });
@@ -77,6 +72,13 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
             }
         },
     });
+
+    const handleRecipientChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedRecipient = e.target.value;
+        const clientuserid = localStorage.getItem('clientuserid') || "";
+        formik.setFieldValue("recipientuserid", selectedRecipient);
+        formik.setFieldValue("clientuserid", clientuserid);
+    };
 
     return (
         <div>
@@ -116,7 +118,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
                                     <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Amount</label>
                                     <input
                                         name="amount"
-                                        type="text"
+                                        type="number"
                                         className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
                                         value={formik.values.amount}
                                         onChange={formik.handleChange}
@@ -133,7 +135,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
                                         name="recipientuserid"
                                         className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
                                         value={formik.values.recipientuserid}
-                                        onChange={formik.handleChange}
+                                        onChange={handleRecipientChange}
                                         onBlur={formik.handleBlur}
                                     >
                                         <option value="">Select recipient</option>
