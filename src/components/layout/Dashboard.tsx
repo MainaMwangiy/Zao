@@ -71,7 +71,7 @@ const Dashboard: React.FC = () => {
 
   const isProjects = projects.length > 0;
   return (
-    <div className="p-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
+    <div className="p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 mt-2">
         {/* Welcome Message */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">

@@ -18,7 +18,7 @@ const Card: React.FC<CardProps> = ({
   projectPlanIncluded
 }) => {
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+    <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md">
       <div className="w-full h-32 bg-gray-300 rounded-lg mb-2"></div>
       <h3 className="mt-2 text-lg font-semibold">{title}</h3>
       <p className="text-sm text-gray-600 dark:text-gray-400">Added by: {addedBy}, {location}</p>
