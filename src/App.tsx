@@ -12,6 +12,7 @@ import PrivateRoute from "./components/common/PrivateRoute";
 import Harvests from "./components/Harvests/Harvests";
 import Transactions from "./components/Transactions/Transactions";
 import Profile from "./components/Profile/Profile";
+import Incomes from "./components/Bills/Incomes";
 
 const App: React.FC = () => {
   return (
@@ -29,6 +30,7 @@ const App: React.FC = () => {
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/my-bills" element={<Incomes />} />
             </Route>
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Route>

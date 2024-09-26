@@ -60,7 +60,10 @@ const ProfileDropdown: React.FC = () => {
           <Link to="/profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
             Profile
           </Link>
-
+          {/* Profile Link */}
+          <Link to="/my-bills" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+            My Bills
+          </Link>
           {/* Logout Button */}
           <button
             className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
