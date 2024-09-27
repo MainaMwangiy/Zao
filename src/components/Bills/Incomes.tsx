@@ -3,17 +3,59 @@ import utils from '../utils';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
 
+interface User {
+    clientuserid: number;
+    name: string;
+    email: string;
+    amount: number | string;
+}
+
+interface Transaction {
+    transactionid: number;
+    amount: number | string;
+    clientuserid: number;
+    notes: string;
+    createdon: string;
+    modifiedon: string;
+    isdeleted: number;
+    name: string;
+    recipientuserid: number;
+}
+
+
 const Incomes: React.FC = () => {
     const [investment, setInvestment] = useState(0);
     const [earnings, setEarnings] = useState(0);
-    const [transactions, setTransactions] = useState<number[]>([]);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [newTransaction, setNewTransaction] = useState<number | string>('');
+    const [earningsPerUser, setEarningsPerUser] = useState(0);
     const { enqueueSnackbar } = useSnackbar();
+
+    const usersString: string | null = localStorage.getItem('users');
+    const clientuserid: string | null = localStorage.getItem('clientuserid');
+    let users: User[] = [];
+    if (usersString) {
+        try {
+            users = JSON.parse(usersString) as User[];
+        } catch (error) {
+            console.error('Error parsing users from localStorage', error);
+        }
+    }
+    let clientusername: string = 'Unknown User';
+
+    if (clientuserid) {
+        const userIdAsNumber = Number(clientuserid);
+        const loggedInUser: User | undefined = users.find(user => user.clientuserid === userIdAsNumber);
+        if (loggedInUser) {
+            clientusername = loggedInUser.name;
+        }
+    }
+
 
     const handleAddTransaction = () => {
         const transactionValue = Number(newTransaction);
         if (!isNaN(transactionValue) && transactionValue > 0) {
-            setTransactions([...transactions, transactionValue]);
+            setTransactions([...transactions, { transactionid: Date.now(), amount: transactionValue, clientuserid: Number(clientuserid), notes: '', createdon: '', modifiedon: '', isdeleted: 0, name: '', recipientuserid: 0 }]);
             setInvestment((prevInvestment) => prevInvestment - transactionValue);
             setNewTransaction('');
         } else {
@@ -21,9 +63,10 @@ const Incomes: React.FC = () => {
         }
     };
     const fetchTotalUserExpense = async () => {
+        const values = { clientusername: clientusername }
         try {
             const url = `${utils.baseUrl}/api/expenses/total-expenses`;
-            const response = await axios.post(url, { clientusername: 'Charles' }, {
+            const response = await axios.post(url, { values }, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const investment = response.data.data[0].amount;
@@ -44,9 +87,40 @@ const Incomes: React.FC = () => {
             enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
         }
     }
+
+    const fetchAllPaidTransactions = async () => {
+        const values = { clientuserid: clientuserid }
+        try {
+            const url = `${utils.baseUrl}/api/transactions/allpaid`;
+            const response = await axios.post(url, { values }, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const paidTotals = response.data.data;
+            setTransactions(paidTotals)
+        } catch (error) {
+            enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
+        }
+    }
+
+    const fetchAllPaidTransactionsPerUser = async () => {
+        const values = { clientuserid: clientuserid }
+        try {
+            const url = `${utils.baseUrl}/api/transactions/totalpaid`;
+            const response = await axios.post(url, { values }, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const paidTotals = response.data.data[0].totalpaid;
+            setEarningsPerUser(paidTotals)
+        } catch (error) {
+            enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
+        }
+    }
+
     useEffect(() => {
-        fetchTotalUserExpense();
         fetchTotalUserEarnings();
+        fetchTotalUserExpense();
+        fetchAllPaidTransactions();
+        fetchAllPaidTransactionsPerUser();
     }, [])
 
     return (
@@ -63,15 +137,26 @@ const Incomes: React.FC = () => {
                     <p className="text-sm text-gray-500 dark:text-gray-400">This is your initial investment, and the remaining amount is being tracked.</p>
                 </div>
 
+                {/* Remaining Balance Section */}
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-4">
+                    <h2 className="text-gray-700 dark:text-gray-300 text-lg font-bold">Remaining Balances</h2>
+                    <p className="text-blue-500 text-3xl font-bold mt-2">  {/* Changed color to blue */}
+                        {/* KES {investment.toLocaleString()} */}
+                        KES -{investment - earningsPerUser}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">This is the remaining balance from  your initial investment, and the remaining amount is being tracked.</p>
+                </div>
+
                 {/* Earnings Section */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-4">
                     <h2 className="text-gray-700 dark:text-gray-300 text-lg font-bold">Total Earnings</h2>
                     <p className="text-green-500 text-3xl font-bold mt-2">
                         {/* KES {earnings.toLocaleString()} */}
-                        KES {earnings}
+                        KES +{earningsPerUser}
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">These are your individual earnings so far.</p>
                 </div>
+
 
                 {/* Transaction List */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
@@ -80,8 +165,15 @@ const Incomes: React.FC = () => {
                         {transactions.length > 0 ? (
                             transactions.map((transaction, index) => (
                                 <li key={index} className="flex justify-between p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                                    <span className="text-gray-600 dark:text-gray-300">Transaction {index + 1}</span>
-                                    <span className="text-gray-600 dark:text-gray-300">KES {transaction.toLocaleString()}</span>
+                                    <div className="text-left">
+                                        <span className="block text-gray-600 dark:text-gray-300 font-bold">
+                                            {transaction.name}
+                                        </span>
+                                        <span className="block text-gray-500 dark:text-gray-400 text-sm">
+                                            Notes: {transaction.notes}
+                                        </span>
+                                    </div>
+                                    <span className="text-gray-600 dark:text-gray-300">KES {transaction.amount}</span>
                                 </li>
                             ))
                         ) : (
@@ -89,6 +181,7 @@ const Incomes: React.FC = () => {
                         )}
                     </ul>
                 </div>
+
             </div>
         </div>
     );

@@ -38,8 +38,9 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
         try {
             const url = `${utils.baseUrl}/api/auth/list-strict`;
             const response = await axios.get(url);
-            const user = response.data.data;
-            setUsers(user);
+            const users = response.data.data;
+            localStorage.setItem('users', users)
+            setUsers(users);
         } catch (error) {
             enqueueSnackbar("User loading failed. Please try again.", { variant: "error" });
         }
