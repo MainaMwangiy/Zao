@@ -125,7 +125,7 @@ const Incomes: React.FC = () => {
 
     return (
         <div className="p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
-            <div className="container mx-auto p-4">
+            <div className="container mx-auto p-2">
 
                 {/* Initial Investment Section */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-4">

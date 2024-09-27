@@ -2,9 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 
+interface User {
+  name: string;
+  email: string;
+}
+
 const ProfileDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [loggedUser, setLoggedUser] = useState<User | null>(null);
   const navigate = useNavigate();
+
+  const getStoredUser = (): User | null => {
+    const storedUser = localStorage.getItem('clientuser');
+    if (storedUser) {
+      try {
+        return JSON.parse(storedUser);
+      } catch (e) {
+        console.error("Failed to parse user from localStorage:", e);
+        return null;
+      }
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    setLoggedUser(getStoredUser());
+  }, []);
 
   const closeMenu = () => {
     setIsOpen(false);
@@ -23,7 +46,7 @@ const ProfileDropdown: React.FC = () => {
     localStorage.clear();
     sessionStorage.clear();
     navigate('/login');
-  }
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -48,11 +71,11 @@ const ProfileDropdown: React.FC = () => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg z-50">
           {/* User Info Section */}
-          <div className="flex items-center px-4 py-2 border-b border-gray-200">
-            <FaUserCircle className="text-gray-500" size={32} />
-            <div className="ml-3">
-              <p className="text-gray-800 font-semibold">Root</p>
-              <p className="text-sm text-gray-500">Farmer</p> {/* Role: Farmer */}
+          <div className="flex items-center px-2 py-2 border-b border-gray-200">
+            <FaUserCircle className="text-gray-500 flex-shrink-0" size={30} />
+            <div className="ml-3 flex-grow">
+              <p className="text-gray-800 font-semibold truncate">{loggedUser?.name || "Guest"}</p>
+              <p className="text-sm text-gray-500 truncate">{loggedUser?.email || "No email available"}</p>
             </div>
           </div>
 
@@ -60,14 +83,15 @@ const ProfileDropdown: React.FC = () => {
           <Link to="/profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
             Profile
           </Link>
-          {/* Profile Link */}
+          {/* My Bills Link */}
           <Link to="/my-bills" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
             My Bills
           </Link>
           {/* Logout Button */}
           <button
             className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-            onClick={() => LogOut()}   >
+            onClick={LogOut}
+          >
             Logout
           </button>
         </div>
