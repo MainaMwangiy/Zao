@@ -1,32 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import utils from "../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
+import utils from "../utils";
 
 const initialValues = {
     name: "",
     amount: "",
-    status: "",
     notes: "",
-    clientuserid: ""
+    clientuserid: "",
+    recipientuserid: ""
 };
 
 const validationSchema = Yup.object({
     name: Yup.string().required("Name is required"),
     amount: Yup.number().typeError("Amount must be a number").required("Amount is required"),
-    status: Yup.string().required("Status is required"),
     notes: Yup.string(),
+    recipientuserid: Yup.string().required("Recipient is required")
 });
 
 interface AddTransactionModalProps {
     showTransactionModal: boolean;
     setTransactionShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
+interface User {
+    clientuserid: number;
+    name: string;
+    email: string;
+}
 
 const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransactionModal, setTransactionShowModal }) => {
     const { enqueueSnackbar } = useSnackbar();
+    const [users, setUsers] = useState<User[]>([]);
+
+    const fetchData = async () => {
+        try {
+            const url = `${utils.baseUrl}/api/auth/list-strict`;
+            const response = await axios.get(url);
+            const users = response.data.data;
+            localStorage.setItem('users', users)
+            setUsers(users);
+        } catch (error) {
+            enqueueSnackbar("User loading failed. Please try again.", { variant: "error" });
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const formik = useFormik({
         initialValues,
@@ -45,12 +67,19 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
                     headers: { "Content-Type": "application/json" },
                 });
                 enqueueSnackbar("Transaction added successfully!", { variant: "success" });
+                setTransactionShowModal(false);
             } catch (error) {
                 enqueueSnackbar("Transaction creation failed. Please try again.", { variant: "error" });
             }
-            setTransactionShowModal(false);
         },
     });
+
+    const handleRecipientChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedRecipient = e.target.value;
+        const clientuserid = localStorage.getItem('clientuserid') || "";
+        formik.setFieldValue("recipientuserid", selectedRecipient);
+        formik.setFieldValue("clientuserid", clientuserid);
+    };
 
     return (
         <div>
@@ -90,7 +119,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
                                     <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Amount</label>
                                     <input
                                         name="amount"
-                                        type="text"
+                                        type="number"
                                         className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
                                         value={formik.values.amount}
                                         onChange={formik.handleChange}
@@ -100,24 +129,25 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
                                         <div className="text-red-500 text-sm">{formik.errors.amount}</div>
                                     )}
                                 </div>
-                            </div>
 
-                            <div className="grid grid-cols-1 gap-4 mb-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Status</label>
+                                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Recipient</label>
                                     <select
-                                        name="status"
+                                        name="recipientuserid"
                                         className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                                        value={formik.values.status}
-                                        onChange={formik.handleChange}
+                                        value={formik.values.recipientuserid}
+                                        onChange={handleRecipientChange}
                                         onBlur={formik.handleBlur}
                                     >
-                                        <option value="">Select</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="completed">Completed</option>
+                                        <option value="">Select recipient</option>
+                                        {users.map((user) => (
+                                            <option key={user.clientuserid} value={user.clientuserid}>
+                                                {user.name} ({user.email})
+                                            </option>
+                                        ))}
                                     </select>
-                                    {formik.touched.status && formik.errors.status && (
-                                        <div className="text-red-500 text-sm">{formik.errors.status}</div>
+                                    {formik.touched.recipientuserid && formik.errors.recipientuserid && (
+                                        <div className="text-red-500 text-sm">{formik.errors.recipientuserid}</div>
                                     )}
                                 </div>
                                 <div>

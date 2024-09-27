@@ -62,11 +62,22 @@ const Dashboard: React.FC = () => {
       enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
     }
   }
+  const fetchUsersData = async () => {
+    try {
+      const url = `${utils.baseUrl}/api/auth/list-strict`;
+      const response = await axios.get(url);
+      const users = response.data.data;
+      localStorage.setItem('users', JSON.stringify(users))
+    } catch (error) {
+      enqueueSnackbar("User loading failed. Please try again.", { variant: "error" });
+    }
+  };
 
   useEffect(() => {
     fetchData();
     fetchTotalExpenses();
     fetchTotalEarningsFromHarvest();
+    fetchUsersData();
   }, [showProjectseModal])
 
   const isProjects = projects.length > 0;
