@@ -15,12 +15,19 @@ interface ProjectsProps {
   imagesurl: string;
 }
 
+interface ClientUser {
+  name: string;
+}
+
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
   const { enqueueSnackbar } = useSnackbar();
   const [showProjectseModal, setProjectshowModal] = useState(false);
   const [totalExpenses, setTotalExpenses] = useState<string>('');
   const [totalHarvestEarnings, setTotalHarvestEarnings] = useState<string>('');
+  const clientuserString = localStorage.getItem('clientuser');
+  const clientuser: ClientUser | null = clientuserString ? JSON.parse(clientuserString) : null;
+
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -86,7 +93,7 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 mt-2">
         {/* Welcome Message */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-2">Welcome Root!</h2>
+          <h2 className="text-2xl font-bold mb-2"> Welcome {clientuser ? clientuser.name : 'Guest'}!</h2>
 
           <div className="flex justify-between items-center mb-4">
             {/* Total Expenses Section */}
