@@ -32,7 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen }) => {
           <li className="mb-4">
             <Link to="/expenses" className="flex items-center text-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
               <FaShoppingCart className="mr-3" />
-              Epenses
+              Expenses
             </Link>
           </li>
           <li className="mb-4">
