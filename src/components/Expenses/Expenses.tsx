@@ -186,7 +186,7 @@ const Expenses: React.FC = () => {
                   <th className="px-4 py-2 text-left text-sm font-semibold">AMOUNT</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold">PAIDBY</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold">STATUS</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold">NOTES</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold min-w-[250px]">NOTES</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">CREATED ON</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold">ACTIONS</th>
                 </tr>

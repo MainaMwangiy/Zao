@@ -50,9 +50,9 @@ const Harvests: React.FC = () => {
                 <table className="min-w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-collapse">
                     <thead>
                         <tr className="border-b dark:border-gray-700">
-                            <th className="px-4 py-2 text-left text-sm font-semibold">BAGS</th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[100px]">BAGS</th>
                             <th className="px-4 py-2 text-left text-sm font-semibold">AMOUNT SOLD</th>
-                            <th className="px-4 py-2 text-left text-sm font-semibold">NOTES</th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[200px]">NOTES</th>
                             <th className="px-4 py-2 text-left text-sm font-semibold">ACTIONS</th>
                         </tr>
                     </thead>
