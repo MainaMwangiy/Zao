@@ -49,7 +49,7 @@ const Expenses: React.FC = () => {
       const values = {
         page: currentPage,
         pageSize: itemsPerPage
-      }
+      };
       const url = `${utils.baseUrl}/api/expenses/list`;
       const response = await axios.post(url, { values }, {
         headers: { 'Content-Type': 'application/json' },
@@ -68,6 +68,26 @@ const Expenses: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, [showExpenseModal, currentPage]);
+
+  const handleExportExpenses = async () => {
+    try {
+      const url = `${utils.baseUrl}/api/expenses/export`;
+      const response = await axios.get(url, {
+        responseType: 'blob'
+      });
+      const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'expenses.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    } catch (error) {
+      enqueueSnackbar("Failed to export expenses. Please try again.", { variant: "error" });
+      console.error('Error exporting expenses:', error);
+    }
+  };
 
   const uploadExpensesFile = async (file: File) => {
     const formData = new FormData();
@@ -167,6 +187,7 @@ const Expenses: React.FC = () => {
 
             <button
               className="bg-gray-300 hover:bg-gray-400 transition text-black px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+              onClick={handleExportExpenses}
             >
               Export
             </button>
