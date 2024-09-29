@@ -180,7 +180,7 @@ const Expenses: React.FC = () => {
                 amount={expense.amount}
                 status={expense.status}
                 notes={expense.notes}
-                paidby={expense.paidby}
+                paidby={expense.clientusername}
                 createdon={expense.createdon}
                 onEdit={() => handleEditExpense(expense)}
                 onDelete={() => handleDeleteExpense(expense.expensesid)}
