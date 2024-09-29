@@ -220,10 +220,10 @@ const Expenses: React.FC = () => {
               >
                 &lt; Previous
               </button>
-              <span className="text-gray-600 font-medium">
-                Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}
-              </span>
             </div>
+            <span className="text-gray-600 font-medium">
+              Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}
+            </span>
             <div>
               <button
                 onClick={() => handlePageChange('next')}
