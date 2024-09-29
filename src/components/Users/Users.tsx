@@ -43,11 +43,20 @@ const Users: React.FC = () => {
 
   return (
     <div className="container mx-auto px-2 py-6">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">All Users</h1>
-        <div className="flex items-center space-x-2">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => setShowModal(true)}>Add User</button>
-          <button className="bg-gray-200 text-black px-4 py-2 rounded">Export</button>
+      <div className="flex flex-col md:flex-row items-center justify-between w-full mb-4 space-y-4 md:space-y-0">
+        <h1 className="text-2xl font-semibold w-full md:w-auto text-center md:text-left">All Users</h1>
+        <div className="flex flex-col md:flex-row items-center w-full md:w-auto md:space-x-4 space-y-4 md:space-y-0">
+          <button
+            className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+            onClick={() => setShowModal(true)}
+          >
+            Add User
+          </button>
+          <button
+            className="bg-gray-300 hover:bg-gray-400 transition text-black px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+          >
+            Export
+          </button>
         </div>
       </div>
 

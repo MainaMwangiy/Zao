@@ -76,16 +76,26 @@ const Transactions: React.FC = () => {
 
     return (
         <div className="container mx-auto px-4 py-6">
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-semibold">All Transactions</h1>
-                <div className="flex items-center space-x-2">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => setTransactionShowModal(true)}>
+            <div className="flex flex-col md:flex-row items-center justify-between w-full mb-4 space-y-4 md:space-y-0">
+                <h1 className="text-2xl font-semibold w-full md:w-auto text-center md:text-left">All Transactions</h1>
+                <div className="flex flex-col md:flex-row items-center w-full md:w-auto md:space-x-4 space-y-4 md:space-y-0">
+                    <button
+                        className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+                        onClick={() => setTransactionShowModal(true)}
+                    >
                         Add Transaction
                     </button>
-                    <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={handleImportTransactions}>
+                    <button
+                        className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+                        onClick={handleImportTransactions}
+                    >
                         Import Transactions
                     </button>
-                    <button className="bg-gray-200 text-black px-4 py-2 rounded">Export</button>
+                    <button
+                        className="bg-gray-300 hover:bg-gray-400 transition text-black px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+                    >
+                        Export
+                    </button>
                 </div>
             </div>
 
