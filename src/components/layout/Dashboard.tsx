@@ -154,9 +154,9 @@ const Dashboard: React.FC = () => {
           <p className="text-sm text-gray-600 dark:text-gray-400">Project Status: Ongoing</p>
 
           <div className="flex items-center mt-4">
-            <button className="bg-red-500 text-white px-2 py-2 mr-2 rounded">
+            {/* <button className="bg-red-500 text-white px-2 py-2 mr-2 rounded">
               Withdraw To Mpesa
-            </button>
+            </button> */}
             <button
               onClick={() => navigate('/transactions')}
               className="bg-blue-500 text-white px-2 py-2 rounded"
