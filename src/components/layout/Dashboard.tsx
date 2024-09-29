@@ -154,12 +154,12 @@ const Dashboard: React.FC = () => {
           <p className="text-sm text-gray-600 dark:text-gray-400">Project Status: Ongoing</p>
 
           <div className="flex items-center mt-4">
-            <button className="bg-red-500 text-white px-4 py-2 mr-2 rounded">
+            <button className="bg-red-500 text-white px-2 py-2 mr-2 rounded">
               Withdraw To Mpesa
             </button>
             <button
               onClick={() => navigate('/transactions')}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="bg-blue-500 text-white px-2 py-2 rounded"
             >
               View Transactions
             </button>
@@ -171,7 +171,7 @@ const Dashboard: React.FC = () => {
           <h2 className="text-2xl font-bold mb-2">My Recent Projects</h2>
           {isProjects && <p className="text-sm text-gray-600 dark:text-gray-400">{projects.length} projects available</p>}
           {!isProjects && <p className="text-sm text-gray-600 dark:text-gray-400">No ongoing projects available</p>}
-          <button className="mt-4 bg-pink-500 text-white px-4 py-2 rounded" onClick={() => setProjectshowModal(true)}>Add Project</button>
+          <button className="mt-4 bg-pink-500 text-white px-2 py-2 rounded" onClick={() => setProjectshowModal(true)}>Add Project</button>
         </div>
       </div>
 
@@ -180,7 +180,7 @@ const Dashboard: React.FC = () => {
         <h2 className="text-xl font-bold mb-4">Projects</h2>
 
         {/* Responsive Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {/* Dynamically load cards from projectsData */}
           {projects.map((item, index) => (
             <Card

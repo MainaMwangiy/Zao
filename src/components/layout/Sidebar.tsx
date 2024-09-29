@@ -22,7 +22,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen }) => {
           <li className="mb-4">
             <Link to="/dashboard" className="flex items-center text-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800">
               <FaTachometerAlt className="mr-3" />
-              Home
+              Dashbboard
             </Link>
           </li>
           <li className="mb-4">
