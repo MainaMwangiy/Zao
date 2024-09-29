@@ -12,6 +12,7 @@ interface ExpensesProps {
   notes: string;
   paidby: string;
   clientusername: string;
+  createdon: string;
 }
 
 const Expenses: React.FC = () => {
@@ -105,6 +106,7 @@ const Expenses: React.FC = () => {
               <th className="px-4 py-2 text-left text-sm font-semibold">PAIDBY</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">STATUS</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">NOTES</th>
+              <th className="px-4 py-2 text-left text-sm font-semibold">CREATED ON</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">ACTIONS</th>
             </tr>
           </thead>
@@ -117,9 +119,11 @@ const Expenses: React.FC = () => {
                 status={expense.status}
                 notes={expense.notes}
                 paidby={expense.clientusername}
+                createdon={expense.createdon}
               />
             ))}
           </tbody>
+
         </table>
         {showExpenseModal && (
           <AddExpenseModal

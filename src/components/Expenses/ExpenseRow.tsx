@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import React from "react";
 
 interface ExpenseRowProps {
@@ -6,9 +7,13 @@ interface ExpenseRowProps {
     status: string;
     notes: string;
     paidby: string;
+    createdon: string;
 }
 
-const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes, paidby }) => {
+const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes, paidby, createdon }) => {
+    if (typeof status === 'string') {
+        status = status.toLowerCase();
+    }
     return (
         <tr className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
             <td className="px-4 py-4">
@@ -22,7 +27,7 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes, pa
             </td>
             <td className="px-4 py-4">
                 <span
-                    className={`px-2 py-1 rounded-full text-xs ${status.toLowerCase() === "pending" ? "bg-yellow-100 text-yellow-600" : "bg-green-100 text-green-600"
+                    className={`px-2 py-1 rounded-full text-xs ${status?.toLowerCase() === "pending" ? "bg-yellow-100 text-yellow-600" : "bg-green-100 text-green-600"
                         }`}
                 >
                     {status}
@@ -30,6 +35,9 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes, pa
             </td>
             <td className="px-4 py-4">
                 <p>{notes}</p>
+            </td>
+            <td className="px-4 py-4">
+                <p>{dayjs(createdon).format('DD-MMM-YYYY')}</p>
             </td>
             <td className="px-4 py-4 flex space-x-2">
                 <button className="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>
