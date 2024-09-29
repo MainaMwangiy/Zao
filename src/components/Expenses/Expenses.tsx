@@ -75,11 +75,12 @@ const Expenses: React.FC = () => {
       const response = await axios.get(url, {
         responseType: 'blob'
       });
+      const currentDate = new Date().toISOString().split('T')[0];
       const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = downloadUrl;
-      link.setAttribute('download', 'expenses.xlsx');
+      link.setAttribute('download', `Expenses${currentDate}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.parentNode?.removeChild(link);
