@@ -10,7 +10,7 @@ interface UserData {
 
 interface Users {
   lookupid: string;
-  displayvalue: string;
+  displayValue: string;
 }
 const utils = {
   isMobile: window.matchMedia("(max-width: 767px)").matches,
@@ -48,12 +48,16 @@ const utils = {
       role: utils.getRoles(dt.roleid) || "User"
     }));
   },
-  getClientUsersList: (clientUsersList: Users[]): Users[] => {
-    const clientUsersFromStorage = localStorage.getItem("clientusers");
+  getClientUsersList: (): Users[] => {
+    const clientUsersFromStorage = localStorage.getItem("users");
     if (clientUsersFromStorage) {
-      return JSON.parse(clientUsersFromStorage);
+      const parsedUsers = JSON.parse(clientUsersFromStorage);
+      return parsedUsers.map((user: { clientuserid: number; name: string }) => ({
+        lookupId: user.clientuserid.toString(),
+        displayValue: user.name,
+      }));
     }
-    return clientUsersList;
+    return [];
   }
 };
 

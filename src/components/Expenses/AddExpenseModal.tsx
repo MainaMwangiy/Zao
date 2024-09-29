@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import utils from "../utils";
@@ -18,6 +18,7 @@ interface ExpenseProps {
     notes: string;
     expensesid: string;
     clientuserid: string;
+    clientusername: string;
 }
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
@@ -26,6 +27,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     expense,
 }) => {
     const { enqueueSnackbar } = useSnackbar();
+    const clientUsers = utils.getClientUsersList();
 
     // Define the initial values for Formik form
     const initialValues: ExpenseProps = {
@@ -34,7 +36,8 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         status: expense?.status || "",
         notes: expense?.notes || "",
         expensesid: expense?.expensesid || "",
-        clientuserid: expense?.clientuserid || ""
+        clientuserid: expense?.clientuserid || "",
+        clientusername: expense?.clientusername || ""
     };
 
     // Define the validation schema using Yup
@@ -43,6 +46,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         amount: Yup.number().typeError("Amount must be a number").required("Amount is required"),
         status: Yup.string().required("Status is required"),
         notes: Yup.string(),
+        clientuserid: Yup.string().required("Client User is required"),
     });
 
     const formik = useFormik<ExpenseProps>({
@@ -73,7 +77,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             }
         },
     });
-
+    console.log("alues", formik.values)
     return (
         <div>
             {/* Modal */}
@@ -142,6 +146,38 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                                         <div className="text-red-500 text-sm">{formik.errors.status}</div>
                                     )}
                                 </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                                        Paid By
+                                    </label>
+                                    <select
+                                        name="clientuserid"
+                                        className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                                        value={formik.values.clientusername}
+                                        onChange={(e) => {
+                                            const selectedUserId = e.target.value;
+                                            const selectedUser = clientUsers.find(
+                                                (user) => user.lookupid === selectedUserId
+                                            );
+                                            console.log("selectedUserId", selectedUserId)
+                                            console.log("selectedUser", selectedUser)
+                                            formik.setFieldValue("clientusername", selectedUserId);
+                                            formik.setFieldValue("clientuserid", localStorage.getItem('clientuserid') || "");
+                                        }}
+                                        onBlur={formik.handleBlur}
+                                    >
+                                        <option value="">Select Paid By</option>
+                                        {clientUsers.map((user) => (
+                                            <option key={user.lookupid} value={user.displayValue}>
+                                                {user.displayValue}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {formik.touched.clientuserid && formik.errors.clientuserid && (
+                                        <div className="text-red-500 text-sm">{formik.errors.clientuserid}</div>
+                                    )}
+                                </div>
+
                                 <div>
                                     <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
                                         Notes
