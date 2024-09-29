@@ -29,6 +29,8 @@ const Expenses: React.FC = () => {
   const [itemsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
 
+  const totalexpenses = localStorage.getItem('totalexpenses');
+
   const handlePageChange = (direction: 'next' | 'prev') => {
     if (direction === 'next' && currentPage < Math.ceil(totalItems / itemsPerPage)) {
       setCurrentPage(prevPage => prevPage + 1);
@@ -132,30 +134,34 @@ const Expenses: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <div className="flex flex-wrap md:flex-nowrap justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold mb-2 md:mb-0 w-full md:w-auto">All Expenses</h1>
-        <div className="flex flex-col md:flex-row items-center w-full md:w-auto md:space-x-2 space-y-2 md:space-y-0">
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded w-full md:w-auto"
-            onClick={() => {
-              setSelectedExpense(null);
-              setExpenseShowModal(true);
-            }}
-          >
-            Add Expense
-          </button>
-          <button
-            className="bg-green-500 text-white px-4 py-2 rounded w-full md:w-auto"
-            onClick={handleImportExpenses}
-          >
-            Import Expenses
-          </button>
-          <button
-            className="bg-gray-200 text-black px-4 py-2 rounded w-full md:w-auto"
-          >
-            Export
-          </button>
+      <div className="flex flex-col md:flex-row items-center w-full md:w-auto md:space-x-4 space-y-4 md:space-y-0 mb-4">
+        <div className="flex items-center bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-2 rounded-lg shadow-md w-full md:w-auto">
+          <p className="font-semibold text-lg mr-2">Total Expenses:</p>
+          <p className="font-bold text-xl text-red-600 dark:text-red-400">KES {totalexpenses} </p>
         </div>
+
+        <button
+          className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+          onClick={() => {
+            setSelectedExpense(null);
+            setExpenseShowModal(true);
+          }}
+        >
+          Add Expense
+        </button>
+
+        <button
+          className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+          onClick={handleImportExpenses}
+        >
+          Import Expenses
+        </button>
+
+        <button
+          className="bg-gray-300 hover:bg-gray-400 transition text-black px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+        >
+          Export
+        </button>
       </div>
 
       <div className="relative mb-4">

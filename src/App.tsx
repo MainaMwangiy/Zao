@@ -13,6 +13,7 @@ import Harvests from "./components/Harvests/Harvests";
 import Transactions from "./components/Transactions/Transactions";
 import Profile from "./components/Profile/Profile";
 import Incomes from "./components/Bills/Incomes";
+import Projects from "./components/Projects/Projects";
 
 const App: React.FC = () => {
   return (
@@ -31,6 +32,7 @@ const App: React.FC = () => {
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/my-bills" element={<Incomes />} />
+              <Route path="/projects/:projectId" element={<Projects />} />
             </Route>
             <Route path="/" element={<Navigate to="/dashboard" />} />
           </Route>

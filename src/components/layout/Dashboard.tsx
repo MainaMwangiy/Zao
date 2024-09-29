@@ -13,6 +13,7 @@ interface ProjectsProps {
   status: string;
   projectplan: boolean;
   imagesurl: string;
+  projectid: string;
 }
 
 interface ClientUser {
@@ -51,6 +52,7 @@ const Dashboard: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
       });
       const projects = response.data.data[0].totalexpenses;
+      localStorage.setItem("totalexpenses", projects)
       setTotalExpenses(projects)
     } catch (error) {
       enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
@@ -147,6 +149,7 @@ const Dashboard: React.FC = () => {
           {projects.map((item, index) => (
             <Card
               key={index}
+              id={item.projectid}
               title={item.name}
               addedBy={'Maina'}
               location={item.location}
