@@ -1,19 +1,18 @@
 import dayjs from "dayjs";
-import React from "react";
 
 interface ExpenseRowProps {
+    expensesid: string;
     name: string;
     amount: string;
     status: string;
     notes: string;
     paidby: string;
     createdon: string;
+    onEdit: () => void;
+    onDelete: () => void;
 }
 
-const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes, paidby, createdon }) => {
-    if (typeof status === 'string') {
-        status = status.toLowerCase();
-    }
+const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes, paidby, createdon, onEdit, onDelete }) => {
     return (
         <tr className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
             <td className="px-4 py-4">
@@ -40,8 +39,8 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes, pa
                 <p>{dayjs(createdon).format('DD-MMM-YYYY')}</p>
             </td>
             <td className="px-4 py-4 flex space-x-2">
-                <button className="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>
-                <button className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                <button onClick={onEdit} className="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>
+                <button onClick={onDelete} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
             </td>
         </tr>
     );
