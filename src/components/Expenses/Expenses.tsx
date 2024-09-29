@@ -17,6 +17,7 @@ interface ExpensesProps {
   clientusername: string;
   createdon: string;
   key: string;
+  clientuserid: string;
 }
 
 const Expenses: React.FC = () => {
@@ -183,7 +184,7 @@ const Expenses: React.FC = () => {
               <thead>
                 <tr className="border-b dark:border-gray-700">
                   <th className="px-4 py-2 text-left text-sm font-semibold min-w-[200px]">NAME</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold">AMOUNT</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold min-w-[100px]">AMOUNT</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold">PAIDBY</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold">STATUS</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold min-w-[250px]">NOTES</th>
@@ -219,10 +220,10 @@ const Expenses: React.FC = () => {
               >
                 &lt; Previous
               </button>
-              <span className="text-gray-600 font-medium">
-                Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}
-              </span>
             </div>
+            <span className="text-gray-600 font-medium">
+              Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}
+            </span>
             <div>
               <button
                 onClick={() => handlePageChange('next')}

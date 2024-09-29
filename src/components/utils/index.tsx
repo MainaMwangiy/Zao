@@ -7,6 +7,11 @@ interface UserData {
   status: "Active" | "Inactive";
   role: string;
 }
+
+interface Users {
+  lookupid: string;
+  displayValue: string;
+}
 const utils = {
   isMobile: window.matchMedia("(max-width: 767px)").matches,
   isTablet: window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches,
@@ -42,6 +47,17 @@ const utils = {
       ...dt,
       role: utils.getRoles(dt.roleid) || "User"
     }));
+  },
+  getClientUsersList: (): Users[] => {
+    const clientUsersFromStorage = localStorage.getItem("users");
+    if (clientUsersFromStorage) {
+      const parsedUsers = JSON.parse(clientUsersFromStorage);
+      return parsedUsers.map((user: { clientuserid: number; name: string }) => ({
+        lookupId: user.clientuserid.toString(),
+        displayValue: user.name,
+      }));
+    }
+    return [];
   }
 };
 
