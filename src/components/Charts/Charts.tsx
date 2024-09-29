@@ -21,6 +21,18 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ type, data, title, yLab
         y: Number(item.amount),
         category: dayjs(item.createdon).format('DD-MM-YYYY'),
     }));
+    let labelFormat;
+    if (type === 'pie') {
+        labelFormat = {
+            enabled: true,
+            format: '<b>{point.name}</b>: {point.y}'
+        }
+    } else if (type === 'bar') {
+        labelFormat = {
+            enabled: true,
+            format: '{point.y}'
+        }
+    }
 
     const options: Options = {
         chart: {
@@ -42,23 +54,43 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ type, data, title, yLab
         },
         series: [
             {
-                data: type === 'pie'
-                    ? sortedData.reduce((acc: any[], item) => {
-                        const foundIndex = acc.findIndex((d) => d.name === item.clientusername);
-                        if (foundIndex !== -1) {
-                            acc[foundIndex].y += Number(item.amount);
-                        } else {
-                            acc.push({
-                                name: item.clientusername,
-                                y: Number(item.amount),
-                            });
-                        }
-                        return acc;
-                    }, [])
-                    : seriesData,
+                data:
+                    type === 'pie'
+                        ? sortedData.reduce((acc: any[], item) => {
+                            const foundIndex = acc.findIndex(
+                                (d) => d.name === item.clientusername
+                            );
+                            if (foundIndex !== -1) {
+                                acc[foundIndex].y += Number(item.amount);
+                            } else {
+                                acc.push({
+                                    name: item.clientusername,
+                                    y: Number(item.amount),
+                                });
+                            }
+                            return acc;
+                        }, [])
+                        : seriesData,
                 type: type,
+                dataLabels: labelFormat
             },
         ],
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.y}'
+                },
+            },
+            bar: {
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y}'
+                },
+            },
+        },
         responsive: {
             rules: [
                 {
@@ -78,9 +110,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({ type, data, title, yLab
         }
     };
 
-    return (
-        <HighchartsReact highcharts={Highcharts} options={options} />
-    );
+    return <HighchartsReact highcharts={Highcharts} options={options} />;
 };
 
 export default ChartComponent;
