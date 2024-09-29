@@ -17,6 +17,7 @@ interface ExpensesProps {
   clientusername: string;
   createdon: string;
   key: string;
+  clientuserid: string;
 }
 
 const Expenses: React.FC = () => {
