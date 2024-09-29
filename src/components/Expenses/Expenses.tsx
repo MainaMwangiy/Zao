@@ -158,6 +158,13 @@ const Expenses: React.FC = () => {
         </div>
       </div>
 
+      <div className="relative mb-4">
+        <input
+          type="text"
+          placeholder="Search for expenses"
+          className="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+        />
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-collapse">
           <thead>
