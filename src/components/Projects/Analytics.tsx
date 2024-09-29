@@ -26,7 +26,7 @@ const Analytics: React.FC = () => {
     }, []);
 
     return (
-        <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md">
+        <div className="bg-white dark:bg-gray-800 p-1 rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold mb-4 dark:text-gray-200">Analytics</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md">
