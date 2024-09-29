@@ -25,16 +25,33 @@ const Expenses: React.FC = () => {
   const [deleteExpenseId, setDeleteExpenseId] = useState<string | null>(null);
   const { enqueueSnackbar } = useSnackbar();
   const [expenses, setExpenses] = useState<ExpensesProps[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const handlePageChange = (direction: 'next' | 'prev') => {
+    if (direction === 'next' && currentPage < Math.ceil(totalItems / itemsPerPage)) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+    if (direction === 'prev' && currentPage > 1) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+  };
 
   const fetchData = async () => {
     try {
+      const values = {
+        page: currentPage,
+        pageSize: itemsPerPage
+      }
       const url = `${utils.baseUrl}/api/expenses/list`;
-      const response = await axios.post(url, {
+      const response = await axios.post(url, { values }, {
         headers: { 'Content-Type': 'application/json' },
       });
-      const expenseData = response.data.data;
-      setExpenses(expenseData);
-      localStorage.setItem('expenses', JSON.stringify(expenseData));
+
+      setExpenses(response.data.data);
+      setTotalItems(response.data.totalItems);
+      localStorage.setItem('expenses', JSON.stringify(response?.data.data));
     } catch (error) {
       enqueueSnackbar("Expenses Loading Failed. Please try again.", { variant: "error" });
     }
@@ -42,7 +59,7 @@ const Expenses: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-  }, [showExpenseModal]);
+  }, [showExpenseModal, currentPage]);
 
   const uploadExpensesFile = async (file: File) => {
     const formData = new FormData();
@@ -141,14 +158,6 @@ const Expenses: React.FC = () => {
         </div>
       </div>
 
-      <div className="relative mb-4">
-        <input
-          type="text"
-          placeholder="Search for expenses"
-          className="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-        />
-      </div>
-
       <div className="overflow-x-auto">
         <table className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-collapse">
           <thead>
@@ -163,7 +172,7 @@ const Expenses: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {expenses && expenses.map((expense) => (
+            {expenses.map((expense) => (
               <ExpenseRow
                 key={expense.expensesid}
                 expensesid={expense.expensesid}
@@ -171,15 +180,38 @@ const Expenses: React.FC = () => {
                 amount={expense.amount}
                 status={expense.status}
                 notes={expense.notes}
-                paidby={expense.clientusername}
+                paidby={expense.paidby}
                 createdon={expense.createdon}
                 onEdit={() => handleEditExpense(expense)}
                 onDelete={() => handleDeleteExpense(expense.expensesid)}
               />
             ))}
-
           </tbody>
         </table>
+      </div>
+
+      <div className="flex justify-between items-center mt-4">
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={() => handlePageChange('prev')}
+            className={`px-4 py-2 rounded bg-gray-200 text-gray-800 ${currentPage === 1 ? 'cursor-not-allowed text-gray-400' : 'hover:bg-gray-300'}`}
+            disabled={currentPage === 1}
+          >
+            &lt; Previous
+          </button>
+          <span className="text-gray-600 font-medium">
+            Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}
+          </span>
+        </div>
+        <div>
+          <button
+            onClick={() => handlePageChange('next')}
+            className={`px-4 py-2 rounded bg-gray-200 text-gray-800 ${currentPage === Math.ceil(totalItems / itemsPerPage) ? 'cursor-not-allowed text-gray-400' : 'hover:bg-gray-300'}`}
+            disabled={currentPage === Math.ceil(totalItems / itemsPerPage)}
+          >
+            Next &gt;
+          </button>
+        </div>
       </div>
 
       {showExpenseModal && (
@@ -203,5 +235,6 @@ const Expenses: React.FC = () => {
     </div>
   );
 };
+
 
 export default Expenses;
