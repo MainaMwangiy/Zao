@@ -15,6 +15,7 @@ interface ExpensesProps {
   paidby: string;
   clientusername: string;
   createdon: string;
+  key: string;
 }
 
 const Expenses: React.FC = () => {
@@ -149,27 +150,34 @@ const Expenses: React.FC = () => {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-collapse">
+        <table className="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-collapse">
           <thead>
             <tr className="border-b dark:border-gray-700">
-              <th className="px-4 py-2 text-left text-sm font-semibold">NAME</th>
+              <th className="px-4 py-2 text-left text-sm font-semibold min-w-[200px]">NAME</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">AMOUNT</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">PAIDBY</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">STATUS</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">NOTES</th>
-              <th className="px-4 py-2 text-left text-sm font-semibold">CREATED ON</th>
+              <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">CREATED ON</th>
               <th className="px-4 py-2 text-left text-sm font-semibold">ACTIONS</th>
             </tr>
           </thead>
           <tbody>
-            {expenses && expenses?.map((expense) => (
+            {expenses && expenses.map((expense) => (
               <ExpenseRow
                 key={expense.expensesid}
-                {...expense}
+                expensesid={expense.expensesid}
+                name={expense.name}
+                amount={expense.amount}
+                status={expense.status}
+                notes={expense.notes}
+                paidby={expense.clientusername}
+                createdon={expense.createdon}
                 onEdit={() => handleEditExpense(expense)}
                 onDelete={() => handleDeleteExpense(expense.expensesid)}
               />
             ))}
+
           </tbody>
         </table>
       </div>
