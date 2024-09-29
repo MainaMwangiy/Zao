@@ -13,7 +13,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen }) => {
     <aside
       className={`sidebar bg-white shadow-lg dark:bg-gray-900 text-gray-900 dark:text-gray-100 fixed inset-y-0 left-0 z-50 h-full transition-transform duration-300 transform ${isOpen || !isMobile ? "translate-x-0 w-64" : "-translate-x-full"}`} >
       <div className="flex flex-col items-center py-6">
-        <img src={logo} alt="Zao Logo" className="h-20 w-auto mb-4" />
+        <Link to="/">
+          <img src={logo} alt="Zao Logo" className="h-20 w-auto mb-4 cursor-pointer" />
+        </Link>
       </div>
       <nav className="mt-6">
         <ul>
