@@ -5,6 +5,7 @@ import axios from "axios";
 import { useSnackbar } from "notistack";
 import AddProjectModal from "../Projects/AddProjectModal";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 interface ProjectsProps {
   name: string;
@@ -13,6 +14,7 @@ interface ProjectsProps {
   status: string;
   projectplan: boolean;
   imagesurl: string;
+  projectid: string;
 }
 
 interface ClientUser {
@@ -27,8 +29,21 @@ const Dashboard: React.FC = () => {
   const [totalHarvestEarnings, setTotalHarvestEarnings] = useState<string>('');
   const clientuserString = localStorage.getItem('clientuser');
   const clientuser: ClientUser | null = clientuserString ? JSON.parse(clientuserString) : null;
-
+  const [isExpensesVisible, setIsExpensesVisible] = useState<boolean>(false);
+  const [isEarningsVisible, setIsEarningsVisible] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  const toggleExpensesVisibility = () => {
+    setIsExpensesVisible(!isExpensesVisible);
+  };
+
+  const toggleEarningsVisibility = () => {
+    setIsEarningsVisible(!isEarningsVisible);
+  };
+
+  const formatPlaceholder = (value: number) => {
+    return '*'.repeat(value.toString().length);
+  };
 
   const fetchData = async () => {
     try {
@@ -51,6 +66,7 @@ const Dashboard: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
       });
       const projects = response.data.data[0].totalexpenses;
+      localStorage.setItem("totalexpenses", projects)
       setTotalExpenses(projects)
     } catch (error) {
       enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
@@ -95,21 +111,43 @@ const Dashboard: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-2"> Welcome {clientuser ? clientuser.name : 'Guest'}!</h2>
 
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-4 space-x-8">
             {/* Total Expenses Section */}
-            <div>
-              <p className="text-gray-600 dark:text-gray-400 mb-1">Total Expenses</p>
-              <p className="text-red-500 text-2xl font-semibold">
-                KES {Number(totalExpenses) || 0}
-              </p>
+            <div className="flex items-center space-x-4">
+              <div>
+                <p className="text-gray-600 dark:text-gray-400 mb-1">Total Expenses</p>
+                <div className="flex items-center">
+                  <p className="text-red-500 text-2xl font-semibold mr-2 font-mono">
+                    {isExpensesVisible ? `KES ${Number(totalExpenses) || 0}` : `KES ${formatPlaceholder(Number(totalExpenses) || 0)}`}
+                  </p>
+                  <button onClick={toggleExpensesVisibility} className="focus:outline-none">
+                    {isExpensesVisible ? (
+                      <FaEyeSlash className="text-gray-600 dark:text-gray-400 text-xl" />
+                    ) : (
+                      <FaEye className="text-gray-600 dark:text-gray-400 text-xl" />
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
 
             {/* Total Earnings Section */}
-            <div>
-              <p className="text-gray-600 dark:text-gray-400 mb-1">Total Earnings</p>
-              <p className="text-green-500 text-2xl font-semibold">
-                KES {Number(totalHarvestEarnings) || 0}
-              </p>
+            <div className="flex items-center space-x-4">
+              <div>
+                <p className="text-gray-600 dark:text-gray-400 mb-1">Total Earnings</p>
+                <div className="flex items-center">
+                  <p className="text-green-500 text-2xl font-semibold mr-2 font-mono">
+                    {isEarningsVisible ? `KES ${Number(totalHarvestEarnings) || 0}` : `KES ${formatPlaceholder(Number(totalHarvestEarnings) || 0)}`}
+                  </p>
+                  <button onClick={toggleEarningsVisibility} className="focus:outline-none">
+                    {isEarningsVisible ? (
+                      <FaEyeSlash className="text-gray-600 dark:text-gray-400 text-xl" />
+                    ) : (
+                      <FaEye className="text-gray-600 dark:text-gray-400 text-xl" />
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -147,6 +185,7 @@ const Dashboard: React.FC = () => {
           {projects.map((item, index) => (
             <Card
               key={index}
+              id={item.projectid}
               title={item.name}
               addedBy={'Maina'}
               location={item.location}
