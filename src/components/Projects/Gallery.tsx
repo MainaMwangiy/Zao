@@ -73,13 +73,13 @@ const Gallery: React.FC = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            setBlobs((prevBlobs) => [...prevBlobs, {
+            setBlobs((prevBlobs) => [{
                 url: response.data.url.url,
                 downloadUrl: response.data.url.url + '?download=1',
                 pathname: imageFile.name,
                 size: imageFile.size,
                 uploadedAt: new Date().toISOString()
-            }]);
+            }, ...prevBlobs]);
             enqueueSnackbar("Upload successful!", { variant: "success" });
         } catch (error) {
             console.error('Error uploading the image', error);
