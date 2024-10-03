@@ -5,10 +5,6 @@ import { useSnackbar } from 'notistack';
 import Loader from '../common/Loader';
 import { FaDownload } from 'react-icons/fa';
 
-type ImageUploadResponse = {
-    url: string;
-};
-
 type BlobItem = {
     url: string;
     downloadUrl: string;
@@ -26,6 +22,13 @@ type ListResponse = {
     success: boolean;
     blobs: BlobsData;
 };
+
+type ImageUploadResponse = {
+    url: {
+        url: string;
+    };
+};
+
 
 const Gallery: React.FC = () => {
     const [blobs, setBlobs] = useState<BlobItem[]>([]);
