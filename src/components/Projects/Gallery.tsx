@@ -4,6 +4,7 @@ import utils from '../utils';
 import { useSnackbar } from 'notistack';
 import Loader from '../common/Loader';
 import { FaDownload } from 'react-icons/fa';
+import imageCompression from 'browser-image-compression';
 
 type BlobItem = {
     url: string;
@@ -63,11 +64,14 @@ const Gallery: React.FC = () => {
             enqueueSnackbar("No Images, Please upload one", { variant: "error" });
             return;
         }
-
-        const formData = new FormData();
-        formData.append('file', imageFile);
-
         try {
+            const options = {
+                maxSizeMB: 1,
+                maxWidthOrHeight: 1920
+            };
+            const compressedImage = await imageCompression(imageFile, options);
+            const formData = new FormData();
+            formData.append('file', compressedImage);
             const response = await axios.post<ImageUploadResponse>(`${utils.baseUrl}/api/upload`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -76,8 +80,8 @@ const Gallery: React.FC = () => {
             setBlobs((prevBlobs) => [{
                 url: response.data.url.url,
                 downloadUrl: response.data.url.url + '?download=1',
-                pathname: imageFile.name,
-                size: imageFile.size,
+                pathname: compressedImage.name,
+                size: compressedImage.size,
                 uploadedAt: new Date().toISOString()
             }, ...prevBlobs]);
             enqueueSnackbar("Upload successful!", { variant: "success" });
