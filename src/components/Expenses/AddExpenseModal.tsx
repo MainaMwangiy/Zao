@@ -168,14 +168,14 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                                             const selectedUser = clientUsers.find(
                                                 (user) => user.lookupid === selectedUserId
                                             );
-                                            formik.setFieldValue("clientusername", selectedUser?.displayValue || "");
+                                            formik.setFieldValue("clientusername", selectedUserId || "");
                                             formik.setFieldValue("clientuserid", localStorage.getItem('clientuserid') || "");
                                         }}
                                         onBlur={formik.handleBlur}
                                     >
                                         <option value="">Select Paid By</option>
                                         {clientUsers.map((user) => (
-                                            <option key={user.lookupid} value={user.lookupid}>
+                                            <option key={user.lookupid} value={user.displayValue}>
                                                 {user.displayValue}
                                             </option>
                                         ))}
