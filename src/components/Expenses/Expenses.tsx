@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ExpenseRow from "./ExpenseRow";
 import utils from "../utils";
 import axios from "axios";
@@ -7,6 +7,7 @@ import AddExpenseModal from "./AddExpenseModal";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import Loader from "../common/Loader";
 import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
+import _ from 'lodash';
 
 interface ExpensesProps {
   expensesid: string;
@@ -36,6 +37,7 @@ const Expenses: React.FC = () => {
   const [itemsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const totalexpenses = localStorage.getItem('totalexpenses');
 
@@ -48,12 +50,13 @@ const Expenses: React.FC = () => {
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = useCallback(_.debounce(async (searchTerm: string) => {
     try {
       setIsLoading(true);
       const values = {
         page: currentPage,
-        pageSize: itemsPerPage
+        pageSize: itemsPerPage,
+        searchTerm: searchTerm.trim()
       };
       const url = `${utils.baseUrl}/api/expenses/list`;
       const response = await axios.post(url, { values }, {
@@ -68,16 +71,24 @@ const Expenses: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, 300), [currentPage, itemsPerPage]);
 
   useEffect(() => {
-    fetchData();
-  }, [showExpenseModal, currentPage]);
+    fetchData(searchTerm);
+  }, [showExpenseModal, currentPage, searchTerm, fetchData]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    fetchData(e.target.value);
+  };
 
   const handleExportExpenses = async () => {
     try {
-      const url = `${utils.baseUrl}/api/expenses/export`;
-      const response = await axios.get(url, {
+      const url = `${utils.baseUrl}/api/expenses/list`;
+      const params = {
+        isExport: true,
+      };
+      const response = await axios.post(url, params, {
         responseType: 'blob'
       });
       const currentDate = new Date().toISOString().split('T')[0];
@@ -206,6 +217,8 @@ const Expenses: React.FC = () => {
             <input
               type="text"
               placeholder="Search for expenses"
+              value={searchTerm}
+              onChange={handleSearchChange}
               className="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
             />
           </div>
@@ -258,7 +271,7 @@ const Expenses: React.FC = () => {
               </button>
             </div>
             <span className="text-gray-600 font-medium">
-              Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}
+              Page {`${currentPage} - ${Math.ceil(totalItems / itemsPerPage)}`} of {totalItems}
             </span>
             <div>
               <button
