@@ -21,7 +21,7 @@ const Summary: React.FC<SummaryProps> = ({ projectData }) => {
         <div className="dark:bg-gray-800 dark:text-gray-200 p-4 rounded-lg">
             <div className="flex flex-col md:flex-row gap-6 mb-6">
                 <div className="flex-1">
-                    <img src="https://pbs.twimg.com/media/FxpaknVWAAISdeU.jpg" alt="Project" className="w-full rounded-lg mb-4" />
+                    <img src="https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3" alt="Project" className="w-full rounded-lg mb-4" />
                     <div className="dark:bg-gray-800 dark:text-gray-200 p-4 rounded-lg">
                         <h2 className="text-2xl font-semibold mb-2">{projectData.title}</h2>
                         <p className="text-sm text-gray-500 dark:text-gray-400">Location: {projectData.location}</p>
@@ -45,10 +45,10 @@ const Summary: React.FC<SummaryProps> = ({ projectData }) => {
                             <table className="w-full text-sm text-left">
                                 <thead>
                                     <tr className="border-b dark:border-gray-700">
-                                        <th className="py-2 px-4">Category</th>
-                                        <th className="py-2 px-4">Estimated</th>
-                                        <th className="py-2 px-4">Actual</th>
-                                        <th className="py-2 px-4">Savings</th>
+                                        <th className="py-2 px-4 min-w-[150px]">Category</th>
+                                        <th className="py-2 px-4 min-w-[150px]">Estimated</th>
+                                        <th className="py-2 px-4 min-w-[150px]">Actual</th>
+                                        <th className="py-2 px-4 min-w-[200px]">Savings</th>
                                     </tr>
                                 </thead>
                                 <tbody>
