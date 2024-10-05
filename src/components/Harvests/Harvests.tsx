@@ -6,13 +6,20 @@ import { useSnackbar } from "notistack";
 import AddHarvestModal from "./AddHarvestModal";
 
 interface HarvestProps {
+    harvestid: string;
     bags: number;
+    unitprice: number;
     amountsold: number;
     notes: string;
+    createdbyusername: string;
+    modifiedbyusername: string;
+    createdon: string;
+    modifiedon: string;
 }
 
 const Harvests: React.FC = () => {
     const [showHarvestModal, setHarvestShowModal] = useState(false);
+    const [selectedHarvest, setSelectedHarvest] = useState<HarvestProps | null>(null);
     const { enqueueSnackbar } = useSnackbar();
     const [harvests, setHarvests] = useState<HarvestProps[]>([]);
 
@@ -34,13 +41,21 @@ const Harvests: React.FC = () => {
         fetchData();
     }, [showHarvestModal]);
 
+    const handleEditHarvest = (harvest: HarvestProps) => {
+        setSelectedHarvest(harvest);
+        setHarvestShowModal(true);
+    };
+
     return (
         <div className="container mx-auto px-4 py-6">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-semibold">All Harvests</h1>
                 <button
                     className="bg-blue-500 text-white px-4 py-2 rounded"
-                    onClick={() => setHarvestShowModal(true)}
+                    onClick={() => {
+                        setSelectedHarvest(null);
+                        setHarvestShowModal(true);
+                    }}
                 >
                     Add Harvest
                 </button>
@@ -50,30 +65,36 @@ const Harvests: React.FC = () => {
                 <table className="min-w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-collapse">
                     <thead>
                         <tr className="border-b dark:border-gray-700">
-                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[100px]">BAGS</th>
-                            <th className="px-4 py-2 text-left text-sm font-semibold">AMOUNT SOLD</th>
-                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[200px]">NOTES</th>
-                            <th className="px-4 py-2 text-left text-sm font-semibold">ACTIONS</th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">BAGS</th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">UNIT PRICE</th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">AMOUNT SOLD</th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[300px]">NOTES</th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[250px]">CREATED ON</th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[250px]">MODIFIED ON</th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">CREATED BY</th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">MODIFIED BY</th>
+                            <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">ACTIONS</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {harvests && harvests.map((harvest, index) => (
+                        {harvests && harvests.map((harvest) => (
                             <HarvestRow
-                                key={index}
-                                bags={harvest.bags}
-                                amountsold={harvest.amountsold}
-                                notes={harvest.notes}
+                                key={harvest.harvestid}
+                                harvest={harvest}
+                                onEdit={() => handleEditHarvest(harvest)}
                             />
                         ))}
                     </tbody>
                 </table>
-                {showHarvestModal && (
-                    <AddHarvestModal
-                        showHarvestModal={showHarvestModal}
-                        setHarvestShowModal={setHarvestShowModal}
-                    />
-                )}
             </div>
+
+            {showHarvestModal && (
+                <AddHarvestModal
+                    showHarvestModal={showHarvestModal}
+                    setHarvestShowModal={setHarvestShowModal}
+                    harvest={selectedHarvest}
+                />
+            )}
         </div>
     );
 };
