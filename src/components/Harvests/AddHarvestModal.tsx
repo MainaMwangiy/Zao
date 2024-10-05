@@ -5,62 +5,81 @@ import utils from "../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 
-const initialValues = {
-    bags: "",
-    unitprice: "",
-    amountsold: "",
-    notes: "",
-    createdbyuserid: "",
-    modifiedbyuserid: ""
-};
-
-const validationSchema = Yup.object({
-    bags: Yup.number().required("Bags is required"),
-    unitprice: Yup.number().required("Unit Price is required"),
-    amountsold: Yup.number().required("Amount Sold is required"),
-    notes: Yup.string(),
-});
-
 interface AddHarvestModalProps {
     showHarvestModal: boolean;
     setHarvestShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-    harvest?: {
-        harvestid?: string;
-        bags: number;
-        unitprice: number;
-        amountsold: number;
-        notes: string;
-    } | null;
+    harvest?: HarvestProps | null;
 }
 
-const AddHarvestModal: React.FC<AddHarvestModalProps> = ({ showHarvestModal, setHarvestShowModal, harvest }) => {
+interface HarvestProps {
+    harvestid: string;
+    bags: number | string;
+    unitprice: number | string;
+    amountsold: number | string;
+    notes: string;
+    createdbyuserid?: string;
+    modifiedbyuserid?: string;
+    createdbyusername?: string;
+    modifiedbyusername?: string;
+    createdon?: string;
+    modifiedon?: string;
+}
+
+const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
+    showHarvestModal,
+    setHarvestShowModal,
+    harvest,
+}) => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const formik = useFormik({
-        initialValues: harvest
-            ? {
-                bags: harvest.bags,
-                unitprice: harvest.unitprice,
-                amountsold: harvest.amountsold,
-                notes: harvest.notes,
-                createdbyuserid: "12",
-                modifiedbyuserid: "12"
-            }
-            : initialValues,
+    // Define the initial values for Formik form
+    const initialValues: HarvestProps = {
+        harvestid: harvest?.harvestid || "",
+        bags: harvest?.bags || "",
+        unitprice: harvest?.unitprice || "",
+        amountsold: harvest?.amountsold || "",
+        notes: harvest?.notes || "",
+        createdbyuserid: harvest?.createdbyuserid || "",
+        modifiedbyuserid: harvest?.modifiedbyuserid || "",
+    };
+
+    // Define the validation schema using Yup
+    const validationSchema = Yup.object({
+        bags: Yup.number().typeError("Bags must be a number").required("Bags is required"),
+        unitprice: Yup.number().typeError("Unit Price must be a number").required("Unit Price is required"),
+        amountsold: Yup.number().typeError("Amount Sold must be a number").required("Amount Sold is required"),
+        notes: Yup.string(),
+    });
+
+    const formik = useFormik<HarvestProps>({
+        initialValues,
         validationSchema,
+        enableReinitialize: true,
         onSubmit: async (values) => {
             try {
-                const url = harvest
-                    ? `${utils.baseUrl}/api/harvests/update/${harvest.harvestid}`
-                    : `${utils.baseUrl}/api/harvests/create`;
+                const clientuserid = localStorage.getItem("clientuserid") || "";
+                let url = "";
+
+                if (!clientuserid) {
+                    enqueueSnackbar("Client user ID is missing.", { variant: "error" });
+                    return;
+                }
+                if (harvest) {
+                    url = `${utils.baseUrl}/api/harvests/update/${harvest.harvestid}`;
+                    values.harvestid = harvest.harvestid;
+                } else {
+                    url = `${utils.baseUrl}/api/harvests/create`;
+                }
+                values.createdbyuserid = clientuserid;
+                values.modifiedbyuserid = clientuserid;
                 await axios.post(url, { values }, {
                     headers: { 'Content-Type': 'application/json' },
                 });
                 enqueueSnackbar(harvest ? "Harvest updated successfully!" : "Harvest added successfully!", { variant: "success" });
+                setHarvestShowModal(false);
             } catch (error) {
                 enqueueSnackbar(harvest ? "Harvest update failed. Please try again." : "Harvest creation failed. Please try again.", { variant: "error" });
             }
-            setHarvestShowModal(false);
         },
     });
 

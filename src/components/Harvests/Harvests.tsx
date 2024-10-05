@@ -15,6 +15,8 @@ interface HarvestProps {
     modifiedbyusername: string;
     createdon: string;
     modifiedon: string;
+    createdbyuserid?: string;
+    modifiedbyuserid?: string;
 }
 
 const Harvests: React.FC = () => {
