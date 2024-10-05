@@ -38,7 +38,7 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md">
-      <img src="https://pbs.twimg.com/media/FxpaknVWAAISdeU.jpg" alt="Project" className="w-full rounded-lg mb-4" onClick={handleOpenTracker} />
+      <img src="https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3" alt="Project" className="w-full rounded-lg mb-4" onClick={handleOpenTracker} />
       <h3 className="mt-2 text-lg font-semibold" onClick={handleOpenTracker}>{title}</h3>
       <p className="text-sm text-gray-600 dark:text-gray-400">Added by: {addedBy}, {location}</p>
       <p>Size {size} acres</p>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ExpenseRow from "./ExpenseRow";
 import utils from "../utils";
 import axios from "axios";
@@ -6,6 +6,8 @@ import { useSnackbar } from "notistack";
 import AddExpenseModal from "./AddExpenseModal";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import Loader from "../common/Loader";
+import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
+import _ from 'lodash';
 
 interface ExpensesProps {
   expensesid: string;
@@ -18,6 +20,10 @@ interface ExpensesProps {
   createdon: string;
   key: string;
   clientuserid: string;
+  createdbyusername: string;
+  modifiedbyusername: string;
+  modifiedon: string;
+  expesesid: string;
 }
 
 const Expenses: React.FC = () => {
@@ -31,6 +37,7 @@ const Expenses: React.FC = () => {
   const [itemsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const totalexpenses = localStorage.getItem('totalexpenses');
 
@@ -43,12 +50,13 @@ const Expenses: React.FC = () => {
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = useCallback(_.debounce(async (searchTerm: string) => {
     try {
       setIsLoading(true);
       const values = {
         page: currentPage,
-        pageSize: itemsPerPage
+        pageSize: itemsPerPage,
+        searchTerm: searchTerm.trim()
       };
       const url = `${utils.baseUrl}/api/expenses/list`;
       const response = await axios.post(url, { values }, {
@@ -63,16 +71,24 @@ const Expenses: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, 300), [currentPage, itemsPerPage]);
 
   useEffect(() => {
-    fetchData();
-  }, [showExpenseModal, currentPage]);
+    fetchData(searchTerm);
+  }, [showExpenseModal, currentPage, searchTerm, fetchData]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    fetchData(e.target.value);
+  };
 
   const handleExportExpenses = async () => {
     try {
-      const url = `${utils.baseUrl}/api/expenses/export`;
-      const response = await axios.get(url, {
+      const url = `${utils.baseUrl}/api/expenses/list`;
+      const params = {
+        isExport: true,
+      };
+      const response = await axios.post(url, params, {
         responseType: 'blob'
       });
       const currentDate = new Date().toISOString().split('T')[0];
@@ -163,34 +179,37 @@ const Expenses: React.FC = () => {
         <Loader />
       ) : (
         <>
-          <div className="flex flex-col md:flex-row items-center w-full md:w-auto md:space-x-4 space-y-4 md:space-y-0 mb-4">
-            <div className="flex items-center bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-2 rounded-lg shadow-md w-full md:w-auto">
-              <p className="font-semibold text-lg mr-2">Total Expenses:</p>
-              <p className="font-bold text-xl text-red-600 dark:text-red-400">KES {totalexpenses} </p>
+          <div className="flex flex-row items-center w-full space-x-2 mb-4">
+            <div className="flex items-center bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-1 rounded-lg shadow-md">
+              <p className="font-semibold text-base mr-2">Total Expenses:</p>
+              <p className="font-bold text-lg text-red-600 dark:text-red-400">KES {totalexpenses}</p>
             </div>
 
             <button
-              className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+              className="bg-blue-600 hover:bg-blue-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
               onClick={() => {
                 setSelectedExpense(null);
                 setExpenseShowModal(true);
               }}
             >
-              Add Expense
+              <AiOutlinePlus className="text-lg md:mr-1" />
+              <span className="hidden md:inline text-sm">Add Expense</span>
             </button>
 
             <button
-              className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+              className="bg-green-600 hover:bg-green-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
               onClick={handleImportExpenses}
             >
-              Import Expenses
+              <AiOutlineUpload className="text-lg md:mr-1" />
+              <span className="hidden md:inline text-sm">Import Expenses</span>
             </button>
 
             <button
-              className="bg-gray-300 hover:bg-gray-400 transition text-black px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+              className="bg-gray-300 hover:bg-gray-400 transition text-black px-3 py-2 rounded-lg shadow-md flex items-center"
               onClick={handleExportExpenses}
             >
-              Export
+              <AiOutlineDownload className="text-lg md:mr-1" />
+              <span className="hidden md:inline text-sm">Export</span>
             </button>
           </div>
 
@@ -198,6 +217,8 @@ const Expenses: React.FC = () => {
             <input
               type="text"
               placeholder="Search for expenses"
+              value={searchTerm}
+              onChange={handleSearchChange}
               className="w-full px-4 py-2 border rounded dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
             />
           </div>
@@ -207,10 +228,13 @@ const Expenses: React.FC = () => {
                 <tr className="border-b dark:border-gray-700">
                   <th className="px-4 py-2 text-left text-sm font-semibold min-w-[200px]">NAME</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold min-w-[100px]">AMOUNT</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold">PAIDBY</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold">PAID BY</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold">STATUS</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold min-w-[250px]">NOTES</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">CREATED ON</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">MODIFIED ON</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold min-w-[100px]">CREATED BY</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold min-w-[100px]">MODIFIED BY</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold">ACTIONS</th>
                 </tr>
               </thead>
@@ -225,6 +249,9 @@ const Expenses: React.FC = () => {
                     notes={expense.notes}
                     paidby={expense.clientusername}
                     createdon={expense.createdon}
+                    modifiedon={expense.modifiedon}
+                    createdbyusername={expense.createdbyusername}
+                    modifiedbyusername={expense.modifiedbyusername}
                     onEdit={() => handleEditExpense(expense)}
                     onDelete={() => handleDeleteExpense(expense.expensesid)}
                   />
@@ -244,7 +271,7 @@ const Expenses: React.FC = () => {
               </button>
             </div>
             <span className="text-gray-600 font-medium">
-              Page {currentPage} of {Math.ceil(totalItems / itemsPerPage)}
+              Page {`${currentPage} - ${Math.ceil(totalItems / itemsPerPage)}`} of {totalItems}
             </span>
             <div>
               <button

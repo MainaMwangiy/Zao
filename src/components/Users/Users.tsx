@@ -5,6 +5,7 @@ import utils from "../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import Loader from "../common/Loader";
+import { AiOutlineDownload, AiOutlinePlus } from "react-icons/ai";
 
 interface UsersProps {
   name: string;
@@ -43,24 +44,24 @@ const Users: React.FC = () => {
 
   return (
     <div className="container mx-auto px-2 py-6">
-      <div className="flex flex-col md:flex-row items-center justify-between w-full mb-4 space-y-4 md:space-y-0">
+      <div className="flex flex-row items-center w-full space-x-2 mb-4">
         <h1 className="text-2xl font-semibold w-full md:w-auto text-center md:text-left">All Users</h1>
-        <div className="flex flex-col md:flex-row items-center w-full md:w-auto md:space-x-4 space-y-4 md:space-y-0">
-          <button
-            className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
-            onClick={() => setShowModal(true)}
-          >
-            Add User
-          </button>
-          <button
-            className="bg-gray-300 hover:bg-gray-400 transition text-black px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
-          >
-            Export
-          </button>
-        </div>
+        <button
+          className="bg-blue-600 hover:bg-blue-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
+          onClick={() => setShowModal(true)}
+        >
+          <AiOutlinePlus className="text-lg md:mr-1" />
+          <span className="hidden md:inline text-sm">Add User</span>
+        </button>
+        <button
+          className="bg-gray-300 hover:bg-gray-400 transition text-black px-3 py-2 rounded-lg shadow-md flex items-center"
+        >
+          <AiOutlineDownload className="text-lg md:mr-1" />
+          <span className="hidden md:inline text-sm">Export</span>
+        </button>
       </div>
 
-      <div className="relative mb-4">
+      <div className="relative mb-4 w-full">
         <input
           type="text"
           placeholder="Search for users"

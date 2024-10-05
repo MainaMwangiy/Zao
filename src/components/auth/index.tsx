@@ -30,16 +30,22 @@ const Login: React.FC = () => {
     onSubmit: async (values) => {
       try {
         const url = `${utils.baseUrl}/api/auth/login`;
-        const response = await axios.post(url, { email: values.email, password: values.password }, {
+        const response = await axios.post(url, {
+          email: values.email,
+          password: values.password,
+          rememberMe: values.rememberMe,
+        }, {
           headers: { 'Content-Type': 'application/json' },
         });
         const token = response.data.token;
         enqueueSnackbar("Login successful!", { variant: "success" });
-        localStorage.setItem('clientuserid', response?.data?.clientuserid);
-        localStorage.setItem('clientuser', JSON.stringify(response?.data));
         if (values.rememberMe) {
           localStorage.setItem('token', token);
+        } else {
+          sessionStorage.setItem('token', token);
         }
+        localStorage.setItem('clientuserid', response?.data?.clientuserid);
+        localStorage.setItem('clientuser', JSON.stringify(response?.data));
         navigate('/dashboard');
       } catch (error) {
         enqueueSnackbar("Login failed. Please try again.", { variant: "error" });
