@@ -6,6 +6,7 @@ import { useSnackbar } from "notistack";
 import AddExpenseModal from "./AddExpenseModal";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import Loader from "../common/Loader";
+import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
 
 interface ExpensesProps {
   expensesid: string;
@@ -167,34 +168,37 @@ const Expenses: React.FC = () => {
         <Loader />
       ) : (
         <>
-          <div className="flex flex-col md:flex-row items-center w-full md:w-auto md:space-x-4 space-y-4 md:space-y-0 mb-4">
-            <div className="flex items-center bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-2 rounded-lg shadow-md w-full md:w-auto">
-              <p className="font-semibold text-lg mr-2">Total Expenses:</p>
-              <p className="font-bold text-xl text-red-600 dark:text-red-400">KES {totalexpenses} </p>
+          <div className="flex flex-row items-center w-full space-x-2 mb-4">
+            <div className="flex items-center bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-1 rounded-lg shadow-md">
+              <p className="font-semibold text-base mr-2">Total Expenses:</p>
+              <p className="font-bold text-lg text-red-600 dark:text-red-400">KES {totalexpenses}</p>
             </div>
 
             <button
-              className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+              className="bg-blue-600 hover:bg-blue-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
               onClick={() => {
                 setSelectedExpense(null);
                 setExpenseShowModal(true);
               }}
             >
-              Add Expense
+              <AiOutlinePlus className="text-lg md:mr-1" />
+              <span className="hidden md:inline text-sm">Add Expense</span>
             </button>
 
             <button
-              className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+              className="bg-green-600 hover:bg-green-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
               onClick={handleImportExpenses}
             >
-              Import Expenses
+              <AiOutlineUpload className="text-lg md:mr-1" />
+              <span className="hidden md:inline text-sm">Import Expenses</span>
             </button>
 
             <button
-              className="bg-gray-300 hover:bg-gray-400 transition text-black px-6 py-2 rounded-lg w-full md:w-auto shadow-md"
+              className="bg-gray-300 hover:bg-gray-400 transition text-black px-3 py-2 rounded-lg shadow-md flex items-center"
               onClick={handleExportExpenses}
             >
-              Export
+              <AiOutlineDownload className="text-lg md:mr-1" />
+              <span className="hidden md:inline text-sm">Export</span>
             </button>
           </div>
 
