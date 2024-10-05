@@ -91,12 +91,12 @@ const Gallery: React.FC = () => {
         }
     };
 
-    return (<div className="container mx-auto px-2 py-6">
+    return (<div className="container mx-auto px-2 py-1">
         {isLoading ? (
             <Loader />
         ) : (
             <>
-                <div className="p-4 max-w-5xl mx-auto mt-10 space-y-8">
+                <div className="p-1 max-w-5xl mx-auto mt-1 space-y-8">
                     {/* Gallery Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {blobs.length > 0 && blobs.map((blob, index) => (
