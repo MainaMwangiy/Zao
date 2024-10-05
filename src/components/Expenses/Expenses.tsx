@@ -18,6 +18,10 @@ interface ExpensesProps {
   createdon: string;
   key: string;
   clientuserid: string;
+  createdbyusername: string;
+  modifiedbyusername: string;
+  modifiedon: string;
+  expesesid: string;
 }
 
 const Expenses: React.FC = () => {
@@ -207,10 +211,13 @@ const Expenses: React.FC = () => {
                 <tr className="border-b dark:border-gray-700">
                   <th className="px-4 py-2 text-left text-sm font-semibold min-w-[200px]">NAME</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold min-w-[100px]">AMOUNT</th>
-                  <th className="px-4 py-2 text-left text-sm font-semibold">PAIDBY</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold">PAID BY</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold">STATUS</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold min-w-[250px]">NOTES</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">CREATED ON</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold min-w-[150px]">MODIFIED ON</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold min-w-[100px]">CREATED BY</th>
+                  <th className="px-4 py-2 text-left text-sm font-semibold min-w-[100px]">MODIFIED BY</th>
                   <th className="px-4 py-2 text-left text-sm font-semibold">ACTIONS</th>
                 </tr>
               </thead>
@@ -225,6 +232,9 @@ const Expenses: React.FC = () => {
                     notes={expense.notes}
                     paidby={expense.clientusername}
                     createdon={expense.createdon}
+                    modifiedon={expense.modifiedon}
+                    createdbyusername={expense.createdbyusername}
+                    modifiedbyusername={expense.modifiedbyusername}
                     onEdit={() => handleEditExpense(expense)}
                     onDelete={() => handleDeleteExpense(expense.expensesid)}
                   />

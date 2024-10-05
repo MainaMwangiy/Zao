@@ -1,3 +1,4 @@
+import React from "react";
 import dayjs from "dayjs";
 
 interface ExpenseRowProps {
@@ -8,11 +9,26 @@ interface ExpenseRowProps {
     notes: string;
     paidby: string;
     createdon: string;
+    modifiedon: string;
+    createdbyusername: string;
+    modifiedbyusername: string;
     onEdit: () => void;
     onDelete: () => void;
 }
 
-const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes, paidby, createdon, onEdit, onDelete }) => {
+const ExpenseRow: React.FC<ExpenseRowProps> = ({
+    name,
+    amount,
+    status,
+    notes,
+    paidby,
+    createdon,
+    modifiedon,
+    createdbyusername,
+    modifiedbyusername,
+    onEdit,
+    onDelete,
+}) => {
     return (
         <tr className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
             <td className="px-4 py-4">
@@ -37,6 +53,15 @@ const ExpenseRow: React.FC<ExpenseRowProps> = ({ name, amount, status, notes, pa
             </td>
             <td className="px-4 py-4">
                 <p>{dayjs(createdon).format('DD-MMM-YYYY')}</p>
+            </td>
+            <td className="px-4 py-4">
+                <p>{dayjs(modifiedon).format('DD-MMM-YYYY')}</p>
+            </td>
+            <td className="px-4 py-4">
+                <p>{createdbyusername}</p>
+            </td>
+            <td className="px-4 py-4">
+                <p>{modifiedbyusername}</p>
             </td>
             <td className="px-4 py-4 flex space-x-2">
                 <button onClick={onEdit} className="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>

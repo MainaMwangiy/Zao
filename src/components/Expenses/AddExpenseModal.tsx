@@ -19,6 +19,7 @@ interface ExpenseProps {
     expensesid: string;
     clientuserid: string;
     clientusername: string;
+    expesesid: string;
 }
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
@@ -31,6 +32,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 
     // Define the initial values for Formik form
     const initialValues: ExpenseProps = {
+        expesesid: expense?.expesesid || "",
         name: expense?.name || "",
         amount: expense?.amount || "",
         status: expense?.status || "",
@@ -56,15 +58,24 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         onSubmit: async (values) => {
             try {
                 const clientuserid = localStorage.getItem('clientuserid') || "";
-                values.clientuserid = clientuserid;
+                let url = '';
                 if (!clientuserid) {
                     enqueueSnackbar("Client user ID is missing.", { variant: "error" });
                     return;
                 }
-                const url = expense
-                    ? `${utils.baseUrl}/api/expenses/update/${expense.expensesid}`
-                    : `${utils.baseUrl}/api/expenses/create`;
-                await axios.post(url, { values }, {
+                if (expense) {
+                    url = `${utils.baseUrl}/api/expenses/update/${expense.expensesid}`;
+                    values.expesesid = expense.expensesid;
+                } else {
+                    url = `${utils.baseUrl}/api/expenses/create`;
+                }
+                values.clientuserid = clientuserid;
+                const data = {
+                    ...values,
+                    createdbyuserid: clientuserid,
+                    modifiedbyuserid: clientuserid
+                };
+                await axios.post(url, { values: data }, {
                     headers: { 'Content-Type': 'application/json' },
                 });
                 enqueueSnackbar(
@@ -77,10 +88,9 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             }
         },
     });
-    console.log("alues", formik.values)
+
     return (
         <div>
-            {/* Modal */}
             {showExpenseModal && (
                 <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg p-6 relative">
@@ -88,7 +98,6 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                             {expense ? "Edit Expense" : "Add New Expense"}
                         </h2>
 
-                        {/* Form */}
                         <form onSubmit={formik.handleSubmit}>
                             <div className="grid grid-cols-1 gap-4 mb-4">
                                 <div>
@@ -159,16 +168,14 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                                             const selectedUser = clientUsers.find(
                                                 (user) => user.lookupid === selectedUserId
                                             );
-                                            console.log("selectedUserId", selectedUserId)
-                                            console.log("selectedUser", selectedUser)
-                                            formik.setFieldValue("clientusername", selectedUserId);
+                                            formik.setFieldValue("clientusername", selectedUser?.displayValue || "");
                                             formik.setFieldValue("clientuserid", localStorage.getItem('clientuserid') || "");
                                         }}
                                         onBlur={formik.handleBlur}
                                     >
                                         <option value="">Select Paid By</option>
                                         {clientUsers.map((user) => (
-                                            <option key={user.lookupid} value={user.displayValue}>
+                                            <option key={user.lookupid} value={user.lookupid}>
                                                 {user.displayValue}
                                             </option>
                                         ))}
