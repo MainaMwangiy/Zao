@@ -21,11 +21,14 @@ const Users: React.FC = () => {
   const [users, setUsers] = useState<UsersProps[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
+  const clientusers = localStorage.getItem('clientuser') || '';
+  const roles = JSON.parse(clientusers);
 
   const fetchData = async () => {
     try {
       const values = {
-        clientorganizationid: clientorganizationid
+        clientorganizationid: clientorganizationid,
+        roleid: roles?.roleid
       }
       setIsLoading(true);
       const url = `${utils.baseUrl}/api/auth/list`;
