@@ -24,6 +24,7 @@ interface ExpensesProps {
   modifiedbyusername: string;
   modifiedon: string;
   expesesid: string;
+  clientorganizationid: string;
 }
 
 const Expenses: React.FC = () => {
@@ -53,16 +54,18 @@ const Expenses: React.FC = () => {
   const fetchData = useCallback(_.debounce(async (searchTerm: string) => {
     try {
       setIsLoading(true);
+      const clientorganizationid = localStorage.getItem('clientorganizationid') || ""; 
       const values = {
         page: currentPage,
         pageSize: itemsPerPage,
-        searchTerm: searchTerm.trim()
+        searchTerm: searchTerm.trim(),
+        clientorganizationid  
       };
       const url = `${utils.baseUrl}/api/expenses/list`;
       const response = await axios.post(url, { values }, {
         headers: { 'Content-Type': 'application/json' },
       });
-
+  
       setExpenses(response.data.data);
       setTotalItems(response.data.totalItems);
       localStorage.setItem('expenses', JSON.stringify(response?.data.data));
@@ -71,7 +74,7 @@ const Expenses: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, 300), [currentPage, itemsPerPage]);
+  }, 300), [currentPage, itemsPerPage]);  
 
   useEffect(() => {
     fetchData(searchTerm);
@@ -157,9 +160,13 @@ const Expenses: React.FC = () => {
 
   const confirmDeleteExpense = async () => {
     if (deleteExpenseId) {
+      const clientorganizationid = localStorage.getItem('clientorganizationid');
       try {
         const url = `${utils.baseUrl}/api/expenses/delete/${deleteExpenseId}`;
-        await axios.post(url, { expensesid: deleteExpenseId }, {
+        await axios.post(url, {
+          expensesid: deleteExpenseId,
+          clientorganizationid: clientorganizationid 
+        }, {
           headers: { 'Content-Type': 'application/json' },
         });
         enqueueSnackbar("Expense deleted successfully.", { variant: "success" });
@@ -171,7 +178,7 @@ const Expenses: React.FC = () => {
         setDeleteExpenseId(null);
       }
     }
-  };
+  };  
 
   return (
     <div className="container mx-auto px-2 py-6">

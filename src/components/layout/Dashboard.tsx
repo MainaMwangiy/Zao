@@ -32,6 +32,7 @@ const Dashboard: React.FC = () => {
   const [isExpensesVisible, setIsExpensesVisible] = useState<boolean>(false);
   const [isEarningsVisible, setIsEarningsVisible] = useState<boolean>(false);
   const navigate = useNavigate();
+  const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 
   const toggleExpensesVisibility = () => {
     setIsExpensesVisible(!isExpensesVisible);
@@ -61,8 +62,11 @@ const Dashboard: React.FC = () => {
   }
   const fetchTotalExpenses = async () => {
     try {
+      const values = {
+        clientorganizationid: clientorganizationid
+      }
       const url = `${utils.baseUrl}/api/expenses/total`;
-      const response = await axios.post(url, {
+      const response = await axios.post(url, { values }, {
         headers: { 'Content-Type': 'application/json' },
       });
       const projects = response.data.data[0].totalexpenses;

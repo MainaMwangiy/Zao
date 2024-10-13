@@ -74,6 +74,7 @@ const Login: React.FC = () => {
         }
         localStorage.setItem('clientuserid', response?.data?.clientuserid);
         localStorage.setItem('clientuser', JSON.stringify(response?.data));
+        localStorage.setItem('clientorganizationid', `${values.clientorganizationid}`);
         navigate('/dashboard');
       } catch (error) {
         enqueueSnackbar("Login failed. Please try again.", { variant: "error" });
