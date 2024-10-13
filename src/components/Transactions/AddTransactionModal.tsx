@@ -10,7 +10,8 @@ const initialValues = {
     amount: "",
     notes: "",
     clientuserid: "",
-    recipientuserid: ""
+    recipientuserid: "",
+    clientorganizationid: ""
 };
 
 const validationSchema = Yup.object({
@@ -28,16 +29,26 @@ interface User {
     clientuserid: number;
     name: string;
     email: string;
+    clientorganizationid: string;
 }
 
 const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransactionModal, setTransactionShowModal }) => {
     const { enqueueSnackbar } = useSnackbar();
     const [users, setUsers] = useState<User[]>([]);
+    const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
+    const clientusers = localStorage.getItem('clientuser') || '';
+    const roles = JSON.parse(clientusers);
 
     const fetchData = async () => {
         try {
+            const values = {
+                clientorganizationid: clientOrganizationId,
+                roleid: roles?.roleid
+            }
             const url = `${utils.baseUrl}/api/auth/list-strict`;
-            const response = await axios.get(url);
+            const response = await axios.post(url, { values }, {
+                headers: { 'Content-Type': 'application/json' },
+            });
             const users = response.data.data;
             localStorage.setItem('users', users)
             setUsers(users);
@@ -57,6 +68,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
             try {
                 const clientuserid = localStorage.getItem('clientuserid') || "";
                 values.clientuserid = clientuserid;
+                values.clientorganizationid = clientOrganizationId;
                 if (!clientuserid) {
                     enqueueSnackbar("Client user ID is missing.", { variant: "error" });
                     return;
