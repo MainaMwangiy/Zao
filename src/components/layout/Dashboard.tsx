@@ -81,8 +81,11 @@ const Dashboard: React.FC = () => {
 
   const fetchTotalEarningsFromHarvest = async () => {
     try {
+      const values = {
+        clientorganizationid: clientorganizationid
+      }
       const url = `${utils.baseUrl}/api/harvests/totalharvestearnings`;
-      const response = await axios.post(url, {
+      const response = await axios.post(url, { values }, {
         headers: { 'Content-Type': 'application/json' },
       });
       const projects = response.data.data[0].totalharvests;

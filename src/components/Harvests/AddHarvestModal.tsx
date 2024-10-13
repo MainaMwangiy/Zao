@@ -23,6 +23,7 @@ interface HarvestProps {
     modifiedbyusername?: string;
     createdon?: string;
     modifiedon?: string;
+    clientorganizationid: string;
 }
 
 const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
@@ -41,6 +42,7 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
         notes: harvest?.notes || "",
         createdbyuserid: harvest?.createdbyuserid || "",
         modifiedbyuserid: harvest?.modifiedbyuserid || "",
+        clientorganizationid: harvest?.clientorganizationid || ""
     };
 
     // Define the validation schema using Yup
@@ -58,6 +60,7 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
         onSubmit: async (values) => {
             try {
                 const clientuserid = localStorage.getItem("clientuserid") || "";
+                const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
                 let url = "";
 
                 if (!clientuserid) {
@@ -72,6 +75,7 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
                 }
                 values.createdbyuserid = clientuserid;
                 values.modifiedbyuserid = clientuserid;
+                values.clientorganizationid = clientOrganizationId;
                 await axios.post(url, { values }, {
                     headers: { 'Content-Type': 'application/json' },
                 });

@@ -19,6 +19,7 @@ interface HarvestProps {
     modifiedon: string;
     createdbyuserid?: string;
     modifiedbyuserid?: string;
+    clientorganizationid: string;
 }
 
 const Harvests: React.FC = () => {
@@ -31,8 +32,12 @@ const Harvests: React.FC = () => {
     const fetchData = async () => {
         try {
             setIsLoading(true);
+            const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
+            const values = {
+                clientorganizationid
+            };
             const url = `${utils.baseUrl}/api/harvests/list`;
-            const response = await axios.post(url, {
+            const response = await axios.post(url, { values }, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const harvestData = response.data.data;
