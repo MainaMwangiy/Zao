@@ -48,13 +48,15 @@ const Dashboard: React.FC = () => {
 
   const fetchData = async () => {
     try {
+      const values = {
+        clientorganizationid: clientorganizationid
+      }
       const url = `${utils.baseUrl}/api/projects/list`;
-      const response = await axios.post(url, {
+      const response = await axios.post(url, { values }, {
         headers: { 'Content-Type': 'application/json' },
       });
       const projects = response.data.data;
       setProjects(projects)
-      // enqueueSnackbar("Users Loading successful!", { variant: "success" });
       localStorage.setItem('projects', JSON.stringify(projects));
     } catch (error) {
       enqueueSnackbar("User Loading Failed. Please try again.", { variant: "error" });
