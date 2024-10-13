@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FcGoogle } from "react-icons/fc";
@@ -10,16 +10,42 @@ import { useNavigate } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { useSnackbar } from "notistack";
 
+interface LoginProps {
+  email: string;
+  password: string;
+  clientorganizationid: string;
+  name: string;
+}
+
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const [clientorgs, setClientOrgs] = useState<LoginProps[]>([]);
+
+  const fetchData = async () => {
+    try {
+      const url = `${utils.baseUrl}/api/clientorganizations/list`;
+      const response = await axios.post(url, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const clientorgs = response.data.data;
+      setClientOrgs(clientorgs)
+    } catch (error) {
+      enqueueSnackbar("User Loading Failed. Please try again.", { variant: "error" });
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [])
 
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
       rememberMe: false,
+      clientorganizationid: 0
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -34,6 +60,7 @@ const Login: React.FC = () => {
           email: values.email,
           password: values.password,
           rememberMe: values.rememberMe,
+          clientorganizationid: values.clientorganizationid
         }, {
           headers: { 'Content-Type': 'application/json' },
         });
@@ -116,7 +143,29 @@ const Login: React.FC = () => {
                 </div>
               ) : null}
             </div>
-
+            {/* Client Organization Dropdown */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Select Organization
+              </label>
+              <select
+                name="clientorganizationid"
+                className="w-full px-4 py-2 mt-1 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                value={formik.values.clientorganizationid}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              >
+                <option value="">Select an organization</option>
+                {clientorgs.map(org => (
+                  <option key={org.clientorganizationid} value={org.clientorganizationid}>
+                    {org.name}
+                  </option>
+                ))}
+              </select>
+              {formik.touched.clientorganizationid && formik.errors.clientorganizationid && (
+                <div className="text-red-500 text-sm">{formik.errors.clientorganizationid}</div>
+              )}
+            </div>
             {/* Remember Me and Forgot Password */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
