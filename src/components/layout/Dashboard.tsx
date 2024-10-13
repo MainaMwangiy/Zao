@@ -15,6 +15,7 @@ interface ProjectsProps {
   projectplan: boolean;
   imagesurl: string;
   projectid: string;
+  roleid: number;
 }
 
 interface ClientUser {
@@ -32,6 +33,9 @@ const Dashboard: React.FC = () => {
   const [isExpensesVisible, setIsExpensesVisible] = useState<boolean>(false);
   const [isEarningsVisible, setIsEarningsVisible] = useState<boolean>(false);
   const navigate = useNavigate();
+  const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
+  const clientusers = localStorage.getItem('clientuser') || '';
+  const roles = JSON.parse(clientusers);
 
   const toggleExpensesVisibility = () => {
     setIsExpensesVisible(!isExpensesVisible);
@@ -47,13 +51,15 @@ const Dashboard: React.FC = () => {
 
   const fetchData = async () => {
     try {
+      const values = {
+        clientorganizationid: clientorganizationid
+      }
       const url = `${utils.baseUrl}/api/projects/list`;
-      const response = await axios.post(url, {
+      const response = await axios.post(url, { values }, {
         headers: { 'Content-Type': 'application/json' },
       });
       const projects = response.data.data;
       setProjects(projects)
-      // enqueueSnackbar("Users Loading successful!", { variant: "success" });
       localStorage.setItem('projects', JSON.stringify(projects));
     } catch (error) {
       enqueueSnackbar("User Loading Failed. Please try again.", { variant: "error" });
@@ -61,8 +67,11 @@ const Dashboard: React.FC = () => {
   }
   const fetchTotalExpenses = async () => {
     try {
+      const values = {
+        clientorganizationid: clientorganizationid
+      }
       const url = `${utils.baseUrl}/api/expenses/total`;
-      const response = await axios.post(url, {
+      const response = await axios.post(url, { values }, {
         headers: { 'Content-Type': 'application/json' },
       });
       const projects = response.data.data[0].totalexpenses;
@@ -75,8 +84,11 @@ const Dashboard: React.FC = () => {
 
   const fetchTotalEarningsFromHarvest = async () => {
     try {
+      const values = {
+        clientorganizationid: clientorganizationid
+      }
       const url = `${utils.baseUrl}/api/harvests/totalharvestearnings`;
-      const response = await axios.post(url, {
+      const response = await axios.post(url, { values }, {
         headers: { 'Content-Type': 'application/json' },
       });
       const projects = response.data.data[0].totalharvests;
@@ -87,8 +99,14 @@ const Dashboard: React.FC = () => {
   }
   const fetchUsersData = async () => {
     try {
+      const values = {
+        clientorganizationid: clientorganizationid,
+        roleid: roles?.roleid
+      }
       const url = `${utils.baseUrl}/api/auth/list-strict`;
-      const response = await axios.get(url);
+      const response = await axios.post(url, { values }, {
+        headers: { 'Content-Type': 'application/json' }
+      });
       const users = response.data.data;
       localStorage.setItem('users', JSON.stringify(users))
     } catch (error) {

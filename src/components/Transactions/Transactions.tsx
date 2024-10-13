@@ -19,12 +19,16 @@ const Transactions: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [transactions, setTransactions] = useState<TransactionProps[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 
     const fetchData = async () => {
         try {
+            const values = {
+                clientorganizationid
+            };
             setIsLoading(true);
             const url = `${utils.baseUrl}/api/transactions/list`;
-            const response = await axios.post(url, {
+            const response = await axios.post(url, { values }, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const transactionData = response.data.data;

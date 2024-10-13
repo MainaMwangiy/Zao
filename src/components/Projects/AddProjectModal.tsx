@@ -5,6 +5,15 @@ import utils from "../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 
+interface ProjectProps {
+    name: string;
+    location: string;
+    size: string;
+    status: string;
+    projectplan: string;
+    clientorganizationid: string;
+}
+
 // Define the initial values for Formik form
 const initialValues = {
     name: "",
@@ -12,6 +21,7 @@ const initialValues = {
     size: "",
     status: "",
     projectplan: "",
+    clientorganizationid: ""
 };
 
 // Define the validation schema using Yup
@@ -31,19 +41,18 @@ interface AddProjectModalProps {
 const AddProjectModal: React.FC<AddProjectModalProps> = ({ showProjectseModal, setProjectshowModal }) => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const formik = useFormik<{
-        name: string;
-        location: string;
-        size: string;
-        status: string;
-        projectplan: string;
-    }>({
+    const formik = useFormik<ProjectProps>({
         initialValues,
         validationSchema,
         onSubmit: async (values) => {
             try {
+                const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
+                const data = {
+                    ...values,
+                    clientorganizationid: clientOrganizationId
+                };
                 const url = `${utils.baseUrl}/api/projects/create`;
-                await axios.post(url, { values }, {
+                await axios.post(url, { values: data }, {
                     headers: { 'Content-Type': 'application/json' },
                 });
                 enqueueSnackbar("Project added successfully!", { variant: "success" });

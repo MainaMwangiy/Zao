@@ -20,12 +20,16 @@ const Users: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [users, setUsers] = useState<UsersProps[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 
   const fetchData = async () => {
     try {
+      const values = {
+        clientorganizationid: clientorganizationid
+      }
       setIsLoading(true);
       const url = `${utils.baseUrl}/api/auth/list`;
-      const response = await axios.post(url, {
+      const response = await axios.post(url, { values }, {
         headers: { 'Content-Type': 'application/json' },
       });
       const user = response.data.data;

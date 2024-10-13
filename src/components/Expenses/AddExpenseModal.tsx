@@ -20,6 +20,7 @@ interface ExpenseProps {
     clientuserid: string;
     clientusername: string;
     expesesid: string;
+    clientorganizationid: string;
 }
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
@@ -39,7 +40,8 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         notes: expense?.notes || "",
         expensesid: expense?.expensesid || "",
         clientuserid: expense?.clientuserid || "",
-        clientusername: expense?.clientusername || ""
+        clientusername: expense?.clientusername || "",
+        clientorganizationid: expense?.clientorganizationid || ""
     };
 
     // Define the validation schema using Yup
@@ -58,6 +60,8 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         onSubmit: async (values) => {
             try {
                 const clientuserid = localStorage.getItem('clientuserid') || "";
+                const clientOrganizationId = localStorage.getItem('clientorganizationid') || ""; 
+
                 let url = '';
                 if (!clientuserid) {
                     enqueueSnackbar("Client user ID is missing.", { variant: "error" });
@@ -72,6 +76,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 values.clientuserid = clientuserid;
                 const data = {
                     ...values,
+                    clientorganizationid: clientOrganizationId,
                     createdbyuserid: clientuserid,
                     modifiedbyuserid: clientuserid
                 };
