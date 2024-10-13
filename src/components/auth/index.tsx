@@ -30,6 +30,7 @@ const Login: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
       });
       const clientorgs = response.data.data;
+      localStorage.setItem('clientorganizations', JSON.stringify(clientorgs))
       setClientOrgs(clientorgs)
     } catch (error) {
       enqueueSnackbar("User Loading Failed. Please try again.", { variant: "error" });

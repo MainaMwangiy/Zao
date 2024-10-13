@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import utils from "../utils";
@@ -16,8 +16,14 @@ const initialValues = {
   status: "",
   role: 0,
   password: "",
-  roleid: 0
+  roleid: 0,
+  clientorganizationid: ""
 };
+interface AuthProps {
+  clientorganizationid: string;
+  name: string;
+}
+
 
 // Define the validation schema using Yup
 const validationSchema = Yup.object({
@@ -27,6 +33,7 @@ const validationSchema = Yup.object({
   status: Yup.string().required("Status is required"),
   role: Yup.string().required("Role is required"),
   password: Yup.string().required("Password is required"),
+  clientorganizationid: Yup.string().required("Client Organization is required")
 });
 
 interface AddUserModalProps {
@@ -38,6 +45,14 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
   const [showPassword, setShowPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const [clientOrganizations, setClientOrganizations] = useState<AuthProps[]>([]);
+
+  useEffect(() => {
+    const orgs = localStorage.getItem('clientorganizations');
+    if (orgs) {
+      setClientOrganizations(JSON.parse(orgs));
+    }
+  }, []);
 
   const formik = useFormik<{
     name: string;
@@ -48,6 +63,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
     role: string | number;
     password: string;
     roleid: number;
+    clientorganizationid: string;
   }>({
     initialValues,
     validationSchema,
@@ -217,6 +233,29 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
                     </div>
                   ) : null}
                 </div>
+                 {/* Client Organization Dropdown */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Select Organization
+                </label>
+                <select
+                  name="clientorganizationid"
+                  className="w-full px-4 py-2 mt-1 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                  value={formik.values.clientorganizationid}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                >
+                  <option value="">Select an organization</option>
+                  {clientOrganizations?.map((org) => (
+                    <option key={org.clientorganizationid} value={org.clientorganizationid}>
+                      {org.name}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.clientorganizationid && formik.errors.clientorganizationid && (
+                  <div className="text-red-500 text-sm">{formik.errors.clientorganizationid}</div>
+                )}
+              </div>
               </div>
 
               <div className="flex justify-end">
