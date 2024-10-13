@@ -15,6 +15,7 @@ interface ProjectsProps {
   projectplan: boolean;
   imagesurl: string;
   projectid: string;
+  roleid: number;
 }
 
 interface ClientUser {
@@ -33,6 +34,8 @@ const Dashboard: React.FC = () => {
   const [isEarningsVisible, setIsEarningsVisible] = useState<boolean>(false);
   const navigate = useNavigate();
   const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
+  const clientusers = localStorage.getItem('clientuser') || '';
+  const roles = JSON.parse(clientusers);
 
   const toggleExpensesVisibility = () => {
     setIsExpensesVisible(!isExpensesVisible);
@@ -96,8 +99,14 @@ const Dashboard: React.FC = () => {
   }
   const fetchUsersData = async () => {
     try {
+      const values = {
+        clientorganizationid: clientorganizationid,
+        roleid: roles?.roleid
+      }
       const url = `${utils.baseUrl}/api/auth/list-strict`;
-      const response = await axios.get(url);
+      const response = await axios.post(url, { values }, {
+        headers: { 'Content-Type': 'application/json' }
+      });
       const users = response.data.data;
       localStorage.setItem('users', JSON.stringify(users))
     } catch (error) {
