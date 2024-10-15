@@ -29,55 +29,15 @@ type ImageUploadResponse = {
         url: string;
     };
 };
-interface Organization {
-    clientorganizationid: number;
-    name: string;
-    appconfig: {
-        dateFormat?: string;
-    };
-    createdon: string;
-    createdbyuserid: number;
-    modifiedon: string;
-    modifiedbyuserid: number;
-    isdeleted: number;
-}
+
 
 const Gallery: React.FC = () => {
     const [blobs, setBlobs] = useState<BlobItem[]>([]);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const { enqueueSnackbar } = useSnackbar();
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const clientOrganizationsString = localStorage.getItem('clientorganizations');
-    const Orgs: Organization[] = clientOrganizationsString ? JSON.parse(clientOrganizationsString) : [];
-    const clientOrganizationIdString = localStorage.getItem('clientorganizationid') || "";
-    const OrgId = clientOrganizationIdString ? parseInt(JSON.parse(clientOrganizationIdString)) : null;
-    let clientConfig = {};
-    for (const org of Orgs) {
-        if (org.clientorganizationid === OrgId) {
-            clientConfig = org.appconfig;
-        }
-    }
+    const gallery = localStorage.getItem("gallery");
+    const images: BlobItem[] = gallery ? JSON.parse(gallery) : [];
 
-    const fetchImages = async () => {
-        try {
-            const values = {
-                clientConfig: clientConfig
-            }
-            setIsLoading(true);
-            const response = await axios.post<ListResponse>(`${utils.baseUrl}/api/upload/list`, { values }, {
-                headers: { 'Content-Type': 'application/json' },
-            });
-            setBlobs(response?.data?.data?.data || []);
-        } catch (error) {
-            console.error('Error fetching images:', error);
-            enqueueSnackbar("Image loading failed. Please try again.", { variant: "error" });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    useEffect(() => {
-        fetchImages();
-    }, []);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -117,15 +77,13 @@ const Gallery: React.FC = () => {
         }
     };
 
-    return (<div className="container mx-auto px-2 py-1">
-        {isLoading ? (
-            <Loader />
-        ) : (
-            <>
+    return (
+        <>
+            <div className="container mx-auto px-2 py-1">
                 <div className="p-1 max-w-5xl mx-auto mt-1 space-y-8">
                     {/* Gallery Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {blobs.length > 0 && blobs.map((blob, index) => (
+                        {images.length > 0 && images.map((blob, index) => (
                             <div key={index} className="rounded-lg overflow-hidden shadow-md dark:shadow-lg relative group">
                                 {/* Image Display */}
                                 <img src={blob.url} alt={`Gallery Image ${index}`} className="w-full object-cover h-48 transition-transform duration-300 transform group-hover:scale-105" />
@@ -177,10 +135,9 @@ const Gallery: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            </>
-        )}
-    </div>
-    );
+            </div>
+        </>
+    )
 };
 
 export default Gallery;
