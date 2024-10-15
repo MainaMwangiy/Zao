@@ -16,12 +16,12 @@ type BlobItem = {
 
 type BlobsData = {
     hasMore: boolean;
-    blobs: BlobItem[];
+    data: BlobItem[];
 };
 
 type ListResponse = {
     success: boolean;
-    blobs: BlobsData;
+    data: BlobsData;
 };
 
 type ImageUploadResponse = {
@@ -49,7 +49,7 @@ const Gallery: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const clientOrganizationsString = localStorage.getItem('clientorganizations');
     const Orgs: Organization[] = clientOrganizationsString ? JSON.parse(clientOrganizationsString) : [];
-    const clientOrganizationIdString = localStorage.getItem('clientorganizationid');
+    const clientOrganizationIdString = localStorage.getItem('clientorganizationid') || "";
     const OrgId = clientOrganizationIdString ? parseInt(JSON.parse(clientOrganizationIdString)) : null;
     let clientConfig = {};
     for (const org of Orgs) {
@@ -67,7 +67,7 @@ const Gallery: React.FC = () => {
             const response = await axios.post<ListResponse>(`${utils.baseUrl}/api/upload/list`, { values }, {
                 headers: { 'Content-Type': 'application/json' },
             });
-            setBlobs(response?.data?.blobs?.blobs || []);
+            setBlobs(response?.data?.data?.data || []);
         } catch (error) {
             console.error('Error fetching images:', error);
             enqueueSnackbar("Image loading failed. Please try again.", { variant: "error" });
