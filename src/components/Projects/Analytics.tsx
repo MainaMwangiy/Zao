@@ -20,12 +20,16 @@ interface HarvestDataItem {
 const Analytics: React.FC = () => {
     const [data, setData] = useState<DataItem[]>([]);
     const [harvestData, setHarvestData] = useState<HarvestDataItem[]>([]);
+    const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 
     const { enqueueSnackbar } = useSnackbar();
     const fetchData = async () => {
         try {
+            const values = {
+                clientorganizationid: clientorganizationid
+            };
             const url = `${utils.baseUrl}/api/expenses/analytics`;
-            const response = await axios.post(url, {
+            const response = await axios.post(url, { values }, {
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -37,8 +41,11 @@ const Analytics: React.FC = () => {
 
     const fetchHarvestsData = async () => {
         try {
+            const values = {
+                clientorganizationid: clientorganizationid
+            };
             const url = `${utils.baseUrl}/api/harvests/analytics`;
-            const response = await axios.post(url, {
+            const response = await axios.post(url, { values }, {
                 headers: { 'Content-Type': 'application/json' },
             });
             setHarvestData(response.data.data);

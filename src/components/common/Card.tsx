@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Carousel from "./Carousel";
 
 interface CardProps {
   id: string;
@@ -9,6 +10,14 @@ interface CardProps {
   size: string;
   status: string;
   projectPlanIncluded: boolean;
+}
+
+interface BlobItem {
+  url: string;
+  downloadUrl: string;
+  pathname: string;
+  size: number;
+  uploadedAt: string;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -22,6 +31,8 @@ const Card: React.FC<CardProps> = ({
 }) => {
   const navigate = useNavigate();
 
+  const gallery = localStorage.getItem("gallery");
+  const images: BlobItem[] = gallery ? JSON.parse(gallery) : [];
   const handleOpenTracker = () => {
     navigate(`/projects/${id}`, {
       state: {
@@ -38,7 +49,16 @@ const Card: React.FC<CardProps> = ({
 
   return (
     <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md">
-      <img src="https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3" alt="Project" className="w-full rounded-lg mb-4" onClick={handleOpenTracker} />
+      {images.length > 0 ? (
+        <Carousel images={images} />
+      ) : (
+        <img
+          src="https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3"
+          alt="Project"
+          className="w-full rounded-lg mb-4"
+          onClick={handleOpenTracker}
+        />
+      )}
       <h3 className="mt-2 text-lg font-semibold" onClick={handleOpenTracker}>{title}</h3>
       <p className="text-sm text-gray-600 dark:text-gray-400">Added by: {addedBy}, {location}</p>
       <p>Size {size} acres</p>

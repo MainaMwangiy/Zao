@@ -60,8 +60,7 @@ const Login: React.FC = () => {
         const response = await axios.post(url, {
           email: values.email,
           password: values.password,
-          rememberMe: values.rememberMe,
-          clientorganizationid: values.clientorganizationid
+          rememberMe: values.rememberMe
         }, {
           headers: { 'Content-Type': 'application/json' },
         });
@@ -74,7 +73,8 @@ const Login: React.FC = () => {
         }
         localStorage.setItem('clientuserid', response?.data?.clientuserid);
         localStorage.setItem('clientuser', JSON.stringify(response?.data));
-        localStorage.setItem('clientorganizationid', `${values.clientorganizationid}`);
+        localStorage.setItem('clientorganizationid', `${response?.data?.clientorganizationid}`);
+        localStorage.setItem('clientorganizationids', `${response?.data?.clientorganizationids}`);
         navigate('/dashboard');
       } catch (error) {
         enqueueSnackbar("Login failed. Please try again.", { variant: "error" });
@@ -144,29 +144,6 @@ const Login: React.FC = () => {
                   {formik.errors.password}
                 </div>
               ) : null}
-            </div>
-            {/* Client Organization Dropdown */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Select Organization
-              </label>
-              <select
-                name="clientorganizationid"
-                className="w-full px-4 py-2 mt-1 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                value={formik.values.clientorganizationid}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              >
-                <option value="">Select an organization</option>
-                {clientorgs.map(org => (
-                  <option key={org.clientorganizationid} value={org.clientorganizationid}>
-                    {org.name}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.clientorganizationid && formik.errors.clientorganizationid && (
-                <div className="text-red-500 text-sm">{formik.errors.clientorganizationid}</div>
-              )}
             </div>
             {/* Remember Me and Forgot Password */}
             <div className="flex items-center justify-between mb-4">

@@ -33,6 +33,8 @@ const Incomes: React.FC = () => {
 
     const usersString: string | null = localStorage.getItem('users');
     const clientuserid: string | null = localStorage.getItem('clientuserid');
+    const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
+
     let users: User[] = [];
     if (usersString) {
         try {
@@ -63,7 +65,10 @@ const Incomes: React.FC = () => {
         }
     };
     const fetchTotalUserExpense = async () => {
-        const values = { clientusername: clientusername }
+        const values = {
+            clientusername: clientusername,
+            clientorganizationid: clientorganizationid
+        }
         try {
             const url = `${utils.baseUrl}/api/expenses/total-expenses`;
             const response = await axios.post(url, { values }, {
@@ -76,9 +81,13 @@ const Incomes: React.FC = () => {
         }
     }
     const fetchTotalUserEarnings = async () => {
+        const values = {
+            clientusername: clientusername,
+            clientorganizationid: clientorganizationid
+        }
         try {
             const url = `${utils.baseUrl}/api/harvests/totalharvestearnings`;
-            const response = await axios.post(url, {
+            const response = await axios.post(url, { values }, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const earnings = response.data.data[0].totalharvests;
@@ -89,7 +98,10 @@ const Incomes: React.FC = () => {
     }
 
     const fetchAllPaidTransactions = async () => {
-        const values = { clientuserid: clientuserid }
+        const values = {
+            clientuserid: clientuserid,
+            clientorganizationid: clientorganizationid
+        }
         try {
             const url = `${utils.baseUrl}/api/transactions/allpaid`;
             const response = await axios.post(url, { values }, {
@@ -103,7 +115,10 @@ const Incomes: React.FC = () => {
     }
 
     const fetchAllPaidTransactionsPerUser = async () => {
-        const values = { clientuserid: clientuserid }
+        const values = {
+            clientuserid: clientuserid,
+            clientorganizationid: clientorganizationid
+        }
         try {
             const url = `${utils.baseUrl}/api/transactions/totalpaid`;
             const response = await axios.post(url, { values }, {

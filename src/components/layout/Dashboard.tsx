@@ -22,6 +22,37 @@ interface ClientUser {
   name: string;
 }
 
+interface Organization {
+  clientorganizationid: number;
+  name: string;
+  appconfig: {
+    dateFormat?: string;
+  };
+  createdon: string;
+  createdbyuserid: number;
+  modifiedon: string;
+  modifiedbyuserid: number;
+  isdeleted: number;
+}
+
+type BlobItem = {
+  url: string;
+  downloadUrl: string;
+  pathname: string;
+  size: number;
+  uploadedAt: string;
+};
+
+type BlobsData = {
+  hasMore: boolean;
+  data: BlobItem[];
+};
+
+type ListResponse = {
+  success: boolean;
+  data: BlobsData;
+};
+
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
   const { enqueueSnackbar } = useSnackbar();
@@ -35,7 +66,18 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
   const clientusers = localStorage.getItem('clientuser') || '';
-  const roles = JSON.parse(clientusers);
+  const user = JSON.parse(clientusers);
+  const clientOrganizationsString = localStorage.getItem('clientorganizations');
+  const Orgs: Organization[] = clientOrganizationsString ? JSON.parse(clientOrganizationsString) : [];
+  const clientOrganizationIdString = localStorage.getItem('clientorganizationid') || "";
+  const OrgId = clientOrganizationIdString ? parseInt(JSON.parse(clientOrganizationIdString)) : null;
+
+  let clientConfig = {};
+  for (const org of Orgs) {
+    if (org.clientorganizationid === OrgId) {
+      clientConfig = org.appconfig;
+    }
+  }
 
   const toggleExpensesVisibility = () => {
     setIsExpensesVisible(!isExpensesVisible);
@@ -101,7 +143,7 @@ const Dashboard: React.FC = () => {
     try {
       const values = {
         clientorganizationid: clientorganizationid,
-        roleid: roles?.roleid
+        roleid: user?.roleid
       }
       const url = `${utils.baseUrl}/api/auth/list-strict`;
       const response = await axios.post(url, { values }, {
@@ -114,11 +156,28 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const fetchImages = async () => {
+    try {
+      const values = {
+        clientConfig: clientConfig
+      }
+      const response = await axios.post<ListResponse>(`${utils.baseUrl}/api/upload/list`, { values }, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const result = response?.data?.data?.data || [];
+      localStorage.setItem('gallery', JSON.stringify(result))
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      enqueueSnackbar("Image loading failed. Please try again.", { variant: "error" });
+    }
+  };
+
   useEffect(() => {
     fetchData();
     fetchTotalExpenses();
     fetchTotalEarningsFromHarvest();
     fetchUsersData();
+    fetchImages();
   }, [showProjectseModal])
 
   const isProjects = projects.length > 0;
@@ -205,8 +264,8 @@ const Dashboard: React.FC = () => {
               key={index}
               id={item.projectid}
               title={item.name}
-              addedBy={'Maina'}
-              location={item.location}
+              addedBy={user?.name}
+              location={user?.location}
               size={item.size}
               status={item.status}
               projectPlanIncluded={item.projectplan}
