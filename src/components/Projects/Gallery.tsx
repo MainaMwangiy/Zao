@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import utils from '../utils';
 import { useSnackbar } from 'notistack';
-import Loader from '../common/Loader';
-import { FaDownload } from 'react-icons/fa';
+import { FaDownload, FaExpand, FaTimes } from 'react-icons/fa';
 import imageCompression from 'browser-image-compression';
 
 type BlobItem = {
@@ -14,30 +13,19 @@ type BlobItem = {
     uploadedAt: string;
 };
 
-type BlobsData = {
-    hasMore: boolean;
-    data: BlobItem[];
-};
-
-type ListResponse = {
-    success: boolean;
-    data: BlobsData;
-};
-
 type ImageUploadResponse = {
     url: {
         url: string;
     };
 };
 
-
 const Gallery: React.FC = () => {
     const [blobs, setBlobs] = useState<BlobItem[]>([]);
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
     const { enqueueSnackbar } = useSnackbar();
     const gallery = localStorage.getItem("gallery");
     const images: BlobItem[] = gallery ? JSON.parse(gallery) : [];
-
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -77,30 +65,63 @@ const Gallery: React.FC = () => {
         }
     };
 
+    const openFullScreen = (url: string) => {
+        setFullscreenImage(url);
+    };
+
+    const closeFullScreen = () => {
+        setFullscreenImage(null);
+    };
+
     return (
         <>
             <div className="container mx-auto px-2 py-1">
                 <div className="p-1 max-w-5xl mx-auto mt-1 space-y-8">
+                    {/* Full-Screen Image */}
+                    {fullscreenImage && (
+                        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex justify-center items-center">
+                            <img src={fullscreenImage} alt="Fullscreen Image" className="max-w-full max-h-full" />
+                            <button
+                                onClick={closeFullScreen}
+                                className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none"
+                            >
+                                <FaTimes className="text-lg" />
+                            </button>
+                        </div>
+                    )}
+
                     {/* Gallery Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {images.length > 0 && images.map((blob, index) => (
-                            <div key={index} className="rounded-lg overflow-hidden shadow-md dark:shadow-lg relative group">
+                            <div
+                                key={index}
+                                className="rounded-lg overflow-hidden shadow-md dark:shadow-lg relative group"
+                            >
                                 {/* Image Display */}
-                                <img src={blob.url} alt={`Gallery Image ${index}`} className="w-full object-cover h-48 transition-transform duration-300 transform group-hover:scale-105" />
+                                <img
+                                    src={blob.url}
+                                    alt={`Gallery Image ${index}`}
+                                    className="w-full object-cover h-48 transition-transform duration-300 transform group-hover:scale-105 cursor-pointer"
+                                />
 
                                 {/* Overlay with Details */}
                                 <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-white">
                                     <p className="font-bold text-lg mb-1">{blob.pathname}</p>
                                     <p className="text-sm mb-1">Size: {(blob.size / 1024).toFixed(2)} KB</p>
                                     <p className="text-sm mb-4">Uploaded At: {new Date(blob.uploadedAt).toLocaleString()}</p>
+                                    <button
+                                        onClick={() => openFullScreen(blob.url)}
+                                        className="self-start bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 inline-flex items-center space-x-2"
+                                    >
+                                        <FaExpand className="text-lg" />
+                                    </button>
 
                                     {/* Download Button */}
                                     <button
                                         onClick={() => window.open(blob.downloadUrl, '_blank')}
-                                        className="self-start bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 inline-flex items-center space-x-2"
+                                        className="self-start bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 inline-flex items-center space-x-2"
                                     >
-                                        <FaDownload className="mr-2" />
-                                        <span>Download</span>
+                                        <FaDownload className="text-lg" />
                                     </button>
                                 </div>
                             </div>
@@ -137,7 +158,7 @@ const Gallery: React.FC = () => {
                 </div>
             </div>
         </>
-    )
+    );
 };
 
 export default Gallery;
