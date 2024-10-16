@@ -37,7 +37,7 @@ const Summary: React.FC<SummaryProps> = ({ projectData }) => {
                                         <th className="py-2 px-4 min-w-[150px]">Category</th>
                                         <th className="py-2 px-4 min-w-[150px]">Estimated</th>
                                         <th className="py-2 px-4 min-w-[150px]">Actual</th>
-                                        <th className="py-2 px-4 min-w-[200px]">Savings</th>
+                                        <th className="py-2 px-4 min-w-[200px]">Costs Variance</th>
                                     </tr>
                                 </thead>
                                 <tbody>
