@@ -4,27 +4,26 @@ export interface HarvestProps {
     unitprice: number | string;
     amountsold: number | string;
     notes: string;
-    createdbyusername: string;
-    modifiedbyusername: string;
-    createdon: string;
-    modifiedon: string;
+    createdbyusername?: string;
+    modifiedbyusername?: string;
+    createdon?: string;
+    modifiedon?: string;
     createdbyuserid?: string;
     modifiedbyuserid?: string;
-    clientorganizationid: string;
+    clientorganizationid?: string;
 }
-
 
 export interface HarvestRowProps {
     harvest: {
         harvestid: string;
-        bags: number;
-        unitprice: number;
-        amountsold: number;
+        bags: number | string;
+        unitprice: number | string;
+        amountsold: number | string;
         notes: string;
-        createdbyusername: string;
-        modifiedbyusername: string;
-        createdon: string;
-        modifiedon: string;
+        createdbyusername?: string;
+        modifiedbyusername?: string;
+        createdon?: string;
+        modifiedon?: string;
     };
     onEdit: () => void;
 }
