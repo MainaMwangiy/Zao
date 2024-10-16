@@ -30,8 +30,8 @@ const Incomes: React.FC = () => {
     if (clientuserid) {
         const userIdAsNumber = Number(clientuserid);
         const loggedInUser: User | undefined = users.find(user => user.clientuserid === userIdAsNumber);
-        if (loggedInUser) {
-            clientusername = loggedInUser.name;
+        if (loggedInUser?.name) {
+            clientusername = loggedInUser.name || '';
         }
     }
 

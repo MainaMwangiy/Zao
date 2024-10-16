@@ -1,10 +1,3 @@
-export interface User {
-    clientuserid: number;
-    name: string;
-    email: string;
-    amount: number | string;
-}
-
 export interface Transaction {
     transactionid: number;
     amount: number | string;

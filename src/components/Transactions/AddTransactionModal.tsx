@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import utils from "../../utils";
+import { AddTransactionModalProps, User } from "../../types";
 
 const initialValues = {
     name: "",
@@ -20,17 +21,6 @@ const validationSchema = Yup.object({
     notes: Yup.string(),
     recipientuserid: Yup.string().required("Recipient is required")
 });
-
-interface AddTransactionModalProps {
-    showTransactionModal: boolean;
-    setTransactionShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
-interface User {
-    clientuserid: number;
-    name: string;
-    email: string;
-    clientorganizationid: string;
-}
 
 const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransactionModal, setTransactionShowModal }) => {
     const { enqueueSnackbar } = useSnackbar();

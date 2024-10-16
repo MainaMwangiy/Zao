@@ -6,13 +6,7 @@ import TransactionRow from "./TransactionRow";
 import AddTransactionModal from "./AddTransactionModal";
 import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
 import Loader from "../../hooks/Loader";
-
-interface TransactionProps {
-    name: string;
-    amount: string;
-    notes: string;
-    clientusername: string;
-}
+import { TransactionProps } from "../../types";
 
 const Transactions: React.FC = () => {
     const [showTransactionModal, setTransactionShowModal] = useState(false);

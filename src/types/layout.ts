@@ -9,10 +9,6 @@ export interface ProjectsProps {
     roleid: number;
   }
   
-  export  interface ClientUser {
-    name: string;
-  }
-  
   export  interface Organization {
     clientorganizationid: number;
     name: string;
