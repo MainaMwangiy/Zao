@@ -6,14 +6,7 @@ import axios from "axios";
 import { useSnackbar } from "notistack";
 import Loader from "../../hooks/Loader";
 import { AiOutlineDownload, AiOutlinePlus } from "react-icons/ai";
-
-interface UsersProps {
-  name: string;
-  email: string;
-  location: string;
-  status: string;
-  role: string | number;
-}
+import { UsersProps } from "../../types";
 
 const Users: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
