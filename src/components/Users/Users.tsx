@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import UserRow from "./UserRow";
-import AddUserModal from "../common/Modal";
-import utils from "../utils";
+import AddUserModal from "../../hooks/Modal";
+import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
-import Loader from "../common/Loader";
+import Loader from "../../hooks/Loader";
 import { AiOutlineDownload, AiOutlinePlus } from "react-icons/ai";
 
 interface UsersProps {

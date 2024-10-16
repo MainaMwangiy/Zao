@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import utils from "../utils";
+import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import TransactionRow from "./TransactionRow";
 import AddTransactionModal from "./AddTransactionModal";
 import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
-import Loader from "../common/Loader";
+import Loader from "../../hooks/Loader";
 
 interface TransactionProps {
     name: string;

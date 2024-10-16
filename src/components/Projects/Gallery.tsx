@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import utils from '../utils';
+import utils from '../../utils';
 import { useSnackbar } from 'notistack';
 import { FaDownload, FaExpand, FaTimes } from 'react-icons/fa';
 import imageCompression from 'browser-image-compression';

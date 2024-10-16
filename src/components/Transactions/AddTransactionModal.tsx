@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useSnackbar } from "notistack";
-import utils from "../utils";
+import utils from "../../utils";
 
 const initialValues = {
     name: "",

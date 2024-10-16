@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Card from "../common/Card";
-import utils from "../utils";
+import Card from "../../hooks/Card";
+import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import AddProjectModal from "../Projects/AddProjectModal";

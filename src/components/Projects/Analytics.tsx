@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ChartComponent from '../Charts/Charts';
 import { useSnackbar } from 'notistack';
-import utils from '../utils';
+import utils from '../../utils';
 import axios from 'axios';
 
 interface DataItem {

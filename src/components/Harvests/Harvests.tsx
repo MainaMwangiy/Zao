@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import HarvestRow from "./HarvestRow";
-import utils from "../utils";
+import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import AddHarvestModal from "./AddHarvestModal";
 import { AiOutlinePlus } from "react-icons/ai";
-import Loader from "../common/Loader";
+import Loader from "../../hooks/Loader";
 
 interface HarvestProps {
     harvestid: string;

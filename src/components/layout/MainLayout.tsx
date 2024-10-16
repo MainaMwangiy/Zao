@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import Footer from "./Footer";
 import { Outlet, useLocation } from "react-router-dom";
-import utils from "../utils";
+import utils from "../../utils";
 
 const MainLayout: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
