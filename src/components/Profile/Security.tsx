@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import utils from '../utils';
+import utils from '../../utils';
 
 const Security: React.FC = () => {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);

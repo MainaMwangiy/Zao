@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FaBell, FaMoon, FaSun } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useDarkMode } from "../common/DarkModeContext";
-import ProfileDropdown from "../common/ProfileDropdown";
+import { useDarkMode } from "../../hooks/DarkModeContext";
+import ProfileDropdown from "../../hooks/ProfileDropdown";
 import { AiOutlineMenu } from "react-icons/ai";
-
-interface SidebarProps {
-  isOpen: boolean,
-  toggleSidebar: () => void;
-}
+import { SidebarProps } from "../../types";
 
 const Header: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();

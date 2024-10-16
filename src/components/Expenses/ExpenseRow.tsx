@@ -1,20 +1,6 @@
 import React from "react";
 import dayjs from "dayjs";
-
-interface ExpenseRowProps {
-    expensesid: string;
-    name: string;
-    amount: string;
-    status: string;
-    notes: string;
-    paidby: string;
-    createdon: string;
-    modifiedon: string;
-    createdbyusername: string;
-    modifiedbyusername: string;
-    onEdit: () => void;
-    onDelete: () => void;
-}
+import { ExpenseRowProps } from "../../types";
 
 const ExpenseRow: React.FC<ExpenseRowProps> = ({
     name,

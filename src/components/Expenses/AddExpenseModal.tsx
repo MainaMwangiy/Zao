@@ -1,27 +1,10 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import utils from "../utils";
+import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
-
-interface AddExpenseModalProps {
-    showExpenseModal: boolean;
-    setExpenseShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-    expense?: ExpenseProps | null;
-}
-
-interface ExpenseProps {
-    name: string;
-    amount: string;
-    status: string;
-    notes: string;
-    expensesid: string;
-    clientuserid: string;
-    clientusername: string;
-    expesesid: string;
-    clientorganizationid: string;
-}
+import { AddExpenseModalProps, ExpenseProps } from "../../types";
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     showExpenseModal,
@@ -60,7 +43,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         onSubmit: async (values) => {
             try {
                 const clientuserid = localStorage.getItem('clientuserid') || "";
-                const clientOrganizationId = localStorage.getItem('clientorganizationid') || ""; 
+                const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
 
                 let url = '';
                 if (!clientuserid) {

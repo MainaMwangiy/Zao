@@ -1,26 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import utils from '../utils';
+import utils from '../../utils';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
-
-interface User {
-    clientuserid: number;
-    name: string;
-    email: string;
-    amount: number | string;
-}
-
-interface Transaction {
-    transactionid: number;
-    amount: number | string;
-    clientuserid: number;
-    notes: string;
-    createdon: string;
-    modifiedon: string;
-    isdeleted: number;
-    name: string;
-    recipientuserid: number;
-}
+import { Transaction, User } from '../../types';
 
 
 const Incomes: React.FC = () => {
@@ -48,8 +30,8 @@ const Incomes: React.FC = () => {
     if (clientuserid) {
         const userIdAsNumber = Number(clientuserid);
         const loggedInUser: User | undefined = users.find(user => user.clientuserid === userIdAsNumber);
-        if (loggedInUser) {
-            clientusername = loggedInUser.name;
+        if (loggedInUser?.name) {
+            clientusername = loggedInUser.name || '';
         }
     }
 

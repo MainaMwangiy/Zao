@@ -1,12 +1,5 @@
 import React from "react";
-
-interface UserRowProps {
-  name: string;
-  email: string;
-  location: string;
-  status: string;
-  role: string | number;
-}
+import { UserRowProps } from "../../types";
 
 const UserRow: React.FC<UserRowProps> = ({ name, email, location, status, role }) => {
   return (

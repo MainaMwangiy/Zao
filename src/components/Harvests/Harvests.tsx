@@ -1,26 +1,12 @@
 import React, { useEffect, useState } from "react";
 import HarvestRow from "./HarvestRow";
-import utils from "../utils";
+import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import AddHarvestModal from "./AddHarvestModal";
 import { AiOutlinePlus } from "react-icons/ai";
-import Loader from "../common/Loader";
-
-interface HarvestProps {
-    harvestid: string;
-    bags: number;
-    unitprice: number;
-    amountsold: number;
-    notes: string;
-    createdbyusername: string;
-    modifiedbyusername: string;
-    createdon: string;
-    modifiedon: string;
-    createdbyuserid?: string;
-    modifiedbyuserid?: string;
-    clientorganizationid: string;
-}
+import Loader from "../../hooks/Loader";
+import { HarvestProps } from "../../types";
 
 const Harvests: React.FC = () => {
     const [showHarvestModal, setHarvestShowModal] = useState(false);

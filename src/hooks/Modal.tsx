@@ -233,29 +233,29 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
                     </div>
                   ) : null}
                 </div>
-                 {/* Client Organization Dropdown */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Select Organization
-                </label>
-                <select
-                  name="clientorganizationid"
-                  className="w-full px-4 py-2 mt-1 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                  value={formik.values.clientorganizationid}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                >
-                  <option value="">Select an organization</option>
-                  {clientOrganizations?.map((org) => (
-                    <option key={org.clientorganizationid} value={org.clientorganizationid}>
-                      {org.name}
-                    </option>
-                  ))}
-                </select>
-                {formik.touched.clientorganizationid && formik.errors.clientorganizationid && (
-                  <div className="text-red-500 text-sm">{formik.errors.clientorganizationid}</div>
-                )}
-              </div>
+                {/* Client Organization Dropdown */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Select Organization
+                  </label>
+                  <select
+                    name="clientorganizationid"
+                    className="w-full px-4 py-2 mt-1 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
+                    value={formik.values.clientorganizationid}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  >
+                    <option value="">Select an organization</option>
+                    {clientOrganizations?.map((org) => (
+                      <option key={org.clientorganizationid} value={org.clientorganizationid}>
+                        {org.name}
+                      </option>
+                    ))}
+                  </select>
+                  {formik.touched.clientorganizationid && formik.errors.clientorganizationid && (
+                    <div className="text-red-500 text-sm">{formik.errors.clientorganizationid}</div>
+                  )}
+                </div>
               </div>
 
               <div className="flex justify-end">

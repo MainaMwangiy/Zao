@@ -1,30 +1,10 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import utils from "../utils";
+import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
-
-interface AddHarvestModalProps {
-    showHarvestModal: boolean;
-    setHarvestShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-    harvest?: HarvestProps | null;
-}
-
-interface HarvestProps {
-    harvestid: string;
-    bags: number | string;
-    unitprice: number | string;
-    amountsold: number | string;
-    notes: string;
-    createdbyuserid?: string;
-    modifiedbyuserid?: string;
-    createdbyusername?: string;
-    modifiedbyusername?: string;
-    createdon?: string;
-    modifiedon?: string;
-    clientorganizationid: string;
-}
+import { AddHarvestModalProps, HarvestProps } from "../../types";
 
 const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
     showHarvestModal,
@@ -40,10 +20,15 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
         unitprice: harvest?.unitprice || "",
         amountsold: harvest?.amountsold || "",
         notes: harvest?.notes || "",
+        createdbyusername: harvest?.createdbyusername || "",
+        modifiedbyusername: harvest?.modifiedbyusername || "",
+        createdon: harvest?.createdon || "",
+        modifiedon: harvest?.modifiedon || "",
         createdbyuserid: harvest?.createdbyuserid || "",
         modifiedbyuserid: harvest?.modifiedbyuserid || "",
         clientorganizationid: harvest?.clientorganizationid || ""
     };
+
 
     // Define the validation schema using Yup
     const validationSchema = Yup.object({

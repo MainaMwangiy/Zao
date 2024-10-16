@@ -5,17 +5,11 @@ import { FcGoogle } from "react-icons/fc";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import logo from "../../assets/logo.svg";
 import axios from "axios";
-import utils from "../utils";
+import utils from "../../utils";
 import { useNavigate } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { useSnackbar } from "notistack";
-
-interface LoginProps {
-  email: string;
-  password: string;
-  clientorganizationid: string;
-  name: string;
-}
+import { LoginProps } from "../../types";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);

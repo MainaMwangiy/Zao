@@ -1,16 +1,5 @@
 import React from 'react';
-
-interface SummaryProps {
-    projectData: {
-        title: string;
-        addedBy: string;
-        location: string;
-        size: string;
-        status: string;
-        projectPlanIncluded: boolean;
-    };
-}
-
+import { SummaryProps } from '../../types';
 
 const Summary: React.FC<SummaryProps> = ({ projectData }) => {
     const totalexpenses = localStorage.getItem('totalexpenses');

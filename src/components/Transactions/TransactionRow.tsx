@@ -1,11 +1,6 @@
 import React from "react";
+import { TransactionRowProps } from "../../types";
 
-interface TransactionRowProps {
-    name: string;
-    amount: string;
-    notes: string;
-    paidby: string;
-}
 
 const TransactionRow: React.FC<TransactionRowProps> = ({ name, amount, notes, paidby }) => {
     return (

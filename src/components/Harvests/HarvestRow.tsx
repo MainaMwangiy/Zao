@@ -1,20 +1,6 @@
 import dayjs from "dayjs";
 import React from "react";
-
-interface HarvestRowProps {
-    harvest: {
-        harvestid: string;
-        bags: number;
-        unitprice: number;
-        amountsold: number;
-        notes: string;
-        createdbyusername: string;
-        modifiedbyusername: string;
-        createdon: string;
-        modifiedon: string;
-    };
-    onEdit: () => void;
-}
+import { HarvestRowProps } from "../../types";
 
 const HarvestRow: React.FC<HarvestRowProps> = ({ harvest, onEdit }) => {
     return (
