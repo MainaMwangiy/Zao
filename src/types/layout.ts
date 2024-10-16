@@ -43,3 +43,15 @@ export interface ProjectsProps {
     success: boolean;
     data: BlobsData;
   };
+
+  export  interface SidebarProps {
+    isOpen?: boolean,
+    toggleSidebar?: () => void;
+  }
+  
+  export interface SidebarProps {
+    isMobile?: boolean;
+    isOpen?: boolean;
+    closeSidebar?: () => void;
+  }
+  
