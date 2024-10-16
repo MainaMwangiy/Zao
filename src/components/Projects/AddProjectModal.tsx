@@ -4,15 +4,8 @@ import * as Yup from "yup";
 import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
+import { ProjectProps } from "../../types";
 
-interface ProjectProps {
-    name: string;
-    location: string;
-    size: string;
-    status: string;
-    projectplan: string;
-    clientorganizationid: string;
-}
 
 // Define the initial values for Formik form
 const initialValues = {

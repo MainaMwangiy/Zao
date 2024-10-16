@@ -4,3 +4,4 @@ export * from './charts';
 export * from './expenses';
 export * from './harvests';
 export * from './layout';
+export * from './projects';

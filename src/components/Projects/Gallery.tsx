@@ -4,20 +4,7 @@ import utils from '../../utils';
 import { useSnackbar } from 'notistack';
 import { FaDownload, FaExpand, FaTimes } from 'react-icons/fa';
 import imageCompression from 'browser-image-compression';
-
-type BlobItem = {
-    url: string;
-    downloadUrl: string;
-    pathname: string;
-    size: number;
-    uploadedAt: string;
-};
-
-type ImageUploadResponse = {
-    url: {
-        url: string;
-    };
-};
+import { BlobItem, ImageUploadResponse } from '../../types';
 
 const Gallery: React.FC = () => {
     const [blobs, setBlobs] = useState<BlobItem[]>([]);

@@ -3,19 +3,7 @@ import ChartComponent from '../Charts/Charts';
 import { useSnackbar } from 'notistack';
 import utils from '../../utils';
 import axios from 'axios';
-
-interface DataItem {
-    name: string;
-    amount: number;
-    createdon: string;
-    clientusername: string;
-}
-interface HarvestDataItem {
-    bags: string;
-    createdon: string;
-    clientusername: string;
-    amountsold: string;
-}
+import { DataItem, HarvestDataItem } from '../../types';
 
 const Analytics: React.FC = () => {
     const [data, setData] = useState<DataItem[]>([]);
