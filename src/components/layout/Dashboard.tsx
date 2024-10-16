@@ -6,52 +6,7 @@ import { useSnackbar } from "notistack";
 import AddProjectModal from "../Projects/AddProjectModal";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
-interface ProjectsProps {
-  name: string;
-  location: string;
-  size: string;
-  status: string;
-  projectplan: boolean;
-  imagesurl: string;
-  projectid: string;
-  roleid: number;
-}
-
-interface ClientUser {
-  name: string;
-}
-
-interface Organization {
-  clientorganizationid: number;
-  name: string;
-  appconfig: {
-    dateFormat?: string;
-  };
-  createdon: string;
-  createdbyuserid: number;
-  modifiedon: string;
-  modifiedbyuserid: number;
-  isdeleted: number;
-}
-
-type BlobItem = {
-  url: string;
-  downloadUrl: string;
-  pathname: string;
-  size: number;
-  uploadedAt: string;
-};
-
-type BlobsData = {
-  hasMore: boolean;
-  data: BlobItem[];
-};
-
-type ListResponse = {
-  success: boolean;
-  data: BlobsData;
-};
+import { ClientUser, ListResponse, Organization, ProjectsProps } from "../../types";
 
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
