@@ -57,7 +57,7 @@ const Expenses: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, 300), [currentPage, itemsPerPage]);
+  }, 1000), [currentPage, itemsPerPage]);
 
   useEffect(() => {
     fetchData(searchTerm);
