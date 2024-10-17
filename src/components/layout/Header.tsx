@@ -26,13 +26,13 @@ const Header: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
       <div className="flex items-center">
         <AiOutlineMenu className="text-3xl cursor-pointer" onClick={toggleSidebar} />
       </div>
-      <div className="flex-grow mx-4">
+      {/* <div className="flex-grow mx-4">
         <input
           type="text"
           className="w-full max-w-sm px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
           placeholder="Search"
         />
-      </div>
+      </div> */}
       <div className="flex items-center space-x-4">
         <FaBell
           className="text-gray-500 dark:text-gray-300 cursor-pointer"
