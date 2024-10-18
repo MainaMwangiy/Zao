@@ -4,11 +4,11 @@ import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import AddExpenseModal from "./AddExpenseModal";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import Loader from "../../hooks/Loader";
 import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
 import _ from 'lodash';
 import { ExpensesProps } from "../../types";
+import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
 const Expenses: React.FC = () => {
   const [showExpenseModal, setExpenseShowModal] = useState(false);
@@ -283,14 +283,13 @@ const Expenses: React.FC = () => {
           )}
 
           {showDeleteDialog && (
-            <Dialog open={showDeleteDialog} onClose={() => setShowDeleteDialog(false)}>
-              <DialogTitle>Confirm Deletion</DialogTitle>
-              <DialogContent>Are you sure you want to delete this expense?</DialogContent>
-              <DialogActions>
-                <Button onClick={() => setShowDeleteDialog(false)}>Cancel</Button>
-                <Button onClick={confirmDeleteExpense} color="secondary">Delete</Button>
-              </DialogActions>
-            </Dialog>
+            <ConfirmationDialog
+              open={showDeleteDialog}
+              title="Confirm Deletion"
+              content="Are you sure you want to delete this expense?"
+              onCancel={() => setShowDeleteDialog(false)}
+              onConfirm={confirmDeleteExpense}
+            />
           )}
         </>
       )}
