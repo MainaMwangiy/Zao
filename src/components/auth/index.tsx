@@ -77,12 +77,12 @@ const Login: React.FC = () => {
   });
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-white dark:bg-gray-900 m-4">
+    <div className="flex flex-col items-center min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6">
       <div className="md:flex md:w-1/2 justify-center items-center">
         <img src={logo} alt="Logo" className="h-32 sm:h-44 md:h-44" />
       </div>
       <div className="w-full max-w-6xl mt-10 flex justify-center">
-        <div className="w-full md:w-1/2 max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-none">
+        <div className="w-full md:w-1/2 max-w-md p-6 bg-white dark:bg-gray-900 rounded-lg shadow-none">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Sign in to your account
           </h2>
