@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { AddExpenseModalProps, ExpenseProps } from "../../types";
+import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     showExpenseModal,
@@ -13,6 +14,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 }) => {
     const { enqueueSnackbar } = useSnackbar();
     const clientUsers = utils.getClientUsersList();
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
 
     // Define the initial values for Formik form
     const initialValues: ExpenseProps = {
@@ -41,28 +43,32 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         validationSchema,
         enableReinitialize: true,
         onSubmit: async (values) => {
-            try {
-                const clientuserid = localStorage.getItem('clientuserid') || "";
-                const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
+            if (formik.dirty) {
+                setShowConfirmationDialog(true);
+                return;
+            }
+            const clientuserid = localStorage.getItem('clientuserid') || "";
+            const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
 
-                let url = '';
-                if (!clientuserid) {
-                    enqueueSnackbar("Client user ID is missing.", { variant: "error" });
-                    return;
-                }
-                if (expense) {
-                    url = `${utils.baseUrl}/api/expenses/update/${expense.expensesid}`;
-                    values.expesesid = expense.expensesid;
-                } else {
-                    url = `${utils.baseUrl}/api/expenses/create`;
-                }
-                values.clientuserid = clientuserid;
-                const data = {
-                    ...values,
-                    clientorganizationid: clientOrganizationId,
-                    createdbyuserid: clientuserid,
-                    modifiedbyuserid: clientuserid
-                };
+            let url = '';
+            if (!clientuserid) {
+                enqueueSnackbar("Client user ID is missing.", { variant: "error" });
+                return;
+            }
+            if (expense) {
+                url = `${utils.baseUrl}/api/expenses/update/${expense.expensesid}`;
+                values.expesesid = expense.expensesid;
+            } else {
+                url = `${utils.baseUrl}/api/expenses/create`;
+            }
+            values.clientuserid = clientuserid;
+            const data = {
+                ...values,
+                clientorganizationid: clientOrganizationId,
+                createdbyuserid: clientuserid,
+                modifiedbyuserid: clientuserid
+            };
+            try {
                 await axios.post(url, { values: data }, {
                     headers: { 'Content-Type': 'application/json' },
                 });
@@ -77,6 +83,10 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         },
     });
 
+    const handleConfirm = () => {
+        setShowConfirmationDialog(false);
+        formik.submitForm(); 
+    };
     return (
         <div>
             {showExpenseModal && (
@@ -209,6 +219,15 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     </div>
                 </div>
             )}
+              <ConfirmationDialog
+                open={showConfirmationDialog}
+                title="Confirm Submission"
+                content="Are you sure you want to submit the changes?"
+                onCancel={() => {
+                    setShowConfirmationDialog(false);
+                }}
+                onConfirm={handleConfirm}
+            />
         </div>
     );
 };
