@@ -17,23 +17,26 @@ const initialValues = {
   role: 0,
   password: "",
   roleid: 0,
-  clientorganizationid: ""
+  clientorganizationid: "",
 };
 interface AuthProps {
   clientorganizationid: string;
   name: string;
 }
 
-
 // Define the validation schema using Yup
 const validationSchema = Yup.object({
   name: Yup.string().required("First Name is required"),
-  email: Yup.string().email("Invalid email format").required("Email is required"),
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required"),
   location: Yup.string().required("Location is required"),
   status: Yup.string().required("Status is required"),
   role: Yup.string().required("Role is required"),
   password: Yup.string().required("Password is required"),
-  clientorganizationid: Yup.string().required("Client Organization is required")
+  clientorganizationid: Yup.string().required(
+    "Client Organization is required"
+  ),
 });
 
 interface AddUserModalProps {
@@ -41,14 +44,21 @@ interface AddUserModalProps {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) => {
+const AddUserModal: React.FC<AddUserModalProps> = ({
+  showModal,
+  setShowModal,
+}) => {
   const [showPassword, setShowPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [clientOrganizations, setClientOrganizations] = useState<AuthProps[]>([]);
+  const [clientOrganizations, setClientOrganizations] = useState<AuthProps[]>(
+    []
+  );
+  const clientusers = localStorage.getItem("clientuser") || "";
+  const roles = JSON.parse(clientusers);
 
   useEffect(() => {
-    const orgs = localStorage.getItem('clientorganizations');
+    const orgs = localStorage.getItem("clientorganizations");
     if (orgs) {
       setClientOrganizations(JSON.parse(orgs));
     }
@@ -67,24 +77,39 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
   }>({
     initialValues,
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async values => {
       try {
-        const url = `${utils.baseUrl}/api/auth/createUpdate`
+        const url = `${utils.baseUrl}/api/auth/createUpdate`;
         const roleid = utils.getRolesId(values.role as string);
         if (roleid) {
           values.roleid = roleid;
         }
-        await axios.post(url, { values }, {
-          headers: { 'Content-Type': 'application/json' },
-        });
+        await axios.post(
+          url,
+          { values },
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
         enqueueSnackbar("User Creation successful!", { variant: "success" });
-        navigate('/users');
+        navigate("/users");
       } catch (error) {
-        enqueueSnackbar("User Creation failed. Please try again.", { variant: "error" });
+        enqueueSnackbar("User Creation failed. Please try again.", {
+          variant: "error",
+        });
       }
       setShowModal(false);
     },
   });
+
+  const allowedOrganizationIds = roles.clientorganizationids;
+  
+  const filteredOrganizations =
+    roles.roleid === 1
+      ? clientOrganizations
+      : clientOrganizations.filter(
+          orgs => orgs.clientorganizationid === allowedOrganizationIds
+        );
 
   return (
     <div>
@@ -100,13 +125,17 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
       {showModal && (
         <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-lg p-6 relative">
-            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Add New User</h2>
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+              Add New User
+            </h2>
 
             {/* Form */}
             <form onSubmit={formik.handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Name</label>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                    Name
+                  </label>
                   <input
                     name="name"
                     type="text"
@@ -116,11 +145,15 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.name && formik.errors.name && (
-                    <div className="text-red-500 text-sm">{formik.errors.name}</div>
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.name}
+                    </div>
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Email</label>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                    Email
+                  </label>
                   <input
                     name="email"
                     type="email"
@@ -130,14 +163,18 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.email && formik.errors.email && (
-                    <div className="text-red-500 text-sm">{formik.errors.email}</div>
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.email}
+                    </div>
                   )}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Phone Number</label>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                    Phone Number
+                  </label>
                   <input
                     name="phoneNumber"
                     type="text"
@@ -147,11 +184,15 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.phoneNumber && formik.errors.phoneNumber && (
-                    <div className="text-red-500 text-sm">{formik.errors.phoneNumber}</div>
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.phoneNumber}
+                    </div>
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Location</label>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                    Location
+                  </label>
                   <input
                     name="location"
                     type="text"
@@ -161,14 +202,18 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
                     onBlur={formik.handleBlur}
                   />
                   {formik.touched.location && formik.errors.location && (
-                    <div className="text-red-500 text-sm">{formik.errors.location}</div>
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.location}
+                    </div>
                   )}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Status</label>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                    Status
+                  </label>
                   <select
                     name="status"
                     className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
@@ -181,11 +226,15 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
                     <option value="Inactive">Inactive</option>
                   </select>
                   {formik.touched.status && formik.errors.status && (
-                    <div className="text-red-500 text-sm">{formik.errors.status}</div>
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.status}
+                    </div>
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Role</label>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                    Role
+                  </label>
                   <select
                     name="role"
                     className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
@@ -194,18 +243,25 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
                     onBlur={formik.handleBlur}
                   >
                     <option value="">Select</option>
-                    <option value="Superadmin">Superadmin</option>
+                    {roles.roleid === 1 && (
+                      <option value="Superadmin">Superadmin</option>
+                    )}
+
                     <option value="Admin">Admin</option>
                     <option value="User">User</option>
                   </select>
                   {formik.touched.role && formik.errors.role && (
-                    <div className="text-red-500 text-sm">{formik.errors.role}</div>
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.role}
+                    </div>
                   )}
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="relative">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Password</label>
+                  <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
+                    Password
+                  </label>
                   <div className="relative w-full">
                     <input
                       name="password"
@@ -246,15 +302,21 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
                     onBlur={formik.handleBlur}
                   >
                     <option value="">Select an organization</option>
-                    {clientOrganizations?.map((org) => (
-                      <option key={org.clientorganizationid} value={org.clientorganizationid}>
+                    {filteredOrganizations?.map(org => (
+                      <option
+                        key={org.clientorganizationid}
+                        value={org.clientorganizationid}
+                      >
                         {org.name}
                       </option>
                     ))}
                   </select>
-                  {formik.touched.clientorganizationid && formik.errors.clientorganizationid && (
-                    <div className="text-red-500 text-sm">{formik.errors.clientorganizationid}</div>
-                  )}
+                  {formik.touched.clientorganizationid &&
+                    formik.errors.clientorganizationid && (
+                      <div className="text-red-500 text-sm">
+                        {formik.errors.clientorganizationid}
+                      </div>
+                    )}
                 </div>
               </div>
 
@@ -279,7 +341,6 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ showModal, setShowModal }) 
         </div>
       )}
     </div>
-
   );
 };
 
