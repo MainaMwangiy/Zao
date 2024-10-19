@@ -24,6 +24,7 @@ const Expenses: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const totalexpenses = localStorage.getItem('totalexpenses');
+  const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 
   const handlePageChange = (direction: 'next' | 'prev') => {
     if (direction === 'next' && currentPage < Math.ceil(totalItems / itemsPerPage)) {
@@ -33,17 +34,17 @@ const Expenses: React.FC = () => {
       setCurrentPage(prevPage => prevPage - 1);
     }
   };
+  const params = {
+    page: currentPage,
+    pageSize: itemsPerPage,
+    searchTerm: searchTerm.trim(),
+    clientorganizationid
+  };
 
   const fetchData = useCallback(_.debounce(async (searchTerm: string) => {
     try {
       setIsLoading(true);
-      const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
-      const values = {
-        page: currentPage,
-        pageSize: itemsPerPage,
-        searchTerm: searchTerm.trim(),
-        clientorganizationid
-      };
+      const values = params;
       const url = `${utils.baseUrl}/api/expenses/list`;
       const response = await axios.post(url, { values }, {
         headers: { 'Content-Type': 'application/json' },
@@ -71,10 +72,11 @@ const Expenses: React.FC = () => {
   const handleExportExpenses = async () => {
     try {
       const url = `${utils.baseUrl}/api/expenses/list`;
-      const params = {
+      const reqParams = {
+        ...params,
         isExport: true,
       };
-      const response = await axios.post(url, params, {
+      const response = await axios.post(url, { values: reqParams }, {
         responseType: 'blob'
       });
       const currentDate = new Date().toISOString().split('T')[0];
