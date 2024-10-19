@@ -41,7 +41,8 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
   setProjectshowModal,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-
+const clientUser = localStorage.getItem("clientuser") || "{}"
+const userDetails = JSON.parse(clientUser)
   const formik = useFormik<ProjectProps>({
     initialValues,
     validationSchema,
@@ -52,6 +53,8 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
         const data = {
           ...values,
           clientorganizationid: clientOrganizationId,
+          clientuserid:userDetails.clientuserid
+
         };
         const url = `${utils.baseUrl}/api/projects/create`;
         await axios.post(

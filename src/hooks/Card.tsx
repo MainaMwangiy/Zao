@@ -10,6 +10,7 @@ interface CardProps {
   size: string;
   status: string;
   projectPlanIncluded: boolean;
+  costProjectEstimation: string;
 }
 
 interface BlobItem {
@@ -27,7 +28,8 @@ const Card: React.FC<CardProps> = ({
   location,
   size,
   status,
-  projectPlanIncluded
+  projectPlanIncluded,
+  costProjectEstimation
 }) => {
   const navigate = useNavigate();
 
@@ -43,6 +45,7 @@ const Card: React.FC<CardProps> = ({
         size,
         status,
         projectPlanIncluded,
+        costProjectEstimation
       },
     });
   };

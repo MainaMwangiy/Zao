@@ -36,5 +36,6 @@ export interface SummaryProps {
         size: string;
         status: string;
         projectPlanIncluded: boolean;
+        costProjectEstimation: string;
     };
 }
