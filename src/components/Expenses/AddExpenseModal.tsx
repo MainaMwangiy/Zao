@@ -12,7 +12,10 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     expense,
 }) => {
     const { enqueueSnackbar } = useSnackbar();
-    const clientUsers = utils.getClientUsersList();
+    const clientuserid = localStorage.getItem('clientuserid') || "";
+    const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
+    const user = localStorage.getItem('user') || "{}";
+    const clientuser = JSON.parse(user);
 
     // Define the initial values for Formik form
     const initialValues: ExpenseProps = {
@@ -32,19 +35,15 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
         name: Yup.string().required("Name is required"),
         amount: Yup.number().typeError("Amount must be a number").required("Amount is required"),
         status: Yup.string().required("Status is required"),
-        notes: Yup.string(),
-        clientuserid: Yup.string().required("Client User is required"),
+        notes: Yup.string()
     });
 
     const formik = useFormik<ExpenseProps>({
         initialValues,
-        validationSchema,
+        validationSchema: validationSchema,
         enableReinitialize: true,
         onSubmit: async (values) => {
             try {
-                const clientuserid = localStorage.getItem('clientuserid') || "";
-                const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
-
                 let url = '';
                 if (!clientuserid) {
                     enqueueSnackbar("Client user ID is missing.", { variant: "error" });
@@ -56,12 +55,15 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 } else {
                     url = `${utils.baseUrl}/api/expenses/create`;
                 }
-                values.clientuserid = clientuserid;
+
                 const data = {
                     ...values,
                     clientorganizationid: clientOrganizationId,
                     createdbyuserid: clientuserid,
-                    modifiedbyuserid: clientuserid
+                    modifiedbyuserid: clientuserid,
+                    clientuserid: clientuser?.[0]?.clientuserid || "",
+                    clientusername: clientuser?.[0]?.name || ""
+
                 };
                 await axios.post(url, { values: data }, {
                     headers: { 'Content-Type': 'application/json' },
@@ -141,35 +143,6 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                                     </select>
                                     {formik.touched.status && formik.errors.status && (
                                         <div className="text-red-500 text-sm">{formik.errors.status}</div>
-                                    )}
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
-                                        Paid By
-                                    </label>
-                                    <select
-                                        name="clientuserid"
-                                        className="w-full px-3 py-2 border rounded-md dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600"
-                                        value={formik.values.clientusername}
-                                        onChange={(e) => {
-                                            const selectedUserId = e.target.value;
-                                            const selectedUser = clientUsers.find(
-                                                (user) => user.lookupid === selectedUserId
-                                            );
-                                            formik.setFieldValue("clientusername", selectedUserId || "");
-                                            formik.setFieldValue("clientuserid", localStorage.getItem('clientuserid') || "");
-                                        }}
-                                        onBlur={formik.handleBlur}
-                                    >
-                                        <option value="">Select Paid By</option>
-                                        {clientUsers.map((user) => (
-                                            <option key={user.lookupid} value={user.displayValue}>
-                                                {user.displayValue}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    {formik.touched.clientuserid && formik.errors.clientuserid && (
-                                        <div className="text-red-500 text-sm">{formik.errors.clientuserid}</div>
                                     )}
                                 </div>
 
