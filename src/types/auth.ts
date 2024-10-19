@@ -8,6 +8,6 @@ export interface LoginProps {
 export interface UserProfile {
   name: string;
   email: string;
-  phone: string;
+  location: string;
   roleid?: number;
 }
