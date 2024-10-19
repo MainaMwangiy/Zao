@@ -13,9 +13,9 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
 }) => {
     const { enqueueSnackbar } = useSnackbar();
     const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
-    const user = localStorage.getItem('user') || "{}";
+    const user = localStorage.getItem('clientuser') || "{}";
     const clientuser = JSON.parse(user);
-    const clientuserid = clientuser?.[0]?.clientuserid;
+    const clientuserid = clientuser?.clientuserid;
 
     // Define the initial values for Formik form
     const initialValues: ExpenseProps = {
@@ -62,7 +62,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     createdbyuserid: clientuserid,
                     modifiedbyuserid: clientuserid,
                     clientuserid: clientuserid || "",
-                    clientusername: clientuser?.[0]?.name || ""
+                    clientusername: clientuser?.name || ""
 
                 };
                 await axios.post(url, { values: data }, {
