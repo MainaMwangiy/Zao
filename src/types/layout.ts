@@ -7,6 +7,7 @@ export interface ProjectsProps {
     imagesurl: string;
     projectid: string;
     roleid: number;
+    costprojectestimation: string;
   }
   
   export  interface Organization {

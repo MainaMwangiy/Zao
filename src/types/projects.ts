@@ -6,6 +6,7 @@ export interface ProjectProps {
     status: string;
     projectplan: string;
     clientorganizationid: string;
+    costProjectEstimation: string;
 }
 
 export interface DataItem {
@@ -35,5 +36,6 @@ export interface SummaryProps {
         size: string;
         status: string;
         projectPlanIncluded: boolean;
+        costProjectEstimation: string;
     };
 }

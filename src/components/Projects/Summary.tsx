@@ -3,7 +3,7 @@ import { SummaryProps } from '../../types';
 
 const Summary: React.FC<SummaryProps> = ({ projectData }) => {
     const totalexpenses = localStorage.getItem('totalexpenses');
-    const estimatedCosts = 620450;
+    const estimatedCosts = Number(projectData.costProjectEstimation || 0);
     const overdueValues = Number(totalexpenses) - estimatedCosts;
     const percentageIncrease = overdueValues / Number(totalexpenses) * 100;
     return (
