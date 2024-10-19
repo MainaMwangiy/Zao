@@ -11,7 +11,7 @@ import { UserProfile } from '../../types';
 const initialValues: UserProfile = {
     name: '',
     email: '',
-    phone: '',
+    location: '',
 }
 
 const validationSchema = Yup.object({
@@ -19,33 +19,20 @@ const validationSchema = Yup.object({
     email: Yup.string()
         .email("Invalid email format")
         .required("Email is required"),
-    phone: Yup.string().required("Phone is required")
+    location: Yup.string().required("Phone is required")
 });
 
 const Profile: React.FC = () => {
     const [activeTab, setActiveTab] = useState('account');
     const { enqueueSnackbar } = useSnackbar();
-    const [userDetails, setUserDetails] = useState<UserProfile>(initialValues);
     const imageSrc = '';
     const clientorganizationid = localStorage.getItem("clientorganizationid");
     const clientusers = localStorage.getItem("clientuser") || "";
     const roles = JSON.parse(clientusers);
     const roleid = roles?.roleid;
-    useEffect(() => {
-        const storedUser = localStorage.getItem('clientuser');
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            setUserDetails({
-                name: parsedUser.name || '',
-                email: parsedUser.email || '',
-                phone: parsedUser.phone || '',
-                roleid: parsedUser.roleid || undefined
-            });
-        }
-    }, []);
 
     const formik = useFormik({
-        initialValues: userDetails,
+        initialValues: initialValues,
         validationSchema,
         enableReinitialize: true,
         onSubmit: async (values) => {
@@ -66,6 +53,19 @@ const Profile: React.FC = () => {
             }
         },
     });
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('clientuser');
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            formik.setValues({
+                name: parsedUser.name || '',
+                email: parsedUser.email || '',
+                location: parsedUser.location || '',
+                roleid: parsedUser.roleid || undefined
+            });
+        }
+    }, []);
 
     return (
         <div className="p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
@@ -114,28 +114,43 @@ const Profile: React.FC = () => {
                                         <label className="text-gray-700 dark:text-gray-300">Full Name</label>
                                         <input
                                             type="text"
+                                            name="name"
                                             className="mt-1 p-2 w-full rounded-lg border dark:bg-gray-700 dark:text-gray-300"
-                                            value={userDetails.name}
-                                            onChange={(e) => setUserDetails({ ...userDetails, name: e.target.value })}
+                                            value={formik.values.name}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
                                         />
+                                        {formik.touched.name && formik.errors.name ? (
+                                            <div className="text-red-500">{formik.errors.name}</div>
+                                        ) : null}
                                     </div>
                                     <div>
                                         <label className="text-gray-700 dark:text-gray-300">Email</label>
                                         <input
                                             type="email"
+                                            name="email"
                                             className="mt-1 p-2 w-full rounded-lg border dark:bg-gray-700 dark:text-gray-300"
-                                            value={userDetails.email}
-                                            onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
+                                            value={formik.values.email}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
                                         />
+                                        {formik.touched.email && formik.errors.email ? (
+                                            <div className="text-red-500">{formik.errors.email}</div>
+                                        ) : null}
                                     </div>
                                     <div>
-                                        <label className="text-gray-700 dark:text-gray-300">Phone Number</label>
+                                        <label className="text-gray-700 dark:text-gray-300">Location</label>
                                         <input
                                             type="tel"
+                                            name="location"
                                             className="mt-1 p-2 w-full rounded-lg border dark:bg-gray-700 dark:text-gray-300"
-                                            value={userDetails.phone}
-                                            onChange={(e) => setUserDetails({ ...userDetails, phone: e.target.value })}
+                                            value={formik.values.location}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
                                         />
+                                        {formik.touched.location && formik.errors.location ? (
+                                            <div className="text-red-500">{formik.errors.location}</div>
+                                        ) : null}
                                     </div>
                                 </div>
                                 <button
