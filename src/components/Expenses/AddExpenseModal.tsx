@@ -12,10 +12,10 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     expense,
 }) => {
     const { enqueueSnackbar } = useSnackbar();
-    const clientuserid = localStorage.getItem('clientuserid') || "";
     const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
     const user = localStorage.getItem('user') || "{}";
     const clientuser = JSON.parse(user);
+    const clientuserid = clientuser?.[0]?.clientuserid;
 
     // Define the initial values for Formik form
     const initialValues: ExpenseProps = {
@@ -61,7 +61,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     clientorganizationid: clientOrganizationId,
                     createdbyuserid: clientuserid,
                     modifiedbyuserid: clientuserid,
-                    clientuserid: clientuser?.[0]?.clientuserid || "",
+                    clientuserid: clientuserid || "",
                     clientusername: clientuser?.[0]?.name || ""
 
                 };
