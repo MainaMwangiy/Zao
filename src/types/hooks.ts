@@ -5,5 +5,5 @@ export interface ConfirmationDialogProps {
     content: string;
     onCancel: () => void;
     onConfirm: () => void;
-    confirmDiscard: string;
+    confirmDiscard?: string;
 }

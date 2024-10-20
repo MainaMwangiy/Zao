@@ -223,7 +223,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 content={showConfirmationDialog ? "Are you sure you want to submit these details?" : "You have unsaved changes. Are you sure you want to discard them?"}
                 onCancel={() => showConfirmationDialog ? setShowConfirmationDialog(false) : setShowCancelConfirmation(false)}
                 onConfirm={showConfirmationDialog ? onConfirm : confirmCancel}
-                confirmDiscard={showConfirmationDialog ? "Confirm" : "Discard"}
+                confirmDiscard={showConfirmationDialog ? "Submit" : "Discard"}
             />
         </div>
     );
