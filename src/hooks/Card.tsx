@@ -58,7 +58,7 @@ const Card: React.FC<CardProps> = ({
         <img
           src="https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3"
           alt="Project"
-          className="w-full  h-1/2 rounded-lg mb-4"
+          className="w-full rounded-lg mb-4"
           onClick={handleOpenTracker}
         />
       )}
