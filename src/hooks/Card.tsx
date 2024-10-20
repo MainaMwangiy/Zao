@@ -11,6 +11,7 @@ interface CardProps {
   status: string;
   projectPlanIncluded: boolean;
   costProjectEstimation: string;
+  imagesurl: string;
 }
 
 interface BlobItem {
@@ -29,7 +30,8 @@ const Card: React.FC<CardProps> = ({
   size,
   status,
   projectPlanIncluded,
-  costProjectEstimation
+  costProjectEstimation,
+  imagesurl
 }) => {
   const navigate = useNavigate();
 
@@ -45,22 +47,25 @@ const Card: React.FC<CardProps> = ({
         size,
         status,
         projectPlanIncluded,
-        costProjectEstimation
+        costProjectEstimation,
+        imagesurl
       },
     });
   };
-
+  const imageSrc = imagesurl ? imagesurl : "https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3";
   return (
     <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md">
       {images.length > 0 ? (
         <Carousel images={images} />
       ) : (
-        <img
-          src="https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3"
-          alt="Project"
-          className="w-full rounded-lg mb-4"
-          onClick={handleOpenTracker}
-        />
+        <div className="h-64 relative">
+          <img
+            src={imageSrc}
+            alt="Project"
+            className="w-full h-full object-cover rounded-lg mb-4"
+            onClick={handleOpenTracker}
+          />
+        </div>
       )}
       <h3 className="mt-2 text-lg font-semibold" onClick={handleOpenTracker}>{title}</h3>
       <p className="text-sm text-gray-600 dark:text-gray-400">Added by: {addedBy}, {location}</p>
