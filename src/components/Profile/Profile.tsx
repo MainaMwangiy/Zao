@@ -19,7 +19,7 @@ const validationSchema = Yup.object({
     email: Yup.string()
         .email("Invalid email format")
         .required("Email is required"),
-    location: Yup.string().required("Phone is required")
+    location: Yup.string().required("Location is required")
 });
 
 const Profile: React.FC = () => {
@@ -141,7 +141,7 @@ const Profile: React.FC = () => {
                                     <div>
                                         <label className="text-gray-700 dark:text-gray-300">Location</label>
                                         <input
-                                            type="tel"
+                                            type="text"
                                             name="location"
                                             className="mt-1 p-2 w-full rounded-lg border dark:bg-gray-700 dark:text-gray-300"
                                             value={formik.values.location}
