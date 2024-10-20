@@ -22,7 +22,7 @@ const Expenses: React.FC<ExpensesProjectProps> = ({ projectData, isProject }) =>
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const totalexpenses = localStorage.getItem('totalexpenses');
+  const [totalExpenses, setTotalExpenses] = useState<string>('');
   const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
   const projectid = projectData?.id || 0;
 
@@ -59,10 +59,29 @@ const Expenses: React.FC<ExpensesProjectProps> = ({ projectData, isProject }) =>
     } finally {
       setIsLoading(false);
     }
-  }, 1000), [currentPage, itemsPerPage]);
+  }, 5000), [currentPage, itemsPerPage]);
+
+  const fetchTotalExpenses = async () => {
+    try {
+      const values = {
+        clientorganizationid: clientorganizationid,
+        projectid: isProject ? projectid : undefined
+      }
+      const url = `${utils.baseUrl}/api/expenses/total`;
+      const response = await axios.post(url, { values }, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const projects = response.data.data[0].totalexpenses;
+      localStorage.setItem("totalexpenses", projects)
+      setTotalExpenses(projects)
+    } catch (error) {
+      enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
+    }
+  }
 
   useEffect(() => {
     fetchData(searchTerm);
+    fetchTotalExpenses();
   }, [showExpenseModal, currentPage, searchTerm, fetchData]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,7 +194,7 @@ const Expenses: React.FC<ExpensesProjectProps> = ({ projectData, isProject }) =>
           <div className="flex flex-row items-center w-full space-x-2 mb-4">
             <div className="flex items-center bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-1 rounded-lg shadow-md">
               <p className="font-semibold text-base mr-2">Total Expenses:</p>
-              <p className="font-bold text-lg text-red-600 dark:text-red-400">KES {totalexpenses}</p>
+              <p className="font-bold text-lg text-red-600 dark:text-red-400">KES {totalExpenses || 0}</p>
             </div>
             {isProject &&
               <button
