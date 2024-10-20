@@ -6,6 +6,7 @@ import axios from "axios";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 // Define the initial values for Formik form
 const initialValues = {
@@ -49,11 +50,11 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   setShowModal,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [clientOrganizations, setClientOrganizations] = useState<AuthProps[]>(
-    []
-  );
+  const [clientOrganizations, setClientOrganizations] = useState<AuthProps[]>([]);
   const clientusers = localStorage.getItem("clientuser") || "";
   const roles = JSON.parse(clientusers);
 
@@ -102,14 +103,39 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     },
   });
 
+  const handleSubmit = () => {
+    if (formik.dirty) {
+      setShowConfirmationDialog(true);
+    } else {
+      formik.submitForm();
+    }
+  };
+
+  const onConfirm = () => {
+    setShowConfirmationDialog(false);
+    formik.submitForm();
+  };
+
+  const onCancel = () => {
+    if (formik.dirty) {
+      setShowCancelConfirmation(true);
+    } else {
+      setShowModal(false);
+    }
+  };
+
+  const confirmCancel = () => {
+    setShowModal(false);
+    setShowCancelConfirmation(false);
+  };
+
   const allowedOrganizationIds = roles.clientorganizationids;
-  
   const filteredOrganizations =
     roles.roleid === 1
       ? clientOrganizations
       : clientOrganizations.filter(
-          orgs => orgs.clientorganizationid === allowedOrganizationIds
-        );
+        orgs => orgs.clientorganizationid === allowedOrganizationIds
+      );
 
   return (
     <div>
@@ -130,7 +156,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
             </h2>
 
             {/* Form */}
-            <form onSubmit={formik.handleSubmit}>
+            <form >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
@@ -324,13 +350,13 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                 <button
                   type="button"
                   className="mr-4 px-4 py-2 border rounded-md dark:text-gray-300 dark:border-gray-600"
-                  onClick={() => setShowModal(false)}
+                  onClick={onCancel}
                 >
                   Cancel
                 </button>
                 <button
-                  type="submit"
-                  // onClick={() => formik.handleSubmit()}
+                  type="button"
+                  onClick={handleSubmit}
                   className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300"
                 >
                   Add User
@@ -340,6 +366,14 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
           </div>
         </div>
       )}
+      <ConfirmationDialog
+        open={showConfirmationDialog || showCancelConfirmation}
+        title={showConfirmationDialog ? "Confirm Submission" : "Unsaved Changes"}
+        content={showConfirmationDialog ? "Are you sure you want to submit these details?" : "You have unsaved changes. Are you sure you want to discard them?"}
+        onCancel={() => showConfirmationDialog ? setShowConfirmationDialog(false) : setShowCancelConfirmation(false)}
+        onConfirm={showConfirmationDialog ? onConfirm : confirmCancel}
+        confirmDiscard={showConfirmationDialog ? "Submit" : "Discard"}
+      />
     </div>
   );
 };

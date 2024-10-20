@@ -110,7 +110,7 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
                             {harvest ? "Edit Harvest" : "Add New Harvest"}
                         </h2>
 
-                        <form onSubmit={formik.handleSubmit}>
+                        <form >
                             <div className="grid grid-cols-1 gap-4 mb-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Bags</label>
@@ -181,7 +181,7 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
                                     Cancel
                                 </button>
                                 <button
-                                    type="submit"
+                                    type="button"
                                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300"
                                     onClick={handleSubmit}
                                 >

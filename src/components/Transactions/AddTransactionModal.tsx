@@ -5,6 +5,7 @@ import axios from "axios";
 import { useSnackbar } from "notistack";
 import utils from "../../utils";
 import { AddTransactionModalProps, User } from "../../types";
+import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
 const initialValues = {
     name: "",
@@ -25,6 +26,8 @@ const validationSchema = Yup.object({
 const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransactionModal, setTransactionShowModal }) => {
     const { enqueueSnackbar } = useSnackbar();
     const [users, setUsers] = useState<User[]>([]);
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+    const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
     const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
     const clientusers = localStorage.getItem('clientuser') || '';
     const roles = JSON.parse(clientusers);
@@ -83,6 +86,31 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
         formik.setFieldValue("clientuserid", clientuserid);
     };
 
+    const handleSubmit = () => {
+        if (formik.dirty) {
+            setShowConfirmationDialog(true);
+        } else {
+            formik.submitForm();
+        }
+    };
+
+    const onConfirm = () => {
+        setShowConfirmationDialog(false);
+        formik.submitForm();
+    };
+
+    const onCancel = () => {
+        if (formik.dirty) {
+            setShowCancelConfirmation(true);
+        } else {
+            setTransactionShowModal(false);
+        }
+    };
+
+    const confirmCancel = () => {
+        setTransactionShowModal(false);
+        setShowCancelConfirmation(false);
+    };
     return (
         <div>
             {/* Button to open the modal */}
@@ -100,7 +128,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
                         <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Add New Transaction</h2>
 
                         {/* Form */}
-                        <form onSubmit={formik.handleSubmit}>
+                        <form >
                             <div className="grid grid-cols-1 gap-4 mb-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">Name</label>
@@ -171,13 +199,14 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
                                 <button
                                     type="button"
                                     className="mr-4 px-4 py-2 border rounded-md dark:text-gray-300 dark:border-gray-600"
-                                    onClick={() => setTransactionShowModal(false)}
+                                    onClick={onCancel}
                                 >
                                     Cancel
                                 </button>
                                 <button
-                                    type="submit"
+                                    type="button"
                                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300"
+                                    onClick={handleSubmit}
                                 >
                                     Add Transaction
                                 </button>
@@ -186,6 +215,14 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ showTransacti
                     </div>
                 </div>
             )}
+            <ConfirmationDialog
+                open={showConfirmationDialog || showCancelConfirmation}
+                title={showConfirmationDialog ? "Confirm Submission" : "Unsaved Changes"}
+                content={showConfirmationDialog ? "Are you sure you want to submit these details?" : "You have unsaved changes. Are you sure you want to discard them?"}
+                onCancel={() => showConfirmationDialog ? setShowConfirmationDialog(false) : setShowCancelConfirmation(false)}
+                onConfirm={showConfirmationDialog ? onConfirm : confirmCancel}
+                confirmDiscard={showConfirmationDialog ? "Submit" : "Discard"}
+            />
         </div>
     );
 };

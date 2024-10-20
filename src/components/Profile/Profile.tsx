@@ -7,6 +7,7 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import * as Yup from "yup";
 import { UserProfile } from '../../types';
+import ConfirmationDialog from '../../hooks/ConfirmationDialog';
 
 const initialValues: UserProfile = {
     name: '',
@@ -24,6 +25,8 @@ const validationSchema = Yup.object({
 
 const Profile: React.FC = () => {
     const [activeTab, setActiveTab] = useState('account');
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+    const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const imageSrc = '';
     const clientorganizationid = localStorage.getItem("clientorganizationid");
@@ -66,6 +69,19 @@ const Profile: React.FC = () => {
             });
         }
     }, []);
+
+    const handleSubmit = () => {
+        if (formik.dirty) {
+            setShowConfirmationDialog(true);
+        } else {
+            formik.submitForm();
+        }
+    };
+
+    const onConfirm = () => {
+        setShowConfirmationDialog(false);
+        formik.submitForm();
+    };
 
     return (
         <div className="p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
@@ -155,13 +171,22 @@ const Profile: React.FC = () => {
                                 </div>
                                 <button
                                     className="bg-pink-500 text-white px-4 py-2 rounded-lg mt-4"
-                                    type='submit'
+                                    type='button'
+                                    onClick={handleSubmit}
                                 >
                                     Save Changes
                                 </button>
                             </div>
                         </form>
 
+                        <ConfirmationDialog
+                            open={showConfirmationDialog || showCancelConfirmation}
+                            title={showConfirmationDialog ? "Confirm Submission" : "Unsaved Changes"}
+                            content={showConfirmationDialog ? "Are you sure you want to submit these details?" : "You have unsaved changes. Are you sure you want to discard them?"}
+                            onCancel={() => showConfirmationDialog ? setShowConfirmationDialog(false) : setShowCancelConfirmation(false)}
+                            onConfirm={onConfirm}
+                            confirmDiscard={showConfirmationDialog ? "Submit" : "Discard"}
+                        />
                         {/* Deactivate Account */}
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                             <h2 className="text-gray-700 dark:text-gray-300 text-lg font-bold mb-4">Deactivate Account</h2>
