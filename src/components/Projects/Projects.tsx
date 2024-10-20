@@ -40,7 +40,7 @@ const Projects: React.FC = () => {
 
             <div>
                 {activeTab === 'summary' && <Summary projectData={projectData} />}
-                {activeTab === 'expense' && <Expenses />}
+                {activeTab === 'expense' && <Expenses projectData={projectData} isProject={true} />}
                 {activeTab === 'analytics' && <Analytics />}
                 {activeTab === 'gallery' && <Gallery />}
             </div>

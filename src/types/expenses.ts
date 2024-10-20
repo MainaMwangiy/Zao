@@ -33,6 +33,7 @@ export interface ExpensesProps {
     showExpenseModal: boolean;
     setExpenseShowModal: React.Dispatch<React.SetStateAction<boolean>>;
     expense?: ExpenseProps | null;
+    projectid?: string | number;
 }
 
 export  interface ExpenseRowProps {

@@ -10,6 +10,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     showExpenseModal,
     setExpenseShowModal,
     expense,
+    projectid
 }) => {
     const { enqueueSnackbar } = useSnackbar();
     const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
@@ -62,7 +63,8 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     createdbyuserid: clientuserid,
                     modifiedbyuserid: clientuserid,
                     clientuserid: clientuserid || "",
-                    clientusername: clientuser?.name || ""
+                    clientusername: clientuser?.name || "",
+                    projectid: projectid
 
                 };
                 await axios.post(url, { values: data }, {
