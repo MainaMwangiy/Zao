@@ -282,6 +282,7 @@ const Expenses: React.FC<ExpensesProjectProps> = ({ projectData, isProject }) =>
               showExpenseModal={showExpenseModal}
               setExpenseShowModal={setExpenseShowModal}
               expense={selectedExpense}
+              projectid={projectid}
             />
           )}
 
