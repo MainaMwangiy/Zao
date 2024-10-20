@@ -8,9 +8,9 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/
 import Loader from "../../hooks/Loader";
 import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
 import _ from 'lodash';
-import { ExpensesProps } from "../../types";
+import { ExpensesProjectProps, ExpensesProps } from "../../types";
 
-const Expenses: React.FC = () => {
+const Expenses: React.FC<ExpensesProjectProps> = ({ projectData, isProject }) => {
   const [showExpenseModal, setExpenseShowModal] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState<ExpensesProps | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -22,9 +22,9 @@ const Expenses: React.FC = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
-
   const totalexpenses = localStorage.getItem('totalexpenses');
   const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
+  const projectid = projectData?.id || 0;
 
   const handlePageChange = (direction: 'next' | 'prev') => {
     if (direction === 'next' && currentPage < Math.ceil(totalItems / itemsPerPage)) {
@@ -38,7 +38,8 @@ const Expenses: React.FC = () => {
     page: currentPage,
     pageSize: itemsPerPage,
     searchTerm: searchTerm.trim(),
-    clientorganizationid
+    clientorganizationid,
+    projectid: isProject ? projectid : undefined
   };
 
   const fetchData = useCallback(_.debounce(async (searchTerm: string) => {
@@ -176,18 +177,18 @@ const Expenses: React.FC = () => {
               <p className="font-semibold text-base mr-2">Total Expenses:</p>
               <p className="font-bold text-lg text-red-600 dark:text-red-400">KES {totalexpenses}</p>
             </div>
-
-            <button
-              className="bg-blue-600 hover:bg-blue-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
-              onClick={() => {
-                setSelectedExpense(null);
-                setExpenseShowModal(true);
-              }}
-            >
-              <AiOutlinePlus className="text-lg md:mr-1" />
-              <span className="hidden md:inline text-sm">Add Expense</span>
-            </button>
-
+            {isProject &&
+              <button
+                className="bg-blue-600 hover:bg-blue-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
+                onClick={() => {
+                  setSelectedExpense(null);
+                  setExpenseShowModal(true);
+                }}
+              >
+                <AiOutlinePlus className="text-lg md:mr-1" />
+                <span className="hidden md:inline text-sm">Add Expense</span>
+              </button>
+            }
             <button
               className="bg-green-600 hover:bg-green-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
               onClick={handleImportExpenses}
