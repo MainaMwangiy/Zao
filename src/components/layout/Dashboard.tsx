@@ -224,6 +224,7 @@ const Dashboard: React.FC = () => {
               size={item.size}
               status={item.status}
               projectPlanIncluded={item.projectplan}
+              costProjectEstimation={item.costprojectestimation}
             />
           ))}
         </div>

@@ -1,34 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import Security from './Security';
 import { FaUser, FaLock, FaUserCircle } from 'react-icons/fa';
+import { useSnackbar } from 'notistack';
+import utils from '../../utils';
+import { useFormik } from 'formik';
+import axios from 'axios';
+import * as Yup from "yup";
+import { UserProfile } from '../../types';
+
+const initialValues: UserProfile = {
+    name: '',
+    email: '',
+    location: '',
+}
+
+const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    email: Yup.string()
+        .email("Invalid email format")
+        .required("Email is required"),
+    location: Yup.string().required("Phone is required")
+});
 
 const Profile: React.FC = () => {
     const [activeTab, setActiveTab] = useState('account');
-    const [userDetails, setUserDetails] = useState<{ name: string; email: string; phone: string }>({
-        name: '',
-        email: '',
-        phone: '',
-    });
+    const { enqueueSnackbar } = useSnackbar();
     const imageSrc = '';
+    const clientorganizationid = localStorage.getItem("clientorganizationid");
+    const clientusers = localStorage.getItem("clientuser") || "";
+    const roles = JSON.parse(clientusers);
+    const roleid = roles?.roleid;
 
-    // Get the user details from localStorage when the component mounts
+    const formik = useFormik({
+        initialValues: initialValues,
+        validationSchema,
+        enableReinitialize: true,
+        onSubmit: async (values) => {
+            try {
+                const data = {
+                    ...values,
+                    roleid: roleid,
+                    clientorganizationid: clientorganizationid
+                }
+                const url = `${utils.baseUrl}/api/auth/createUpdate`;
+                await axios.post(url, { values: data }, {
+                    headers: { "Content-Type": "application/json" },
+                });
+                enqueueSnackbar("User updated successfully.", { variant: "success" });
+            } catch (error) {
+                console.error('Error updating user:', error);
+                enqueueSnackbar("User update failed. Please try again.", { variant: "error" });
+            }
+        },
+    });
+
     useEffect(() => {
         const storedUser = localStorage.getItem('clientuser');
         if (storedUser) {
             const parsedUser = JSON.parse(storedUser);
-            setUserDetails({
+            formik.setValues({
                 name: parsedUser.name || '',
                 email: parsedUser.email || '',
-                phone: parsedUser.phone || '', // Use phone if available
+                location: parsedUser.location || '',
+                roleid: parsedUser.roleid || undefined
             });
         }
     }, []);
-
-    // Handle Save Changes (update localStorage)
-    const handleSaveChanges = () => {
-        localStorage.setItem('clientuser', JSON.stringify(userDetails));
-        alert('Changes saved!');
-    };
 
     return (
         <div className="p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
@@ -38,8 +75,8 @@ const Profile: React.FC = () => {
                     <button
                         onClick={() => setActiveTab('account')}
                         className={`flex items-center space-x-2 ${activeTab === 'account'
-                                ? 'text-pink-500 dark:text-pink-300 border-b-2 border-pink-500'
-                                : 'text-gray-600 dark:text-gray-400 border-b-2 border-transparent'
+                            ? 'text-pink-500 dark:text-pink-300 border-b-2 border-pink-500'
+                            : 'text-gray-600 dark:text-gray-400 border-b-2 border-transparent'
                             } p-2`}
                     >
                         <FaUser />
@@ -48,8 +85,8 @@ const Profile: React.FC = () => {
                     <button
                         onClick={() => setActiveTab('security')}
                         className={`flex items-center space-x-2 ${activeTab === 'security'
-                                ? 'text-pink-500 dark:text-pink-300 border-b-2 border-pink-500'
-                                : 'text-gray-600 dark:text-gray-400 border-b-2 border-transparent'
+                            ? 'text-pink-500 dark:text-pink-300 border-b-2 border-pink-500'
+                            : 'text-gray-600 dark:text-gray-400 border-b-2 border-transparent'
                             } p-2`}
                     >
                         <FaLock />
@@ -60,53 +97,70 @@ const Profile: React.FC = () => {
                 {/* Tab content */}
                 {activeTab === 'account' && (
                     <div className="mt-8 space-y-6">
-                        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                            <div className="flex items-center space-x-6">
-                                {imageSrc ? (
-                                    <img src={imageSrc} alt="Profile" className="w-24 h-24 rounded-full" />
-                                ) : (
-                                    <FaUserCircle className="text-gray-500" size={96} />
-                                )}
-                                <button className="bg-pink-500 text-white px-4 py-2 rounded-lg">Upload New Photo</button>
-                            </div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Allowed JPG, GIF, or PNG. Max size of 800K</p>
+                        <form onSubmit={formik.handleSubmit}>
+                            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                                <div className="flex items-center space-x-6">
+                                    {imageSrc ? (
+                                        <img src={imageSrc} alt="Profile" className="w-24 h-24 rounded-full" />
+                                    ) : (
+                                        <FaUserCircle className="text-gray-500" size={96} />
+                                    )}
+                                    <button className="bg-pink-500 text-white px-4 py-2 rounded-lg">Upload New Photo</button>
+                                </div>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Allowed JPG, GIF, or PNG. Max size of 800K</p>
 
-                            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="text-gray-700 dark:text-gray-300">Full Name</label>
-                                    <input
-                                        type="text"
-                                        className="mt-1 p-2 w-full rounded-lg border dark:bg-gray-700 dark:text-gray-300"
-                                        value={userDetails.name}
-                                        onChange={(e) => setUserDetails({ ...userDetails, name: e.target.value })}
-                                    />
+                                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-gray-700 dark:text-gray-300">Full Name</label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            className="mt-1 p-2 w-full rounded-lg border dark:bg-gray-700 dark:text-gray-300"
+                                            value={formik.values.name}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                        />
+                                        {formik.touched.name && formik.errors.name ? (
+                                            <div className="text-red-500">{formik.errors.name}</div>
+                                        ) : null}
+                                    </div>
+                                    <div>
+                                        <label className="text-gray-700 dark:text-gray-300">Email</label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            className="mt-1 p-2 w-full rounded-lg border dark:bg-gray-700 dark:text-gray-300"
+                                            value={formik.values.email}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                        />
+                                        {formik.touched.email && formik.errors.email ? (
+                                            <div className="text-red-500">{formik.errors.email}</div>
+                                        ) : null}
+                                    </div>
+                                    <div>
+                                        <label className="text-gray-700 dark:text-gray-300">Location</label>
+                                        <input
+                                            type="tel"
+                                            name="location"
+                                            className="mt-1 p-2 w-full rounded-lg border dark:bg-gray-700 dark:text-gray-300"
+                                            value={formik.values.location}
+                                            onChange={formik.handleChange}
+                                            onBlur={formik.handleBlur}
+                                        />
+                                        {formik.touched.location && formik.errors.location ? (
+                                            <div className="text-red-500">{formik.errors.location}</div>
+                                        ) : null}
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="text-gray-700 dark:text-gray-300">Email</label>
-                                    <input
-                                        type="email"
-                                        className="mt-1 p-2 w-full rounded-lg border dark:bg-gray-700 dark:text-gray-300"
-                                        value={userDetails.email}
-                                        onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="text-gray-700 dark:text-gray-300">Phone Number</label>
-                                    <input
-                                        type="tel"
-                                        className="mt-1 p-2 w-full rounded-lg border dark:bg-gray-700 dark:text-gray-300"
-                                        value={userDetails.phone}
-                                        onChange={(e) => setUserDetails({ ...userDetails, phone: e.target.value })}
-                                    />
-                                </div>
+                                <button
+                                    className="bg-pink-500 text-white px-4 py-2 rounded-lg mt-4"
+                                    type='submit'
+                                >
+                                    Save Changes
+                                </button>
                             </div>
-                            <button
-                                className="bg-pink-500 text-white px-4 py-2 rounded-lg mt-4"
-                                onClick={handleSaveChanges}
-                            >
-                                Save Changes
-                            </button>
-                        </div>
+                        </form>
 
                         {/* Deactivate Account */}
                         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
@@ -125,7 +179,7 @@ const Profile: React.FC = () => {
 
                 {activeTab === 'security' && <Security />}
             </div>
-        </div>
+        </div >
     );
 };
 

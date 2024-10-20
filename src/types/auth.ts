@@ -4,3 +4,10 @@ export interface LoginProps {
     clientorganizationid: string;
     name: string;
   }
+
+export interface UserProfile {
+  name: string;
+  email: string;
+  location: string;
+  roleid?: number;
+}
