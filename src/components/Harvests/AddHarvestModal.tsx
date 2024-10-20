@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { AddHarvestModalProps, HarvestProps } from "../../types";
+import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
 const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
     showHarvestModal,
@@ -12,6 +13,8 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
     harvest,
 }) => {
     const { enqueueSnackbar } = useSnackbar();
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+    const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
 
     // Define the initial values for Formik form
     const initialValues: HarvestProps = {
@@ -71,6 +74,32 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
             }
         },
     });
+
+    const handleSubmit = () => {
+        if (formik.dirty) {
+            setShowConfirmationDialog(true);
+        } else {
+            formik.submitForm();
+        }
+    };
+
+    const onConfirm = () => {
+        setShowConfirmationDialog(false);
+        formik.submitForm();
+    };
+
+    const onCancel = () => {
+        if (formik.dirty) {
+            setShowCancelConfirmation(true);
+        } else {
+            setHarvestShowModal(false);
+        }
+    };
+
+    const confirmCancel = () => {
+        setHarvestShowModal(false);
+        setShowCancelConfirmation(false);
+    };
 
     return (
         <>
@@ -147,13 +176,14 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
                                 <button
                                     type="button"
                                     className="mr-4 px-4 py-2 border rounded-md dark:text-gray-300 dark:border-gray-600"
-                                    onClick={() => setHarvestShowModal(false)}
+                                    onClick={onCancel}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300"
+                                    onClick={handleSubmit}
                                 >
                                     {harvest ? "Update Harvest" : "Add Harvest"}
                                 </button>
@@ -162,6 +192,14 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
                     </div>
                 </div>
             )}
+            <ConfirmationDialog
+                open={showConfirmationDialog || showCancelConfirmation}
+                title={showConfirmationDialog ? "Confirm Submission" : "Unsaved Changes"}
+                content={showConfirmationDialog ? "Are you sure you want to submit these details?" : "You have unsaved changes. Are you sure you want to discard them?"}
+                onCancel={() => showConfirmationDialog ? setShowConfirmationDialog(false) : setShowCancelConfirmation(false)}
+                onConfirm={showConfirmationDialog ? onConfirm : confirmCancel}
+                confirmDiscard={showConfirmationDialog ? "Submit" : "Discard"}
+            />
         </>
     );
 };
