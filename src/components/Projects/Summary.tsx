@@ -6,11 +6,14 @@ const Summary: React.FC<SummaryProps> = ({ projectData }) => {
     const estimatedCosts = Number(projectData.costProjectEstimation || 0);
     const overdueValues = Number(totalexpenses) - estimatedCosts;
     const percentageIncrease = overdueValues / Number(totalexpenses) * 100;
+    const imageSrc = projectData?.imagesurl ? projectData?.imagesurl : "https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3";
     return (
         <div className="dark:bg-gray-800 dark:text-gray-200 p-4 rounded-lg">
             <div className="flex flex-col md:flex-row gap-6 mb-6">
                 <div className="flex-1">
-                    <img src="https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3" alt="Project" className="w-full rounded-lg mb-4" />
+                    <div className="h-64 relative">
+                        <img src={imageSrc} alt="Project" className="w-full h-full object-cover rounded-lg mb-4" />
+                    </div>
                     <div className="dark:bg-gray-800 dark:text-gray-200 p-4 rounded-lg">
                         <h2 className="text-2xl font-semibold mb-2">{projectData.title}</h2>
                         <p className="text-sm text-gray-500 dark:text-gray-400">Location: {projectData.location}</p>
