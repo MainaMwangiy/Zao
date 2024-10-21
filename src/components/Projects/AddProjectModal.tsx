@@ -5,6 +5,7 @@ import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { ProjectProps } from "../../types";
+import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
 // Define the initial values for Formik form
 const initialValues = {
@@ -43,6 +44,9 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
   const { enqueueSnackbar } = useSnackbar();
   const clientUser = localStorage.getItem("clientuser") || "{}"
   const userDetails = JSON.parse(clientUser)
+  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
+
   const formik = useFormik<ProjectProps>({
     initialValues,
     validationSchema,
@@ -74,6 +78,33 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
     },
   });
 
+  const handleSubmit = () => {
+    if (formik.dirty) {
+      setShowConfirmationDialog(true);
+    } else {
+      formik.submitForm();
+    }
+  };
+
+  const onConfirm = () => {
+    setShowConfirmationDialog(false);
+    formik.submitForm();
+  };
+
+  const onCancel = () => {
+    if (formik.dirty) {
+      setShowCancelConfirmation(true);
+    } else {
+      setProjectshowModal(false);
+    }
+  };
+
+  const confirmCancel = () => {
+    setProjectshowModal(false);
+    setShowCancelConfirmation(false);
+  };
+
+
   return (
     <div>
       {/* Button to open the modal */}
@@ -93,7 +124,7 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
             </h2>
 
             {/* Form */}
-            <form onSubmit={formik.handleSubmit}>
+            <form >
               <div className="grid grid-cols-1 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
@@ -224,13 +255,14 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
                 <button
                   type="button"
                   className="mr-4 px-4 py-2 border rounded-md dark:text-gray-300 dark:border-gray-600"
-                  onClick={() => setProjectshowModal(false)}
+                  onClick={onCancel}
                 >
                   Cancel
                 </button>
                 <button
-                  type="submit"
+                  type="button"
                   className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300"
+                  onClick={handleSubmit}
                 >
                   Add Project
                 </button>
@@ -239,6 +271,14 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
           </div>
         </div>
       )}
+      <ConfirmationDialog
+        open={showConfirmationDialog || showCancelConfirmation}
+        title={showConfirmationDialog ? "Confirm Submission" : "Unsaved Changes"}
+        content={showConfirmationDialog ? "Are you sure you want to submit these details?" : "You have unsaved changes. Are you sure you want to discard them?"}
+        onCancel={() => showConfirmationDialog ? setShowConfirmationDialog(false) : setShowCancelConfirmation(false)}
+        onConfirm={showConfirmationDialog ? onConfirm : confirmCancel}
+        confirmDiscard={showConfirmationDialog ? "Submit" : "Discard"}
+      />
     </div>
   );
 };
