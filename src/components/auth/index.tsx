@@ -9,13 +9,11 @@ import utils from "../../utils";
 import { useNavigate } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { useSnackbar } from "notistack";
-import { LoginProps } from "../../types";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [clientorgs, setClientOrgs] = useState<LoginProps[]>([]);
 
   const fetchData = async () => {
     try {
@@ -25,7 +23,6 @@ const Login: React.FC = () => {
       });
       const clientorgs = response.data.data;
       localStorage.setItem('clientorganizations', JSON.stringify(clientorgs))
-      setClientOrgs(clientorgs)
     } catch (error) {
       enqueueSnackbar("User Loading Failed. Please try again.", { variant: "error" });
     }

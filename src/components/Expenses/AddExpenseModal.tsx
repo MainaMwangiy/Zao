@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import utils from "../../utils";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { AddExpenseModalProps, ExpenseProps } from "../../types";
+import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
 const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     showExpenseModal,
@@ -13,10 +14,12 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
     projectid
 }) => {
     const { enqueueSnackbar } = useSnackbar();
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
     const user = localStorage.getItem('clientuser') || "{}";
     const clientuser = JSON.parse(user);
     const clientuserid = clientuser?.clientuserid;
+    const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
 
     // Define the initial values for Formik form
     const initialValues: ExpenseProps = {
@@ -80,6 +83,35 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
             }
         },
     });
+    const { dirty } = formik;
+
+
+    const handleSubmit = () => {
+        if (dirty) {
+            setShowConfirmationDialog(true);
+        } else {
+            formik.submitForm();
+        }
+    };
+
+    const onConfirm = () => {
+        setShowConfirmationDialog(false);
+        formik.submitForm();
+    };
+
+    const onCancel = () => {
+        if (dirty) {
+            setShowCancelConfirmation(true);
+        } else {
+            setExpenseShowModal(false);
+            setShowCancelConfirmation(false);
+        }
+    };
+
+    const confirmCancel = () => {
+        setExpenseShowModal(false);
+        setShowCancelConfirmation(false);
+    };
 
     return (
         <div>
@@ -90,7 +122,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                             {expense ? "Edit Expense" : "Add New Expense"}
                         </h2>
 
-                        <form onSubmit={formik.handleSubmit}>
+                        <form>
                             <div className="grid grid-cols-1 gap-4 mb-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
@@ -169,13 +201,14 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                                 <button
                                     type="button"
                                     className="mr-4 px-4 py-2 border rounded-md dark:text-gray-300 dark:border-gray-600"
-                                    onClick={() => setExpenseShowModal(false)}
+                                    onClick={onCancel}
                                 >
                                     Cancel
                                 </button>
                                 <button
-                                    type="submit"
+                                    type="button"
                                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300"
+                                    onClick={handleSubmit}
                                 >
                                     {expense ? "Update Expense" : "Add Expense"}
                                 </button>
@@ -184,6 +217,14 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                     </div>
                 </div>
             )}
+            <ConfirmationDialog
+                open={showConfirmationDialog || showCancelConfirmation}
+                title={showConfirmationDialog ? "Confirm Submission" : "Unsaved Changes"}
+                content={showConfirmationDialog ? "Are you sure you want to submit these details?" : "You have unsaved changes. Are you sure you want to discard them?"}
+                onCancel={() => showConfirmationDialog ? setShowConfirmationDialog(false) : setShowCancelConfirmation(false)}
+                onConfirm={showConfirmationDialog ? onConfirm : confirmCancel}
+                confirmDiscard={showConfirmationDialog ? "Submit" : "Discard"}
+            />
         </div>
     );
 };
