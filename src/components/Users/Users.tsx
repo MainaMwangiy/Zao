@@ -7,6 +7,7 @@ import { useSnackbar } from "notistack";
 import Loader from "../../hooks/Loader";
 import { AiOutlineDownload, AiOutlinePlus } from "react-icons/ai";
 import { UsersProps } from "../../types";
+import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
 const Users: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
@@ -16,6 +17,10 @@ const Users: React.FC = () => {
   const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
   const clientusers = localStorage.getItem('clientuser') || '';
   const roles = JSON.parse(clientusers);
+  const [clientUsers, setClientUsers] = useState<UsersProps[]>([]);
+  const [selectedClientUser, setSelectedClientUser] = useState<UsersProps | null>(null);
+  const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
   const fetchData = async () => {
     try {
@@ -41,6 +46,44 @@ const Users: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, [showModal]);
+
+  const handleEditClientUser = (clientUser: UsersProps) => {
+    setSelectedClientUser(clientUser);
+    setShowModal(true);
+  };
+
+  const handleDeleteClientUser = (userId: string | number | undefined) => {
+    if (userId === undefined) {
+      console.error("Attempted to delete a user without a valid user ID.");
+      return;
+    }
+    setDeleteUserId(userId.toString());
+    setShowDeleteDialog(true);
+  };
+
+
+  const confirmDeleteClientUser = async () => {
+    if (deleteUserId) {
+      const clientorganizationid = localStorage.getItem('clientorganizationid');
+      try {
+        const url = `${utils.baseUrl}/api/clientusers/delete/${deleteUserId}`;
+        await axios.post(url, {
+          userid: deleteUserId,
+          clientorganizationid: clientorganizationid
+        }, {
+          headers: { 'Content-Type': 'application/json' },
+        });
+        enqueueSnackbar("User deleted successfully.", { variant: "success" });
+        setClientUsers(clientUsers.filter(user => user.clientuserid !== deleteUserId));
+      } catch (error) {
+        enqueueSnackbar("Failed to delete user. Please try again.", { variant: "error" });
+      } finally {
+        setShowDeleteDialog(false);
+        setDeleteUserId(null);
+      }
+    }
+  };
+
 
   return (
     <div className="container mx-auto px-2 py-6">
@@ -92,6 +135,9 @@ const Users: React.FC = () => {
                   location={user.location}
                   status={user.status}
                   role={user.role}
+                  clientuserid={user.clientuserid}
+                  onEdit={() => handleEditClientUser(user)}
+                  onDelete={() => handleDeleteClientUser(user.clientuserid)}
                 />
               ))}
             </tbody>
@@ -100,6 +146,17 @@ const Users: React.FC = () => {
             <AddUserModal
               showModal={showModal}
               setShowModal={setShowModal}
+              user={selectedClientUser}
+            />
+          )}
+          {showDeleteDialog && (
+            <ConfirmationDialog
+              open={showDeleteDialog}
+              title="Confirm Deletion"
+              content="Are you sure you want to delete this expense?"
+              onCancel={() => setShowDeleteDialog(false)}
+              onConfirm={confirmDeleteClientUser}
+              confirmDiscard={"Delete"}
             />
           )}
         </div>

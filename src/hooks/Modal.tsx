@@ -7,19 +7,8 @@ import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import ConfirmationDialog from "./ConfirmationDialog";
+import { UsersProps } from "../types";
 
-// Define the initial values for Formik form
-const initialValues = {
-  name: "",
-  email: "",
-  phoneNumber: "",
-  location: "",
-  status: "",
-  role: 0,
-  password: "",
-  roleid: 0,
-  clientorganizationid: "",
-};
 interface AuthProps {
   clientorganizationid: string;
   name: string;
@@ -43,11 +32,13 @@ const validationSchema = Yup.object({
 interface AddUserModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  user?: UsersProps | null;
 }
 
 const AddUserModal: React.FC<AddUserModalProps> = ({
   showModal,
   setShowModal,
+  user
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
@@ -57,6 +48,21 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   const [clientOrganizations, setClientOrganizations] = useState<AuthProps[]>([]);
   const clientusers = localStorage.getItem("clientuser") || "";
   const roles = JSON.parse(clientusers);
+
+  // Define the initial values for Formik form
+  const initialValues = {
+    name: user?.name || "",
+    email: user?.email || "",
+    phoneNumber: user?.phoneNumber || "",
+    location: user?.location || "",
+    status: user?.status || "",
+    role: user?.role || 0,
+    password: "",
+    roleid: user?.roleid || 0,
+    clientorganizationid: user?.clientorganizationid || "",
+    clientuserid: user?.clientuserid || ""
+  };
+
 
   useEffect(() => {
     const orgs = localStorage.getItem("clientorganizations");
@@ -75,12 +81,27 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     password: string;
     roleid: number;
     clientorganizationid: string;
+    clientuserid: string;
   }>({
-    initialValues,
+    initialValues: {
+      ...initialValues,
+      clientuserid: user?.clientuserid?.toString() || "",
+    },
     validationSchema,
     onSubmit: async values => {
       try {
-        const url = `${utils.baseUrl}/api/auth/createUpdate`;
+        let url = '';
+        if (user) {
+          if (user.clientuserid !== undefined) {
+            url = `${utils.baseUrl}/api/auth/update/${user.clientuserid.toString()}`;
+            values.clientuserid = user.clientuserid.toString();
+          } else {
+            console.error("clientuserid is undefined.");
+            return;
+          }
+        } else {
+          url = `${utils.baseUrl}/api/auth/create`;
+        }
         const roleid = utils.getRolesId(values.role as string);
         if (roleid) {
           values.roleid = roleid;
@@ -92,6 +113,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
             headers: { "Content-Type": "application/json" },
           }
         );
+        formik.resetForm();
         enqueueSnackbar("User Creation successful!", { variant: "success" });
         navigate("/users");
       } catch (error) {
@@ -121,11 +143,13 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
       setShowCancelConfirmation(true);
     } else {
       setShowModal(false);
+      formik.resetForm();
     }
   };
 
   const confirmCancel = () => {
     setShowModal(false);
+    formik.resetForm();
     setShowCancelConfirmation(false);
   };
 
@@ -359,7 +383,8 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                   onClick={handleSubmit}
                   className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300"
                 >
-                  Add User
+
+                  {user ? "Update User" : "Add User"}
                 </button>
               </div>
             </form>

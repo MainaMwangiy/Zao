@@ -26,6 +26,7 @@ export interface HarvestRowProps {
         modifiedon?: string;
     };
     onEdit: () => void;
+    onDelete: () => void;
 }
 
 export interface AddHarvestModalProps {

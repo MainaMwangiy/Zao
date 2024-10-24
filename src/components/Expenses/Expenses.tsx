@@ -312,6 +312,7 @@ const Expenses: React.FC<ExpensesProjectProps> = ({ projectData, isProject }) =>
               content="Are you sure you want to delete this expense?"
               onCancel={() => setShowDeleteDialog(false)}
               onConfirm={confirmDeleteExpense}
+              confirmDiscard={"Delete"}
             />
           )}
         </>
