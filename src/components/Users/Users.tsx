@@ -66,9 +66,9 @@ const Users: React.FC = () => {
     if (deleteUserId) {
       const clientorganizationid = localStorage.getItem('clientorganizationid');
       try {
-        const url = `${utils.baseUrl}/api/clientusers/delete/${deleteUserId}`;
+        const url = `${utils.baseUrl}/api/auth/delete/${deleteUserId}`;
         await axios.post(url, {
-          userid: deleteUserId,
+          clientuserid: deleteUserId,
           clientorganizationid: clientorganizationid
         }, {
           headers: { 'Content-Type': 'application/json' },
