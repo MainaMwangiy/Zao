@@ -29,7 +29,8 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
         modifiedon: harvest?.modifiedon || "",
         createdbyuserid: harvest?.createdbyuserid || "",
         modifiedbyuserid: harvest?.modifiedbyuserid || "",
-        clientorganizationid: harvest?.clientorganizationid || ""
+        clientorganizationid: harvest?.clientorganizationid || "",
+
     };
 
 

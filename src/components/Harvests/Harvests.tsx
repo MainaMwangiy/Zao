@@ -7,6 +7,7 @@ import AddHarvestModal from "./AddHarvestModal";
 import { AiOutlinePlus } from "react-icons/ai";
 import Loader from "../../hooks/Loader";
 import { HarvestProps } from "../../types";
+import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
 const Harvests: React.FC = () => {
     const [showHarvestModal, setHarvestShowModal] = useState(false);
@@ -14,6 +15,8 @@ const Harvests: React.FC = () => {
     const { enqueueSnackbar } = useSnackbar();
     const [harvests, setHarvests] = useState<HarvestProps[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [deleteHarvestId, setDeleteHarvestId] = useState<string | null>(null);
+    const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
     const fetchData = async () => {
         try {
@@ -44,6 +47,34 @@ const Harvests: React.FC = () => {
         setSelectedHarvest(harvest);
         setHarvestShowModal(true);
     };
+
+    const handleDeleteHarvest = (harvestId: string) => {
+        setDeleteHarvestId(harvestId);
+        setShowDeleteDialog(true);
+    };
+
+    const confirmDeleteHarvest = async () => {
+        if (deleteHarvestId) {
+            const clientorganizationid = localStorage.getItem('clientorganizationid');
+            try {
+                const url = `${utils.baseUrl}/api/harvests/delete/${deleteHarvestId}`;
+                await axios.post(url, {
+                    harvestsid: deleteHarvestId,
+                    clientorganizationid: clientorganizationid
+                }, {
+                    headers: { 'Content-Type': 'application/json' },
+                });
+                enqueueSnackbar("Harvest deleted successfully.", { variant: "success" });
+                setHarvests(harvests.filter(harvest => harvest.harvestid !== deleteHarvestId));
+            } catch (error) {
+                enqueueSnackbar("Failed to delete harvest. Please try again.", { variant: "error" });
+            } finally {
+                setShowDeleteDialog(false);
+                setDeleteHarvestId(null);
+            }
+        }
+    };
+
 
     return (
         <div className="container mx-auto px-2 py-6">
@@ -86,6 +117,7 @@ const Harvests: React.FC = () => {
                                         key={harvest.harvestid}
                                         harvest={harvest}
                                         onEdit={() => handleEditHarvest(harvest)}
+                                        onDelete={() => handleDeleteHarvest(harvest.harvestid)}
                                     />
                                 ))}
                             </tbody>
@@ -97,6 +129,16 @@ const Harvests: React.FC = () => {
                             showHarvestModal={showHarvestModal}
                             setHarvestShowModal={setHarvestShowModal}
                             harvest={selectedHarvest}
+                        />
+                    )}
+                    {showDeleteDialog && (
+                        <ConfirmationDialog
+                            open={showDeleteDialog}
+                            title="Confirm Deletion"
+                            content="Are you sure you want to delete this Harvest?"
+                            onCancel={() => setShowDeleteDialog(false)}
+                            onConfirm={confirmDeleteHarvest}
+                            confirmDiscard={"Delete"}
                         />
                     )}
                 </>

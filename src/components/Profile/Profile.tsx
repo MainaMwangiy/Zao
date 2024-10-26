@@ -31,8 +31,8 @@ const Profile: React.FC = () => {
     const imageSrc = '';
     const clientorganizationid = localStorage.getItem("clientorganizationid");
     const clientusers = localStorage.getItem("clientuser") || "";
-    const roles = JSON.parse(clientusers);
-    const roleid = roles?.roleid;
+    const user = JSON.parse(clientusers);
+    const roleid = user?.roleid;
 
     const formik = useFormik({
         initialValues: initialValues,
@@ -43,9 +43,10 @@ const Profile: React.FC = () => {
                 const data = {
                     ...values,
                     roleid: roleid,
-                    clientorganizationid: clientorganizationid
+                    clientorganizationid: clientorganizationid,
+                    clientuserid: user?.clientuserid
                 }
-                const url = `${utils.baseUrl}/api/auth/createUpdate`;
+                const url = `${utils.baseUrl}/api/auth/update/${user?.clientuserid}`;
                 await axios.post(url, { values: data }, {
                     headers: { "Content-Type": "application/json" },
                 });
