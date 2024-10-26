@@ -6,6 +6,7 @@ interface UserData {
   location: string;
   status: "Active" | "Inactive";
   role: string;
+  clientuserid: string | number | undefined;
 }
 
 interface Users {
@@ -45,7 +46,8 @@ const utils = {
   updateData: (data: UserData[]): UserData[] => {
     return data.map((dt) => ({
       ...dt,
-      role: utils.getRoles(dt.roleid) || "User"
+      role: utils.getRoles(dt.roleid) || "User",
+      clientuserid: dt.clientuserid || "",
     }));
   },
   getClientUsersList: (): Users[] => {

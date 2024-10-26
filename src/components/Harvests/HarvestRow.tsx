@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import React from "react";
 import { HarvestRowProps } from "../../types";
 
-const HarvestRow: React.FC<HarvestRowProps> = ({ harvest, onEdit }) => {
+const HarvestRow: React.FC<HarvestRowProps> = ({ harvest, onEdit, onDelete }) => {
     return (
         <tr className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
             <td className="px-4 py-4">
@@ -30,13 +30,8 @@ const HarvestRow: React.FC<HarvestRowProps> = ({ harvest, onEdit }) => {
                 <p>{harvest.modifiedbyusername}</p>
             </td>
             <td className="px-4 py-4 flex space-x-2">
-                <button
-                    className="bg-blue-500 text-white px-3 py-1 rounded"
-                    onClick={onEdit}
-                >
-                    Edit
-                </button>
-                <button className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                <button onClick={onEdit} className="bg-blue-500 text-white px-3 py-1 rounded" >Edit</button>
+                <button onClick={onDelete} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
             </td>
         </tr>
     );

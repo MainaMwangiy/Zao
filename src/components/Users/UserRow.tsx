@@ -1,7 +1,7 @@
 import React from "react";
 import { UserRowProps } from "../../types";
 
-const UserRow: React.FC<UserRowProps> = ({ name, email, location, status, role }) => {
+const UserRow: React.FC<UserRowProps> = ({ name, email, location, status, role, onEdit, onDelete }) => {
   return (
     <tr className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
       <td className="px-4 py-4">
@@ -28,8 +28,8 @@ const UserRow: React.FC<UserRowProps> = ({ name, email, location, status, role }
         <p>{role}</p>
       </td>
       <td className="px-4 py-4 flex space-x-2">
-        <button className="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>
-        <button className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+        <button onClick={onEdit} className="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>
+        <button onClick={onDelete} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
       </td>
     </tr>
   );
