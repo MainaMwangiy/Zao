@@ -220,12 +220,13 @@ const Dashboard: React.FC = () => {
               id={item.projectid}
               title={item.name}
               addedBy={user?.name}
-              location={user?.location}
+              location={item?.location}
               size={item.size}
               status={item.status}
               projectPlanIncluded={item.projectplan}
               costProjectEstimation={item.costprojectestimation}
               imagesurl={item?.imagesurl}
+              name={item?.name}
             />
           ))}
         </div>

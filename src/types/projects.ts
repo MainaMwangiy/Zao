@@ -38,6 +38,7 @@ export interface SummaryProps {
         projectPlanIncluded: boolean;
         costProjectEstimation: string;
         imagesurl: string;
+        name: string;
     };
 }
 export interface ExpensesProjectProps {
@@ -51,5 +52,5 @@ export interface ExpensesProjectProps {
         costProjectEstimation: string;
         id: string;
     };
-    isProject?: boolean;  
+    isProject?: boolean;
 }
