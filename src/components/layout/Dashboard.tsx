@@ -6,7 +6,7 @@ import { useSnackbar } from "notistack";
 import AddProjectModal from "../Projects/AddProjectModal";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { User, ListResponse, Organization, ProjectsProps } from "../../types";
+import { User, ListResponse, Organization, ProjectsProps, ClientConfig } from "../../types";
 
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
@@ -27,7 +27,7 @@ const Dashboard: React.FC = () => {
   const clientOrganizationIdString = localStorage.getItem('clientorganizationid') || "";
   const OrgId = clientOrganizationIdString ? parseInt(JSON.parse(clientOrganizationIdString)) : null;
 
-  let clientConfig = {};
+  let clientConfig: ClientConfig = {};
   for (const org of Orgs) {
     if (org.clientorganizationid === OrgId) {
       clientConfig = org.appconfig;
@@ -189,12 +189,14 @@ const Dashboard: React.FC = () => {
             {/* <button className="bg-red-500 text-white px-2 py-2 mr-2 rounded">
               Withdraw To Mpesa
             </button> */}
-            <button
-              onClick={() => navigate('/transactions')}
-              className="bg-blue-500 text-white px-2 py-2 rounded"
-            >
-              View Transactions
-            </button>
+            {clientConfig?.showTransactions &&
+              <button
+                onClick={() => navigate('/transactions')}
+                className="bg-blue-500 text-white px-2 py-2 rounded"
+              >
+                View Transactions
+              </button>
+            }
           </div>
         </div>
 
@@ -220,12 +222,13 @@ const Dashboard: React.FC = () => {
               id={item.projectid}
               title={item.name}
               addedBy={user?.name}
-              location={user?.location}
+              location={item?.location}
               size={item.size}
               status={item.status}
               projectPlanIncluded={item.projectplan}
               costProjectEstimation={item.costprojectestimation}
               imagesurl={item?.imagesurl}
+              name={item?.name}
             />
           ))}
         </div>

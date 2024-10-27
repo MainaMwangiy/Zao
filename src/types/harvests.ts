@@ -11,6 +11,7 @@ export interface HarvestProps {
     createdbyuserid?: string;
     modifiedbyuserid?: string;
     clientorganizationid?: string;
+    projectid?: string | number | undefined;
 }
 
 export interface HarvestRowProps {
@@ -33,4 +34,21 @@ export interface AddHarvestModalProps {
     showHarvestModal: boolean;
     setHarvestShowModal: React.Dispatch<React.SetStateAction<boolean>>;
     harvest?: HarvestProps | null;
+    projectid?: string | number;
+}
+
+export interface HarvestsProjectProps {
+    projectData?: {
+        title: string;
+        addedBy: string;
+        location: string;
+        size: string;
+        status: string;
+        projectPlanIncluded: boolean;
+        costProjectEstimation: string;
+        id: string;
+        projectid?: string | number;
+    };
+    isProject?: boolean;
+    projectid?: string | number;
 }

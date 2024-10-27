@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import utils from '../../utils';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
-import { Transaction, User } from '../../types';
+import { ClientConfig, Organization, Transaction, User } from '../../types';
 
 
 const Incomes: React.FC = () => {
@@ -17,6 +17,17 @@ const Incomes: React.FC = () => {
     const clientuserid: string | null = localStorage.getItem('clientuserid');
     const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 
+    const clientOrganizationsString = localStorage.getItem('clientorganizations');
+    const Orgs: Organization[] = clientOrganizationsString ? JSON.parse(clientOrganizationsString) : [];
+    const clientOrganizationIdString = localStorage.getItem('clientorganizationid') || "";
+    const OrgId = clientOrganizationIdString ? parseInt(JSON.parse(clientOrganizationIdString)) : null;
+
+    let clientConfig: ClientConfig = {};
+    for (const org of Orgs) {
+        if (org.clientorganizationid === OrgId) {
+            clientConfig = org.appconfig;
+        }
+    }
     let users: User[] = [];
     if (usersString) {
         try {
@@ -154,33 +165,33 @@ const Incomes: React.FC = () => {
                     <p className="text-sm text-gray-500 dark:text-gray-400">These are your individual earnings so far.</p>
                 </div>
 
-
                 {/* Transaction List */}
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                    <h2 className="text-gray-700 dark:text-gray-300 text-lg font-bold">Transactions</h2>
-                    <ul className="mt-4 space-y-2">
-                        {transactions.length > 0 ? (
-                            transactions.map((transaction, index) => (
-                                <li key={index} className="flex justify-between p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                                    <div className="text-left">
-                                        <span className="block text-gray-600 dark:text-gray-300 font-bold">
-                                            {transaction.name}
-                                        </span>
-                                        <span className="block text-gray-500 dark:text-gray-400 text-sm">
-                                            Notes: {transaction.notes}
-                                        </span>
-                                    </div>
-                                    <span className="text-gray-600 dark:text-gray-300">KES {transaction.amount}</span>
-                                </li>
-                            ))
-                        ) : (
-                            <p className="text-sm text-gray-500 dark:text-gray-400">No transactions added yet.</p>
-                        )}
-                    </ul>
-                </div>
-
+                {clientConfig?.showTransactions &&
+                    < div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                        <h2 className="text-gray-700 dark:text-gray-300 text-lg font-bold">Transactions</h2>
+                        <ul className="mt-4 space-y-2">
+                            {transactions.length > 0 ? (
+                                transactions.map((transaction, index) => (
+                                    <li key={index} className="flex justify-between p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                                        <div className="text-left">
+                                            <span className="block text-gray-600 dark:text-gray-300 font-bold">
+                                                {transaction.name}
+                                            </span>
+                                            <span className="block text-gray-500 dark:text-gray-400 text-sm">
+                                                Notes: {transaction.notes}
+                                            </span>
+                                        </div>
+                                        <span className="text-gray-600 dark:text-gray-300">KES {transaction.amount}</span>
+                                    </li>
+                                ))
+                            ) : (
+                                <p className="text-sm text-gray-500 dark:text-gray-400">No transactions added yet.</p>
+                            )}
+                        </ul>
+                    </div>
+                }
             </div>
-        </div>
+        </div >
     );
 };
 

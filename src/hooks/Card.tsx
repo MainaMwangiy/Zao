@@ -12,6 +12,7 @@ interface CardProps {
   projectPlanIncluded: boolean;
   costProjectEstimation: string;
   imagesurl: string;
+  name?: string;
 }
 
 interface BlobItem {
@@ -31,7 +32,8 @@ const Card: React.FC<CardProps> = ({
   status,
   projectPlanIncluded,
   costProjectEstimation,
-  imagesurl
+  imagesurl,
+  name
 }) => {
   const navigate = useNavigate();
 
@@ -48,7 +50,8 @@ const Card: React.FC<CardProps> = ({
         status,
         projectPlanIncluded,
         costProjectEstimation,
-        imagesurl
+        imagesurl,
+        name
       },
     });
   };
@@ -68,7 +71,7 @@ const Card: React.FC<CardProps> = ({
         </div>
       )}
       <h3 className="mt-2 text-lg font-semibold" onClick={handleOpenTracker}>{title}</h3>
-      <p className="text-sm text-gray-600 dark:text-gray-400">Added by: {addedBy}, {location}</p>
+      <p className="text-sm text-gray-600 dark:text-gray-400">Added by: {name}, {location}</p>
       <p>Size {size} acres</p>
       <p className="text-green-500 font-bold">{status}</p>
       <p className="mt-2 text-gray-600 dark:text-gray-400">

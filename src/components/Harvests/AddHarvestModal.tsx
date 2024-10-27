@@ -11,6 +11,7 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
     showHarvestModal,
     setHarvestShowModal,
     harvest,
+    projectid
 }) => {
     const { enqueueSnackbar } = useSnackbar();
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
@@ -30,7 +31,7 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
         createdbyuserid: harvest?.createdbyuserid || "",
         modifiedbyuserid: harvest?.modifiedbyuserid || "",
         clientorganizationid: harvest?.clientorganizationid || "",
-
+        projectid: harvest?.projectid || ""
     };
 
 
@@ -56,16 +57,20 @@ const AddHarvestModal: React.FC<AddHarvestModalProps> = ({
                     enqueueSnackbar("Client user ID is missing.", { variant: "error" });
                     return;
                 }
+                const data = {
+                    ...values,
+                    harvestid: harvest?.harvestid || 0,
+                    createdbyuserid: clientuserid,
+                    modifiedbyuserid: clientuserid,
+                    clientorganizationid: clientOrganizationId,
+                    projectid: projectid
+                }
                 if (harvest) {
                     url = `${utils.baseUrl}/api/harvests/update/${harvest.harvestid}`;
-                    values.harvestid = harvest.harvestid;
                 } else {
                     url = `${utils.baseUrl}/api/harvests/create`;
                 }
-                values.createdbyuserid = clientuserid;
-                values.modifiedbyuserid = clientuserid;
-                values.clientorganizationid = clientOrganizationId;
-                await axios.post(url, { values }, {
+                await axios.post(url, { values: data }, {
                     headers: { 'Content-Type': 'application/json' },
                 });
                 enqueueSnackbar(harvest ? "Harvest updated successfully!" : "Harvest added successfully!", { variant: "success" });
