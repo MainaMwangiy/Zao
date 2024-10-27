@@ -6,10 +6,10 @@ import { useSnackbar } from "notistack";
 import AddHarvestModal from "./AddHarvestModal";
 import { AiOutlinePlus } from "react-icons/ai";
 import Loader from "../../hooks/Loader";
-import { HarvestProps } from "../../types";
+import { HarvestProps, HarvestsProjectProps } from "../../types";
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
-const Harvests: React.FC = () => {
+const Harvests: React.FC<HarvestsProjectProps> = ({ projectData, isProject }) => {
     const [showHarvestModal, setHarvestShowModal] = useState(false);
     const [selectedHarvest, setSelectedHarvest] = useState<HarvestProps | null>(null);
     const { enqueueSnackbar } = useSnackbar();
@@ -17,13 +17,15 @@ const Harvests: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [deleteHarvestId, setDeleteHarvestId] = useState<string | null>(null);
     const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
+    const projectid = projectData?.id || 0;
 
     const fetchData = async () => {
         try {
             setIsLoading(true);
             const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
             const values = {
-                clientorganizationid
+                clientorganizationid,
+                projectid: isProject ? projectid : undefined
             };
             const url = `${utils.baseUrl}/api/harvests/list`;
             const response = await axios.post(url, { values }, {
@@ -84,16 +86,18 @@ const Harvests: React.FC = () => {
                 <>
                     <div className="flex justify-between items-center mb-4">
                         <h1 className="text-2xl font-semibold">All Harvests</h1>
-                        <button
-                            className="bg-blue-500 hover:bg-blue-700 transition text-white px-4 py-2 rounded-lg shadow-md flex items-center"
-                            onClick={() => {
-                                setSelectedHarvest(null);
-                                setHarvestShowModal(true);
-                            }}
-                        >
-                            <AiOutlinePlus className="text-lg md:mr-1" />
-                            <span className="hidden md:inline text-sm">Add Harvest</span>
-                        </button>
+                        {isProject &&
+                            <button
+                                className="bg-blue-500 hover:bg-blue-700 transition text-white px-4 py-2 rounded-lg shadow-md flex items-center"
+                                onClick={() => {
+                                    setSelectedHarvest(null);
+                                    setHarvestShowModal(true);
+                                }}
+                            >
+                                <AiOutlinePlus className="text-lg md:mr-1" />
+                                <span className="hidden md:inline text-sm">Add Harvest</span>
+                            </button>
+                        }
                     </div>
 
                     <div className="overflow-x-auto">
@@ -129,6 +133,7 @@ const Harvests: React.FC = () => {
                             showHarvestModal={showHarvestModal}
                             setHarvestShowModal={setHarvestShowModal}
                             harvest={selectedHarvest}
+                            projectid={projectid}
                         />
                     )}
                     {showDeleteDialog && (

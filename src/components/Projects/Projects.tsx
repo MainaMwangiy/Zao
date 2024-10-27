@@ -4,6 +4,7 @@ import Expenses from '../Expenses/Expenses';
 import Analytics from './Analytics';
 import Gallery from './Gallery';
 import { useLocation } from 'react-router-dom';
+import Harvests from '../Harvests/Harvests';
 
 const Projects: React.FC = () => {
     const [activeTab, setActiveTab] = useState<string>('summary');
@@ -24,7 +25,7 @@ const Projects: React.FC = () => {
                 {projectData.title}
             </h1>
             <div className="tabs flex overflow-x-auto scroll-snap-x border-b border-gray-300 dark:border-gray-700 mb-4 scrollbar-hide">
-                {['Summary', 'Expense', 'Analytics', 'Gallery'].map((tab) => (
+                {['Summary', 'Expense', 'Harvests', 'Analytics', 'Gallery'].map((tab) => (
                     <button
                         key={tab}
                         className={`py-2 px-2 scroll-snap-start whitespace-nowrap transition ${activeTab.toLowerCase() === tab.toLowerCase()
@@ -41,7 +42,8 @@ const Projects: React.FC = () => {
             <div>
                 {activeTab === 'summary' && <Summary projectData={projectData} />}
                 {activeTab === 'expense' && <Expenses projectData={projectData} isProject={true} />}
-                {activeTab === 'analytics' && <Analytics />}
+                {activeTab === 'harvests' && <Harvests projectData={projectData} isProject={true} />}
+                {activeTab === 'analytics' && <Analytics projectData={projectData} />}
                 {activeTab === 'gallery' && <Gallery />}
             </div>
         </div>
