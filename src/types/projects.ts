@@ -54,3 +54,14 @@ export interface ExpensesProjectProps {
     };
     isProject?: boolean;
 }
+
+export interface ProjectDataProps {
+    id: string | number;
+    title?: string;
+    addedBy?: string;
+    location?: string;
+    size?: string;
+    status?: string;
+    projectPlanIncluded?: boolean;
+    costProjectEstimation?: string;
+}
