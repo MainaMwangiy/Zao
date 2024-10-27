@@ -38,6 +38,7 @@ export interface SummaryProps {
         projectPlanIncluded: boolean;
         costProjectEstimation: string;
         imagesurl: string;
+        name: string;
     };
 }
 export interface ExpensesProjectProps {
