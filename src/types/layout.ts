@@ -8,6 +8,7 @@ export interface ProjectsProps {
   projectid: string;
   roleid: number;
   costprojectestimation: string;
+  projectname: string;
 }
 
 export type ClientConfig = {

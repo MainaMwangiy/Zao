@@ -16,6 +16,7 @@ const initialValues = {
   projectplan: "",
   clientorganizationid: "",
   costProjectEstimation: "",
+  projectname: ""
 };
 
 // Define the validation schema using Yup

@@ -229,6 +229,7 @@ const Dashboard: React.FC = () => {
               costProjectEstimation={item.costprojectestimation}
               imagesurl={item?.imagesurl}
               name={item?.name}
+              projectname={item?.projectname}
             />
           ))}
         </div>
