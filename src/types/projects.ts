@@ -7,6 +7,7 @@ export interface ProjectProps {
     projectplan: string;
     clientorganizationid: string;
     costProjectEstimation: string;
+    projectname: string;
 }
 
 export interface DataItem {
@@ -39,6 +40,7 @@ export interface SummaryProps {
         costProjectEstimation: string;
         imagesurl: string;
         name: string;
+        projectname: string;
     };
 }
 export interface ExpensesProjectProps {
