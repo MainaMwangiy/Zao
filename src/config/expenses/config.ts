@@ -1,11 +1,14 @@
-// config/expenses/config.ts
-
 import utils from "../../utils";
-import {  ModuleConfig } from "./types";
+import { ModuleConfig } from "./types";
 
 const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
+const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
+const user = localStorage.getItem('clientuser') || "{}";
+const projectid = localStorage.getItem('projectid') || "";
+const clientuser = JSON.parse(user);
+const clientuserid = clientuser?.clientuserid;
 
-export const expensesConfig: ModuleConfig  = {
+export const expensesConfig: ModuleConfig = {
   title: "Expenses",
   apiEndpoints: {
     list: {
@@ -19,6 +22,14 @@ export const expensesConfig: ModuleConfig  = {
     },
     create: {
       url: `${utils.baseUrl}/api/expenses/create`,
+      payload: {
+        clientorganizationid: clientOrganizationId,
+        createdbyuserid: clientuserid,
+        modifiedbyuserid: clientuserid,
+        clientuserid: clientuserid || "",
+        clientusername: clientuser?.name || "",
+        projectid: projectid
+      }
     },
     update: {
       url: `${utils.baseUrl}/api/expenses/update`,
@@ -31,7 +42,7 @@ export const expensesConfig: ModuleConfig  = {
     { name: "name", type: "text", label: "Name", required: true, width: "150px" },
     { name: "amount", type: "number", label: "Amount", required: true, width: "100px" },
     { name: "clientusername", type: "text", label: "Paid By", form: false, width: "120px" },
-    {  name: "status", type: "select", label: "Status", options: ["pending", "paid"],  required: true, width: "100px" },
+    { name: "status", type: "select", label: "Status", options: ["pending", "paid"], required: true, width: "100px" },
     { name: "notes", type: "textarea", label: "Notes", width: "200px" },
     { name: "createdon", type: "text", label: "Created On", form: false, width: "150px" },
     { name: "modifiedon", type: "text", label: "Modified On", form: false, width: "150px" },

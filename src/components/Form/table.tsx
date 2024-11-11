@@ -9,7 +9,7 @@ interface GenericTableProps {
   params?: Record<string, any>;
 }
 
-const Table: React.FC<GenericTableProps> = ({ config, onEdit, params }) => {
+const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config, onEdit, params, showAddNew = false }) => {
   const { apiRequest } = useApi();
   const [data, setData] = useState<any[]>([]);
 

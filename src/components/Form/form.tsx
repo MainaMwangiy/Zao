@@ -13,7 +13,8 @@ interface GenericFormProps {
   initialValues?: Record<string, any>;
 }
 
-const Form: React.FC<GenericFormProps> = ({ config, onClose, isOpen, initialValues = {} }) => {
+const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: any }> = ({ config, onClose, isOpen, initialValues = {}, mode, ...rest }) => {
+  const isUpdate = mode === 'edit';
   const { apiRequest } = useApi();
   const fieldsToShow = config.fields.filter(field => field.form !== false);
   const defaultInitialValues = fieldsToShow.reduce<Record<string, any>>((acc, field) => {
@@ -28,7 +29,6 @@ const Form: React.FC<GenericFormProps> = ({ config, onClose, isOpen, initialValu
       return schema;
     }, {})
   );
-  const isUpdate = Boolean(initialValues.id);
   const formik = useFormik({
     initialValues: defaultInitialValues,
     validationSchema,
@@ -61,7 +61,7 @@ const Form: React.FC<GenericFormProps> = ({ config, onClose, isOpen, initialValu
     </FormikProvider>
   );
   return (
-    <Modal isOpen={isOpen} title={`${isUpdate ? 'Edit' : 'Add'} ${config.title}`}>
+    <Modal isOpen={isOpen} onClose={onClose} title={isUpdate ? `Edit ${config.title}` : `Add ${config.title}`} {...rest}>
       {formContent}
     </Modal>
   );

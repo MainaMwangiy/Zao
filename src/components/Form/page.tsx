@@ -18,16 +18,21 @@ const ModulePage: React.FC = () => {
     setSelectedItem(null);
   };
 
+  const mode = selectedItem ? "edit" : "add";
   return (
     <div>
       <h1>{expensesConfig.title}</h1>
-      <button onClick={() => setIsFormOpen(true)}>Add New</button>
-      <Modal isOpen={isFormOpen} onClose={handleClose} title="Manage Expense">
+      <button onClick={() => {
+        setSelectedItem(null);
+        setIsFormOpen(true);
+      }}>Add New</button>
+      <Modal isOpen={isFormOpen} onClose={handleClose} title={selectedItem ? "Edit Item" : "Add Item"}>
         <Form
           config={expensesConfig}
           onClose={handleClose}
           isOpen={isFormOpen}
           initialValues={selectedItem || {}}
+          mode={mode}
         />
       </Modal>
       <Table config={expensesConfig} onEdit={handleEdit} />
