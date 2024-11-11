@@ -53,7 +53,7 @@ const Security: React.FC = () => {
                 <form onSubmit={formik.handleSubmit}>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
                         {/* Current Password */}
-                        <div className="mb-4 relative">
+                        {/* <div className="mb-4 relative">
                             <label className="text-gray-700 dark:text-gray-300">Current Password</label>
                             <div className="flex">
                                 <input
@@ -76,10 +76,10 @@ const Security: React.FC = () => {
                             {formik.touched.currentPassword && formik.errors.currentPassword ? (
                                 <div className="text-red-500 text-sm">{formik.errors.currentPassword}</div>
                             ) : null}
-                        </div>
+                        </div> */}
 
                         {/* New Password */}
-                        <div className="mb-4 relative">
+                        {/* <div className="mb-4 relative">
                             <label className="text-gray-700 dark:text-gray-300">New Password</label>
                             <div className="flex">
                                 <input
@@ -102,10 +102,10 @@ const Security: React.FC = () => {
                             {formik.touched.newPassword && formik.errors.newPassword ? (
                                 <div className="text-red-500 text-sm">{formik.errors.newPassword}</div>
                             ) : null}
-                        </div>
+                        </div> */}
 
                         {/* Confirm New Password */}
-                        <div className="mb-4 relative">
+                        {/* <div className="mb-4 relative">
                             <label className="text-gray-700 dark:text-gray-300">Confirm New Password</label>
                             <div className="flex">
                                 <input
@@ -128,7 +128,7 @@ const Security: React.FC = () => {
                             {formik.touched.confirmNewPassword && formik.errors.confirmNewPassword ? (
                                 <div className="text-red-500 text-sm">{formik.errors.confirmNewPassword}</div>
                             ) : null}
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Action Buttons */}

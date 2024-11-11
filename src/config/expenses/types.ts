@@ -50,3 +50,35 @@ export  interface ExpenseRowProps {
     onEdit: () => void;
     onDelete: () => void;
 }
+export interface Colors {
+  pending: string;
+  paid: string;
+}
+
+export interface FieldConfig {
+  name: string;
+  type: "text" | "number" | "select" | "textarea";
+  label: string;
+  options?: string[];
+  required?: boolean;
+  width?: string;
+  colors?: Colors;
+  render?: (value: string) => React.ReactNode;
+  form?: boolean;
+}
+
+export interface ApiEndpointConfig {
+  url: string;
+  payload?: Record<string, any>; 
+}
+
+export interface ModuleConfig {
+  title: string;
+  apiEndpoints: {
+    list: ApiEndpointConfig;
+    create: ApiEndpointConfig;
+    update: ApiEndpointConfig;
+    delete: ApiEndpointConfig;
+  };
+  fields: FieldConfig[];
+}
