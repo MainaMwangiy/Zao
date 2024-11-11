@@ -28,12 +28,12 @@ const Form: React.FC<GenericFormProps> = ({ config, onClose, isOpen, initialValu
       return schema;
     }, {})
   );
+  const isUpdate = Boolean(initialValues.id);
   const formik = useFormik({
     initialValues: defaultInitialValues,
     validationSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const isUpdate = Boolean(initialValues.id);
       const endpoint = isUpdate ? config.apiEndpoints.update : config.apiEndpoints.create;
       const url = endpoint.url;
       const defaultPayload = endpoint.payload || {};
@@ -53,12 +53,15 @@ const Form: React.FC<GenericFormProps> = ({ config, onClose, isOpen, initialValu
         {fieldsToShow.map((fieldConfig) => (
           <FormField key={fieldConfig.name} fieldConfig={fieldConfig} />
         ))}
-        <button type="submit">Submit</button>
+        <div className="flex justify-end space-x-2 mt-4">
+          <button type="button" onClick={onClose} className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-md transition duration-300">Cancel</button>
+          <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md transition duration-300">{isUpdate ? 'Update' : 'Submit'}</button>
+        </div>
       </form>
     </FormikProvider>
   );
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Form Modal">
+    <Modal isOpen={isOpen} title={`${isUpdate ? 'Edit' : 'Add'} ${config.title}`}>
       {formContent}
     </Modal>
   );
