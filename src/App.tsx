@@ -15,6 +15,7 @@ import Profile from "./components/Profile/Profile";
 import Incomes from "./components/Bills/Incomes";
 import Projects from "./components/Projects/Projects";
 import ModulePage from "./components/Form/page";
+import { expensesConfig } from "./config/expenses/config";
 
 const App: React.FC = () => {
   return (
@@ -26,7 +27,7 @@ const App: React.FC = () => {
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/users" element={<Users />} />
-              <Route path="/expenses" element={<ModulePage />} />
+              <Route path="/expenses" element={<ModulePage config={expensesConfig} showAddNew={false} />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/harvests" element={<Harvests />} />
               <Route path="/transactions" element={<Transactions />} />

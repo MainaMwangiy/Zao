@@ -11,6 +11,7 @@ export interface ProjectProps {
 }
 
 export interface DataItem {
+    id: string;
     name: string;
     amount: number;
     createdon: string;

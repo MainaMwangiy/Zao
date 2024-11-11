@@ -10,6 +10,10 @@ const clientuserid = clientuser?.clientuserid;
 
 export const expensesConfig: ModuleConfig = {
   title: "Expenses",
+  showTotal: true,
+  isImport: true,
+  isExport: true,
+  showTitle: false,
   apiEndpoints: {
     list: {
       url: `${utils.baseUrl}/api/expenses/list`,
