@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ModuleConfig } from "../../config/expenses/types";
+import { ModuleConfig } from "../../config/harvests/types";
 import { useApi } from "../../hooks/Apis";
 import ActionMenu from "../../hooks/ActionMenu";
 
@@ -20,8 +20,8 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
     setData(response?.data || []);
   };
 
-  const handleDelete = async (id: string) => {
-    await apiRequest({ method: "POST", url: `${config.apiEndpoints.delete}/${id}` });
+  const handleDelete = async (id: number) => {
+    await apiRequest({ method: "POST", url: `${config.apiEndpoints.delete.url}/${id}` });
     fetchData();
   };
 
@@ -58,7 +58,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
               ))}
 
               <td className="px-4 py-2 text-sm">
-                <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDelete(item.id)} />
+                <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDelete(item.expensesid || 0)} />
               </td>
             </tr>
           ))}

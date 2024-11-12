@@ -1,5 +1,5 @@
 import utils from "../../utils";
-import { ModuleConfig } from "./types";
+import { ModuleConfig } from "../harvests/types";
 
 const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";

@@ -3,7 +3,7 @@ import { useFormik, FormikProvider } from "formik";
 import * as Yup from "yup";
 import FormField from "./fields";
 import Modal from "./Modal";
-import { ModuleConfig } from "../../config/expenses/types";
+import { ModuleConfig } from "../../config/harvests/types";
 import { useApi } from "../../hooks/Apis";
 
 interface GenericFormProps {

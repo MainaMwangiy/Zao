@@ -4,7 +4,7 @@ import Table from "./table";
 import Modal from "./Modal";
 
 import { ModuleConfig, DataItem } from "../../types";
-import { AiOutlineDownload, AiOutlineUpload } from "react-icons/ai";
+import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
 
 interface ModulePageProps {
   config: ModuleConfig;
@@ -37,10 +37,15 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false }) =
           </div>
         </>}
         {showAddNew && (
-          <button onClick={() => {
-            setSelectedItem(null);
-            setIsFormOpen(true);
-          }}>Add New</button>
+          <button
+            className="bg-blue-600 hover:bg-blue-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
+            onClick={() => {
+              setSelectedItem(null);
+              setIsFormOpen(true);
+            }}>
+            <AiOutlinePlus className="text-lg md:mr-1" />
+            <span className="hidden md:inline text-sm">Add New</span>
+          </button>
         )}
         {config.isImport && <>
           <button

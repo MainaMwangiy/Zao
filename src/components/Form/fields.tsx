@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldConfig } from "../../config/expenses/types";
+import { FieldConfig } from "../../config/harvests/types";
 import { useField } from "formik";
 
 interface FormFieldProps {

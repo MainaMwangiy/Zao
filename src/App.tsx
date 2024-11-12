@@ -15,6 +15,8 @@ import Profile from "./components/Profile/Profile";
 import Incomes from "./components/Bills/Incomes";
 import Projects from "./components/Projects/Projects";
 import ModulePage from "./components/Form/page";
+import { usersConfig } from "./config/users/config";
+import { harvestsConfig } from "./config/harvests/config";
 import { expensesConfig } from "./config/expenses/config";
 
 const App: React.FC = () => {
@@ -26,10 +28,10 @@ const App: React.FC = () => {
           <Route element={<PrivateRoute />}>
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="/expenses" element={<ModulePage config={expensesConfig} showAddNew={false} />} />
               <Route path="/reports" element={<Reports />} />
-              <Route path="/harvests" element={<Harvests />} />
+              <Route path="/expenses" element={<ModulePage config={expensesConfig} showAddNew={false} />} />
+              <Route path="/users" element={<ModulePage config={usersConfig} showAddNew={true} />} />
+              <Route path="/harvests" element={<ModulePage config={harvestsConfig} showAddNew={true} />} />
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/profile" element={<Profile />} />
