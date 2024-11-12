@@ -34,8 +34,8 @@ export const harvestsConfig: ModuleConfig = {
     },
     fields: [
         { name: 'bags', type: 'number', label: 'BAGS', width: '150px' },
-        { name: 'unitPrice', type: 'number', label: 'UNIT PRICE', width: '150px' },
-        { name: 'amountSold', type: 'number', label: 'AMOUNT SOLD', width: '150px' },
+        { name: 'unitprice', type: 'number', label: 'UNIT PRICE', width: '150px' },
+        { name: 'amountsold', type: 'number', label: 'AMOUNT SOLD', width: '150px' },
         { name: 'notes', type: 'text', label: 'NOTES', width: '300px' }
     ]
 };

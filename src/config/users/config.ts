@@ -5,6 +5,8 @@ const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 const user = localStorage.getItem('clientuser') || "{}";
 const clientuser = JSON.parse(user);
 const clientuserid = clientuser?.clientuserid;
+const clientusers = localStorage.getItem('clientuser') || '';
+const roles = JSON.parse(clientusers);
 
 export const usersConfig : ModuleConfig = {
     title: "Users",
@@ -15,6 +17,10 @@ export const usersConfig : ModuleConfig = {
     apiEndpoints: {
         list: {
             url: `${utils.baseUrl}/api/auth/list`,
+            payload: {
+                clientorganizationid: clientorganizationid,
+                roleid: roles?.roleid
+            }
         },
         create: {
             url: `${utils.baseUrl}/api/auth/create`,
@@ -39,6 +45,6 @@ export const usersConfig : ModuleConfig = {
         { name: 'name', type: 'text', label: 'Name', width: '150px' },
         { name: 'location', type: 'text', label: 'Location', width: '150px' },
         { name: 'status', type: 'text', label: 'Status', width: '100px' },
-        { name: 'role', type: 'text', label: 'Role', width: '150px' }
+        { name: 'roleid', type: 'select', label: 'Role', width: '150px', options: ["superadmin", "admin", "user"] }
     ]
 };

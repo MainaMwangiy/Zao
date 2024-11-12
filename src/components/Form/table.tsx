@@ -27,7 +27,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [config]);
 
   return (
     <div className="overflow-x-auto">
