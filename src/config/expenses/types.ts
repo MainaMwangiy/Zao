@@ -73,6 +73,7 @@ export interface ApiEndpointConfig {
 }
 
 export interface ModuleConfig {
+  keyField: string;
   title: string;
   apiEndpoints: {
     list: ApiEndpointConfig;

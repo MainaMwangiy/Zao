@@ -6,9 +6,12 @@ import Modal from "./Modal";
 import { ModuleConfig, DataItem } from "../../types";
 import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
 
+interface DataArray {}
+
 interface ModulePageProps {
   config: ModuleConfig;
   showAddNew?: boolean;
+  rest?: DataArray;
 }
 
 const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false }) => {

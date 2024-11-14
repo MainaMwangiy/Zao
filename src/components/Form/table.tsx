@@ -10,6 +10,7 @@ interface GenericTableProps {
 }
 
 const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config, onEdit, params, showAddNew = false }) => {
+  const key = `${config?.keyField.toLowerCase()}id`;
   const { apiRequest } = useApi();
   const [data, setData] = useState<any[]>([]);
 
@@ -21,7 +22,11 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
   };
 
   const handleDelete = async (id: number) => {
-    await apiRequest({ method: "POST", url: `${config.apiEndpoints.delete.url}/${id}` });
+    const data = {
+      ...config.apiEndpoints.delete.payload,
+      [key]: id
+    }
+    await apiRequest({ method: "POST", url: `${config.apiEndpoints.delete.url}/${id}`, data: data });
     fetchData();
   };
 
@@ -56,9 +61,8 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
                   {field.render ? field.render(item[field.name]) : item[field.name]}
                 </td>
               ))}
-
               <td className="px-4 py-2 text-sm">
-                <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDelete(item.expensesid || 0)} />
+                <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDelete(item[key] || 0)} />
               </td>
             </tr>
           ))}

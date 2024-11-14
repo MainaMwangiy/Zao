@@ -8,7 +8,8 @@ const clientuserid = clientuser?.clientuserid;
 const clientusers = localStorage.getItem('clientuser') || '';
 const roles = JSON.parse(clientusers);
 
-export const usersConfig : ModuleConfig = {
+export const usersConfig: ModuleConfig = {
+    keyField: "User",
     title: "Users",
     showTitle: true,
     showTotal: false,

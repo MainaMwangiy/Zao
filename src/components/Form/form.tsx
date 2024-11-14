@@ -20,7 +20,8 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
   const defaultInitialValues = fieldsToShow.reduce<Record<string, any>>((acc, field) => {
     acc[field.name] = initialValues[field.name] ?? "";
     return acc;
-  }, {});
+  }, { [`${config.title.toLowerCase()}id`]: initialValues[`${config.keyField.toLowerCase()}id`] ?? "" });
+
   const validationSchema = Yup.object(
     fieldsToShow.reduce<Record<string, any>>((schema, field) => {
       if (field.required) {
@@ -34,8 +35,9 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
     validationSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
+      const id = values[`${config.keyField.toLowerCase()}id`];
       const endpoint = isUpdate ? config.apiEndpoints.update : config.apiEndpoints.create;
-      const url = endpoint.url;
+      const url = isUpdate && id ? `${endpoint.url}/${id}` : endpoint.url;
       const defaultPayload = endpoint.payload || {};
       const requestData = { ...defaultPayload, ...values };
       await apiRequest({ method: "POST", url, data: requestData });

@@ -9,6 +9,7 @@ const clientuser = JSON.parse(user);
 const clientuserid = clientuser?.clientuserid;
 
 export const expensesConfig: ModuleConfig = {
+  keyField: 'Expense',
   title: "Expenses",
   showTotal: true,
   isImport: true,
