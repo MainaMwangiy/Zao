@@ -46,9 +46,9 @@ export const harvestsConfig: ModuleConfig = {
         }
     },
     fields: [
-        { name: 'bags', type: 'number', label: 'BAGS', width: '150px' },
-        { name: 'unitprice', type: 'number', label: 'UNIT PRICE', width: '150px' },
-        { name: 'amountsold', type: 'number', label: 'AMOUNT SOLD', width: '150px' },
-        { name: 'notes', type: 'text', label: 'NOTES', width: '300px' }
+        { name: 'bags', type: 'number', label: 'Bags', width: '150px' },
+        { name: 'unitprice', type: 'number', label: 'Unit Price', width: '150px' },
+        { name: 'amountsold', type: 'number', label: 'Amount Sold', width: '150px' },
+        { name: 'notes', type: 'text', label: 'Notes', width: '300px' }
     ]
 };

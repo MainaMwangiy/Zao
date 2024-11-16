@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ModuleConfig } from "../../config/harvests/types";
 import { useApi } from "../../hooks/Apis";
 import ActionMenu from "../../hooks/ActionMenu";
+import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
 interface GenericTableProps {
   config: ModuleConfig;
@@ -13,6 +14,8 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
   const key = `${config?.keyField.toLowerCase()}id`;
   const { apiRequest } = useApi();
   const [data, setData] = useState<any[]>([]);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false); 
+  const [deleteId, setDeleteId] = useState<number | null>(null); 
 
   const fetchData = async () => {
     const { url, payload = {} } = config.apiEndpoints.list;
@@ -21,13 +24,22 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
     setData(response?.data || []);
   };
 
-  const handleDelete = async (id: number) => {
-    const data = {
-      ...config.apiEndpoints.delete.payload,
-      [key]: id
+  const confirmDeleteExpense = async () => {
+    if (deleteId !== null) {
+      const data = {
+        ...config.apiEndpoints.delete.payload,
+        [key]: deleteId,
+      };
+      await apiRequest({ method: "POST", url: `${config.apiEndpoints.delete.url}/${deleteId}`, data: data });
+      fetchData();
+      setShowDeleteDialog(false); 
+      setDeleteId(null); 
     }
-    await apiRequest({ method: "POST", url: `${config.apiEndpoints.delete.url}/${id}`, data: data });
-    fetchData();
+  };
+
+  const handleDeleteClick = (id: number) => {
+    setDeleteId(id); 
+    setShowDeleteDialog(true); 
   };
 
   useEffect(() => {
@@ -43,7 +55,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
               <th
                 key={field.name}
                 className="px-4 py-2 text-left text-sm font-semibold"
-                style={{ minWidth: field.width || '150px' }}
+                style={{ minWidth: field.width || "150px" }}
               >
                 {field.label}
               </th>
@@ -62,12 +74,23 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
                 </td>
               ))}
               <td className="px-4 py-2 text-sm">
-                <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDelete(item[key] || 0)} />
+                <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDeleteClick(item[key] || 0)} />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {showDeleteDialog && (
+        <ConfirmationDialog
+          open={showDeleteDialog}
+          title="Confirm Deletion"
+          content="Are you sure you want to delete this expense?"
+          onCancel={() => setShowDeleteDialog(false)} 
+          onConfirm={confirmDeleteExpense} 
+          confirmDiscard="Delete" 
+        />
+      )}
     </div>
   );
 };
