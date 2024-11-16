@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
 import { FaEye, FaEyeSlash, FaEllipsisV, FaEllipsisH } from "react-icons/fa";
@@ -36,7 +36,7 @@ const Card: React.FC<CardProps> = ({
   costProjectEstimation,
   imagesurl,
   name,
-  projectname
+  projectname,
 }) => {
   const navigate = useNavigate();
 
@@ -67,11 +67,54 @@ const Card: React.FC<CardProps> = ({
         costProjectEstimation,
         imagesurl,
         name,
-        projectname
+        projectname,
       },
     });
   };
-  const imageSrc = imagesurl ? imagesurl : "https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3";
+
+  const [menuVisible, setMenuVisible] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLDivElement>(null); // Reference for the button
+
+  // Click outside to close the menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setMenuVisible(false);
+      }
+    };
+
+    // Add when the menu is visible
+    if (menuVisible) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuVisible]); // Only re-run the effect if menuVisible changes
+
+  const toggleMenu = () => {
+    setMenuVisible(prev => !prev);
+  };
+
+  const deleteProject = () => {
+    // Logic to delete the project
+    console.log("Delete Project", id);
+  };
+
+  const editProject = () => {
+    // Navigate to edit page or handle editing logic here
+    console.log("Edit Project", id);
+  };
+
+  const imageSrc = imagesurl
+    ? imagesurl
+    : "https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3";
   return (
     <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md flex flex-col">
       {/* Image Section */}
@@ -127,8 +170,33 @@ const Card: React.FC<CardProps> = ({
         {/* Right Side Vertical Menu */}
         <div className=" md:ml-auto md:mt-0 mt-4 flex flex-col items-start">
           {/* Vertical Three-Dot Icon */}
-          <div className="flex justify-start">
-            <FaEllipsisH className="text-gray-600 dark:text-gray-400 text-2xl" />
+       
+          <div className="md:mt-0 mt-4 flex flex-col items-start ">
+            <div className="flex justify-start" ref={buttonRef}>
+              <FaEllipsisH
+                onClick={toggleMenu}
+                className="text-gray-600 dark:text-gray-400 text-2xl cursor-pointer"
+              />
+              {menuVisible && (
+                <div
+                  ref={menuRef}
+                  className="bg-white shadow-lg rounded-lg mt-5 absolute top-auto"
+                >
+                  <button
+                    onClick={editProject}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={deleteProject}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
           {/* Total Expenses Section */}
           <div className="mb-4">
