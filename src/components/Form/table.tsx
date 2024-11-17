@@ -11,9 +11,10 @@ interface GenericTableProps {
   config: ModuleConfig;
   onEdit: (item: any) => void;
   params?: Record<string, any>;
+  id?: number;
 }
 
-const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config, onEdit, params, showAddNew = false }) => {
+const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config, onEdit, params, showAddNew = false, ...rest }) => {
   const key = `${config?.keyField.toLowerCase()}id`;
   const { apiRequest } = useApi();
   const [data, setData] = useState<any[]>([]);
@@ -28,7 +29,8 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
   const fetchData = async () => {
     setLoading(true);
     const { url, payload = {} } = config.apiEndpoints.list;
-    const tempPayload = { ...payload, ...params, page: currentPage, pageSize: itemsPerPage };
+    const additionalParams = { projectid: rest?.id };
+    const tempPayload = { ...payload, ...params, page: currentPage, pageSize: itemsPerPage, ...additionalParams };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setData(response?.data || []);
     setTotalItems(response?.totalItems || 0);

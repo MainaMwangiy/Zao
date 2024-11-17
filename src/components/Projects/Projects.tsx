@@ -44,7 +44,7 @@ const Projects: React.FC = () => {
 
             <div>
                 {activeTab === 'summary' && <Summary projectData={projectData} />}
-                {activeTab === 'expense' && <ModulePage config={expensesConfig} showAddNew={true} />}
+                {activeTab === 'expense' && <ModulePage config={expensesConfig} showAddNew={true} rest={projectData} />}
                 {activeTab === 'harvests' && <ModulePage config={harvestsConfig} showAddNew={true} rest={projectData} />}
                 {activeTab === 'analytics' && <Analytics projectData={projectData} />}
                 {activeTab === 'gallery' && <Gallery />}

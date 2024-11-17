@@ -7,7 +7,7 @@ import { ModuleConfig, DataItem } from "../../types";
 import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
 import { useApi } from "../../hooks/Apis";
 
-interface DataArray { }
+interface DataArray { id?: number; }
 
 interface ModulePageProps {
   config: ModuleConfig;
@@ -15,7 +15,7 @@ interface ModulePageProps {
   rest?: DataArray;
 }
 
-const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false }) => {
+const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, rest }) => {
   const { apiRequest } = useApi();
   const [selectedItem, setSelectedItem] = useState<DataItem | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
@@ -33,7 +33,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false }) =
 
   const getTotals = async () => {
     const { url = '', payload = {} } = config?.apiEndpoints?.total ?? {};
-    const tempPayload = { ...payload };
+    const additionalParams = { projectid: rest?.id };
+    const tempPayload = { ...payload, ...additionalParams };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setTotal(response?.data?.[0]?.total || 0);
   }
@@ -96,9 +97,10 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false }) =
           initialValues={selectedItem || {}}
           mode={mode}
           onDataUpdated={refreshData}
+          {...rest}
         />
       </Modal>
-      <Table config={config} onEdit={handleEdit} />
+      <Table config={config} onEdit={handleEdit} {...rest} />
     </div>
   );
 };

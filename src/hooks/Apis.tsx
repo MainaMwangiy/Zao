@@ -8,6 +8,7 @@ interface ApiOptions {
   method: RequestMethod;
   url: string;
   data?: any;
+  id?: number | string;
 }
 
 export const useApi = () => {

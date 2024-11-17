@@ -45,7 +45,8 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
       const endpoint = isUpdate ? config.apiEndpoints.update : config.apiEndpoints.create;
       const url = isUpdate && id ? `${endpoint.url}/${id}` : endpoint.url;
       const defaultPayload = endpoint.payload || {};
-      const requestData = { ...defaultPayload, ...values };
+      const additionalParams = { projectid: rest?.id };
+      const requestData = { ...defaultPayload, ...values, ...additionalParams };
       await apiRequest({ method: "POST", url, data: requestData });
       setSubmissionState(true);
       onClose();

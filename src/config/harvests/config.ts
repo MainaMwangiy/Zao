@@ -3,21 +3,19 @@ import { ModuleConfig } from "./types";
 
 const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 const clientuserid = localStorage.getItem("clientuserid") || "";
-const projectid = window.location.pathname.split('/').pop() || "";
 
 export const harvestsConfig: ModuleConfig = {
     keyField: 'Harvest',
     title: "Harvests",
-    showTitle: true,
+    showTitle: false,
     showTotal: true,
     isImport: true,
-    isExport: false,
+    isExport: true,
     apiEndpoints: {
         list: {
             url: `${utils.baseUrl}/api/harvests/list`,
             payload: {
-                clientorganizationid: clientorganizationid,
-                projectid: projectid
+                clientorganizationid: clientorganizationid
             }
         },
         create: {
@@ -26,8 +24,7 @@ export const harvestsConfig: ModuleConfig = {
                 harvestid: 0,
                 createdbyuserid: clientuserid,
                 modifiedbyuserid: clientuserid,
-                clientorganizationid: clientorganizationid,
-                projectid: projectid
+                clientorganizationid: clientorganizationid
             }
         },
         update: {
@@ -35,22 +32,19 @@ export const harvestsConfig: ModuleConfig = {
             payload: {
                 createdbyuserid: clientuserid,
                 modifiedbyuserid: clientuserid,
-                clientorganizationid: clientorganizationid,
-                projectid: projectid
+                clientorganizationid: clientorganizationid
             }
         },
         delete: {
             url: `${utils.baseUrl}/api/harvests/delete`,
             payload: {
-                clientorganizationid: clientorganizationid,
-                projectid: projectid
+                clientorganizationid: clientorganizationid
             }
         },
         total: {
             url: `${utils.baseUrl}/api/harvests/total`,
             payload: {
-                clientorganizationid: clientorganizationid,
-                projectid: projectid
+                clientorganizationid: clientorganizationid
             }
         }
     },

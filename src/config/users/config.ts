@@ -40,6 +40,12 @@ export const usersConfig: ModuleConfig = {
         },
         delete: {
             url: `${utils.baseUrl}/api/auth/delete`
+        },
+        total: {
+            url: `${utils.baseUrl}/api/harvests/total`,
+            payload: {
+                clientorganizationid: clientorganizationid
+            }
         }
     },
     fields: [
