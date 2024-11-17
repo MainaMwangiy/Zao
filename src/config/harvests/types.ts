@@ -80,6 +80,7 @@ export interface ModuleConfig {
     create: ApiEndpointConfig;
     update: ApiEndpointConfig;
     delete: ApiEndpointConfig;
+    total?: ApiEndpointConfig;
   };
   fields: FieldConfig[];
   showTotal: boolean;

@@ -20,7 +20,8 @@ export const expensesConfig: ModuleConfig = {
     list: {
       url: `${utils.baseUrl}/api/expenses/list`,
       payload: {
-        clientorganizationid: clientorganizationid
+        clientorganizationid: clientorganizationid,
+        projectid: projectid
       }
     },
     create: {
@@ -46,6 +47,13 @@ export const expensesConfig: ModuleConfig = {
     delete: {
       url: `${utils.baseUrl}/api/expenses/delete`,
     },
+    total: {
+      url: `${utils.baseUrl}/api/expenses/total`,
+      payload: {
+        clientorganizationid: clientorganizationid,
+        projectid: projectid
+      }
+    }
   },
   fields: [
     { name: "name", type: "text", label: "Name", required: true, width: "150px" },

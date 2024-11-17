@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "./form";
 import Table from "./table";
 import Modal from "./Modal";
 
 import { ModuleConfig, DataItem } from "../../types";
 import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
+import { useApi } from "../../hooks/Apis";
 
-interface DataArray {}
+interface DataArray { }
 
 interface ModulePageProps {
   config: ModuleConfig;
@@ -15,8 +16,10 @@ interface ModulePageProps {
 }
 
 const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false }) => {
+  const { apiRequest } = useApi();
   const [selectedItem, setSelectedItem] = useState<DataItem | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const [total, setTotal] = useState(0);
 
   const handleEdit = (item: DataItem) => {
     setSelectedItem(item);
@@ -28,6 +31,17 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false }) =
     setSelectedItem(null);
   };
 
+  const getTotals = async () => {
+    const { url = '', payload = {} } = config?.apiEndpoints?.total ?? {};
+    const tempPayload = { ...payload };
+    const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
+    setTotal(response?.data?.[0]?.total || 0);
+  }
+
+  useEffect(() => {
+    getTotals();
+  }, [])
+
   const mode = selectedItem ? "edit" : "add";
   return (
     <div>
@@ -36,7 +50,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false }) =
         {config.showTotal && <>
           <div className="flex items-center bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-1 rounded-lg shadow-md">
             <p className="font-semibold text-base mr-2">{`Total ${config.title}: `}</p>
-            <p className="font-bold text-lg text-red-600 dark:text-red-400">KES {0}</p>
+            <p className="font-bold text-lg text-red-600 dark:text-red-400">KES {total}</p>
           </div>
         </>}
         {showAddNew && (

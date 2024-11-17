@@ -16,7 +16,8 @@ export const harvestsConfig: ModuleConfig = {
         list: {
             url: `${utils.baseUrl}/api/harvests/list`,
             payload: {
-                clientorganizationid: clientorganizationid
+                clientorganizationid: clientorganizationid,
+                projectid: projectid
             }
         },
         create: {
@@ -41,7 +42,15 @@ export const harvestsConfig: ModuleConfig = {
         delete: {
             url: `${utils.baseUrl}/api/harvests/delete`,
             payload: {
-                clientorganizationid: clientorganizationid
+                clientorganizationid: clientorganizationid,
+                projectid: projectid
+            }
+        },
+        total: {
+            url: `${utils.baseUrl}/api/harvests/total`,
+            payload: {
+                clientorganizationid: clientorganizationid,
+                projectid: projectid
             }
         }
     },
