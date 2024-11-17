@@ -5,6 +5,7 @@ import ActionMenu from "../../hooks/ActionMenu";
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 import Pagination from "./pagination";
 import Loader from "../../hooks/Loader";
+import { useSubmissionContext } from "./context";
 
 interface GenericTableProps {
   config: ModuleConfig;
@@ -22,6 +23,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
   const [itemsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
+  const { submissionState } = useSubmissionContext();
 
   const fetchData = async () => {
     setLoading(true);
@@ -59,7 +61,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
 
   useEffect(() => {
     fetchData();
-  }, [config, currentPage]);
+  }, [config, currentPage, submissionState]);
 
   if (loading) {
     return <Loader />;

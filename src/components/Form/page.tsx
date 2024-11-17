@@ -21,7 +21,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false }) =
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [total, setTotal] = useState(0);
 
-  const handleEdit = (item: DataItem) => {
+  const handleEdit = (item: any) => {
     setSelectedItem(item);
     setIsFormOpen(true);
   };
@@ -41,6 +41,10 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false }) =
   useEffect(() => {
     getTotals();
   }, [])
+
+  const refreshData = async () => {
+    await getTotals();
+  };
 
   const mode = selectedItem ? "edit" : "add";
   return (
@@ -91,6 +95,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false }) =
           isOpen={isFormOpen}
           initialValues={selectedItem || {}}
           mode={mode}
+          onDataUpdated={refreshData}
         />
       </Modal>
       <Table config={config} onEdit={handleEdit} />

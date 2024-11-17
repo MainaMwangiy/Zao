@@ -7,6 +7,7 @@ import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 import { ModuleConfig } from "../../config/harvests/types";
 import { useApi } from "../../hooks/Apis";
 import { constants } from "../../utils/constants";
+import { useSubmissionContext } from "./context";
 
 interface GenericFormProps {
   config: ModuleConfig;
@@ -22,9 +23,10 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
   const defaultInitialValues = fieldsToShow.reduce<Record<string, any>>((acc, field) => {
     acc[field.name] = initialValues[field.name] ?? "";
     return acc;
-  }, { [`${config.title.toLowerCase()}id`]: initialValues[`${config.keyField.toLowerCase()}id`] ?? "" });
+  }, { [`${config.keyField.toLowerCase()}id`]: initialValues[`${config.keyField.toLowerCase()}id`] ?? "" });
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
+  const { setSubmissionState } = useSubmissionContext();
 
   const validationSchema = Yup.object(
     fieldsToShow.reduce<Record<string, any>>((schema, field) => {
@@ -39,13 +41,15 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
     validationSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const id = values[`${config?.title.toLowerCase()}id`];
+      const id = values[`${config?.keyField.toLowerCase()}id`];
       const endpoint = isUpdate ? config.apiEndpoints.update : config.apiEndpoints.create;
       const url = isUpdate && id ? `${endpoint.url}/${id}` : endpoint.url;
       const defaultPayload = endpoint.payload || {};
       const requestData = { ...defaultPayload, ...values };
       await apiRequest({ method: "POST", url, data: requestData });
+      setSubmissionState(true);
       onClose();
+      rest.onDataUpdated();
     },
   });
 
@@ -78,6 +82,13 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
     onClose();
     setShowCancelConfirmation(false);
   };
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSubmissionState(false);
+    }
+  }, [isOpen, setSubmissionState]);
+
 
   const formContent = (
     <FormikProvider value={formik}>

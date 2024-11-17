@@ -8,6 +8,7 @@ const user = localStorage.getItem('clientuser') || "{}";
 const projectid = window.location.pathname.split('/').pop() || "";
 const clientuser = JSON.parse(user);
 const clientuserid = clientuser?.clientuserid;
+const clientusername = clientuser?.name || '';
 
 export const expensesConfig: ModuleConfig = {
   keyField: 'Expense',
@@ -41,11 +42,16 @@ export const expensesConfig: ModuleConfig = {
         createdbyuserid: clientuserid,
         modifiedbyuserid: clientuserid,
         clientorganizationid: clientorganizationid,
-        projectid: projectid
+        projectid: projectid,
+        clientusername: clientusername
       }
     },
     delete: {
       url: `${utils.baseUrl}/api/expenses/delete`,
+      payload: {
+        clientorganizationid: clientOrganizationId,
+        projectid: projectid
+      }
     },
     total: {
       url: `${utils.baseUrl}/api/expenses/total`,

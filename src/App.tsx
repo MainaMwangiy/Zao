@@ -18,30 +18,33 @@ import ModulePage from "./components/Form/page";
 import { usersConfig } from "./config/users/config";
 import { harvestsConfig } from "./config/harvests/config";
 import { expensesConfig } from "./config/expenses/config";
+import { SubmissionProvider } from "./components/Form/context";
 
 const App: React.FC = () => {
   return (
     <DarkModeProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route element={<PrivateRoute />}>
-            <Route element={<MainLayout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/reports" element={<Reports />} />
-              <Route path="/expenses" element={<ModulePage config={expensesConfig} showAddNew={false} />} />
-              <Route path="/users" element={<ModulePage config={usersConfig} showAddNew={true} />} />
-              <Route path="/harvests" element={<ModulePage config={harvestsConfig} showAddNew={true} />} />
-              <Route path="/transactions" element={<Transactions />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/my-bills" element={<Incomes />} />
-              <Route path="/projects/:projectId" element={<Projects />} />
+      <SubmissionProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route element={<PrivateRoute />}>
+              <Route element={<MainLayout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/reports" element={<Reports />} />
+                <Route path="/expenses" element={<ModulePage config={expensesConfig} showAddNew={false} />} />
+                <Route path="/users" element={<ModulePage config={usersConfig} showAddNew={true} />} />
+                <Route path="/harvests" element={<ModulePage config={harvestsConfig} showAddNew={true} />} />
+                <Route path="/transactions" element={<Transactions />} />
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/my-bills" element={<Incomes />} />
+                <Route path="/projects/:projectId" element={<Projects />} />
+              </Route>
+              <Route path="/" element={<Navigate to="/dashboard" />} />
             </Route>
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-          </Route>
-        </Routes>
-      </Router>
+          </Routes>
+        </Router>
+      </SubmissionProvider>
     </DarkModeProvider>
   );
 };

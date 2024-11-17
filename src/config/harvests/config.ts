@@ -11,7 +11,7 @@ export const harvestsConfig: ModuleConfig = {
     showTitle: true,
     showTotal: true,
     isImport: true,
-    isExport: true,
+    isExport: false,
     apiEndpoints: {
         list: {
             url: `${utils.baseUrl}/api/harvests/list`,
