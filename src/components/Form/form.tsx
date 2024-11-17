@@ -39,7 +39,7 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
     validationSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const id = values[`${config.keyField.toLowerCase()}id`];
+      const id = values[`${config?.title.toLowerCase()}id`];
       const endpoint = isUpdate ? config.apiEndpoints.update : config.apiEndpoints.create;
       const url = isUpdate && id ? `${endpoint.url}/${id}` : endpoint.url;
       const defaultPayload = endpoint.payload || {};

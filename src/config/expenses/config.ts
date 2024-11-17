@@ -4,7 +4,8 @@ import { ModuleConfig } from "../harvests/types";
 const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
 const user = localStorage.getItem('clientuser') || "{}";
-const projectid = localStorage.getItem('projectid') || "";
+// const projectid = localStorage.getItem('projectid') || "";
+const projectid = window.location.pathname.split('/').pop() || "";
 const clientuser = JSON.parse(user);
 const clientuserid = clientuser?.clientuserid;
 
@@ -19,9 +20,6 @@ export const expensesConfig: ModuleConfig = {
     list: {
       url: `${utils.baseUrl}/api/expenses/list`,
       payload: {
-        page: 1,
-        pageSize: 10,
-        searchTerm: "",
         clientorganizationid: clientorganizationid
       }
     },
@@ -38,6 +36,12 @@ export const expensesConfig: ModuleConfig = {
     },
     update: {
       url: `${utils.baseUrl}/api/expenses/update`,
+      payload: {
+        createdbyuserid: clientuserid,
+        modifiedbyuserid: clientuserid,
+        clientorganizationid: clientorganizationid,
+        projectid: projectid
+      }
     },
     delete: {
       url: `${utils.baseUrl}/api/expenses/delete`,
