@@ -3,6 +3,8 @@ import { ModuleConfig } from "../../config/harvests/types";
 import { useApi } from "../../hooks/Apis";
 import ActionMenu from "../../hooks/ActionMenu";
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
+import Pagination from "./pagination";
+import Loader from "../../hooks/Loader";
 
 interface GenericTableProps {
   config: ModuleConfig;
@@ -19,16 +21,20 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
+    setLoading(true);
     const { url, payload = {} } = config.apiEndpoints.list;
     const tempPayload = { ...payload, ...params, page: currentPage, pageSize: itemsPerPage };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setData(response?.data || []);
     setTotalItems(response?.totalItems || 0);
+    setLoading(false);
   };
 
   const confirmDeleteExpense = async () => {
+    setLoading(true);
     if (deleteId !== null) {
       const data = {
         ...config.apiEndpoints.delete.payload,
@@ -38,6 +44,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
       fetchData();
       setShowDeleteDialog(false);
       setDeleteId(null);
+      setLoading(false);
     }
   };
 
@@ -46,19 +53,17 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
     setShowDeleteDialog(true);
   };
 
-  const handlePageChange = (direction: 'next' | 'prev') => {
-    if (direction === 'next' && currentPage < Math.ceil(totalItems / itemsPerPage)) {
-      setCurrentPage(prevPage => prevPage + 1);
-    }
-    if (direction === 'prev' && currentPage > 1) {
-      setCurrentPage(prevPage => prevPage - 1);
-    }
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
   };
-
 
   useEffect(() => {
     fetchData();
   }, [config, currentPage]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -107,25 +112,12 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
           />
         )}
       </div>
-      <div className="flex justify-between items-center mt-4">
-        <button
-          onClick={() => handlePageChange('prev')}
-          className={`px-4 py-2 rounded bg-gray-200 text-gray-800 ${currentPage === 1 ? 'cursor-not-allowed text-gray-400' : 'hover:bg-gray-300'}`}
-          disabled={currentPage === 1}
-        >
-          &lt; Previous
-        </button>
-        <span className="text-gray-600 font-medium">
-          Page {`${currentPage} - ${Math.ceil(totalItems / itemsPerPage)}`} of {totalItems}
-        </span>
-        <button
-          onClick={() => handlePageChange('next')}
-          className={`px-4 py-2 rounded bg-gray-200 text-gray-800 ${currentPage === Math.ceil(totalItems / itemsPerPage) ? 'cursor-not-allowed text-gray-400' : 'hover:bg-gray-300'}`}
-          disabled={currentPage === Math.ceil(totalItems / itemsPerPage)}
-        >
-          Next &gt;
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalItems={totalItems}
+        itemsPerPage={itemsPerPage}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };
