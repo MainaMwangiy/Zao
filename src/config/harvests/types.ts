@@ -57,14 +57,18 @@ export interface Colors {
 
 export interface FieldConfig {
   name: string;
-  type: 'text' | 'number' | 'select' | 'textarea' | 'string';
+  type: 'text' | 'number' | 'select' | 'textarea' | 'string' | 'password';
   label: string;
   options?: string[];
   required?: boolean;
   width?: string;
   colors?: Colors;
-  render?: (value: string) => React.ReactNode;
   form?: boolean;
+  render?: (value: any, item?: any) => JSX.Element | string;
+  onEvent?: (item: any) => void;
+  getCustomClass?: (item: any) => string;
+  convertValue?: (value: any) => string;
+  passKeyField?: boolean;
 }
 
 export interface ApiEndpointConfig {
@@ -83,7 +87,7 @@ export interface ModuleConfig {
     total?: ApiEndpointConfig;
   };
   fields: FieldConfig[];
-  showTotal: boolean;
+  showTotal?: boolean;
   isImport: boolean;
   isExport: boolean;
   showTitle: boolean;

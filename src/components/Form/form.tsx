@@ -8,6 +8,7 @@ import { ModuleConfig } from "../../config/harvests/types";
 import { useApi } from "../../hooks/Apis";
 import { constants } from "../../utils/constants";
 import { useSubmissionContext } from "./context";
+import utils from "../../utils";
 
 interface GenericFormProps {
   config: ModuleConfig;
@@ -41,12 +42,19 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
     validationSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const id = values[`${config?.keyField.toLowerCase()}id`];
+      const staticValues = { ...values };
+      config.fields.forEach(field => {
+        debugger
+        if (field?.passKeyField && values[field.name]) {
+          staticValues[field.name] = utils.getRolesId(values[field.name]);
+        }
+      });
+      const id = staticValues[`${config?.keyField.toLowerCase()}id`];
       const endpoint = isUpdate ? config.apiEndpoints.update : config.apiEndpoints.create;
       const url = isUpdate && id ? `${endpoint.url}/${id}` : endpoint.url;
       const defaultPayload = endpoint.payload || {};
-      const additionalParams = { projectid: rest?.id };
-      const requestData = { ...defaultPayload, ...values, ...additionalParams };
+      const additionalParams = endpoint?.payload?.hideProject ? {} : { projectid: rest?.id };
+      const requestData = { ...defaultPayload, ...staticValues, ...additionalParams };
       await apiRequest({ method: "POST", url, data: requestData });
       setSubmissionState(true);
       onClose();

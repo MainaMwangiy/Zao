@@ -12,7 +12,6 @@ export const usersConfig: ModuleConfig = {
     keyField: "User",
     title: "Users",
     showTitle: true,
-    showTotal: false,
     isImport: false,
     isExport: true,
     apiEndpoints: {
@@ -21,7 +20,8 @@ export const usersConfig: ModuleConfig = {
             payload: {
                 clientorganizationid: clientorganizationid,
                 roleid: roles?.roleid
-            }
+            },
+            hideProject: true
         },
         create: {
             url: `${utils.baseUrl}/api/auth/create`,
@@ -49,9 +49,30 @@ export const usersConfig: ModuleConfig = {
         }
     },
     fields: [
-        { name: 'name', type: 'text', label: 'Name', width: '150px' },
+        {
+            name: 'name', type: 'text', label: 'Name', width: '150px',
+            // getCustomClass: (item) => item.status === 'active' ? 'text-green-500' : 'text-red-500', example of how changing colors should be done
+            // onEvent: (item) => alert(`Name clicked: ${item.name}`), Show on Click how it will look like
+        },
+        { name: 'email', type: 'string', label: 'Email', width: '100px' },
         { name: 'location', type: 'text', label: 'Location', width: '150px' },
-        { name: 'status', type: 'text', label: 'Status', width: '100px' },
-        { name: 'roleid', type: 'select', label: 'Role', width: '150px', options: ["superadmin", "admin", "user"] }
+        { name: 'status', type: 'select', label: 'Status', width: '100px', options: ["active", "inactive"] },
+        {
+            name: 'roleid', type: 'select', label: 'Role', width: '150px', options: ["superadmin", "admin", "user"], passKeyField: true, convertValue: (value) => utils.getRoles(parseInt(value)) || "",
+            getCustomClass: (item) => {
+                const role = utils.getRoles(parseInt(item.roleid));
+                switch (role) {
+                    case 'SuperAdmin':
+                        return 'text-red-500';
+                    case 'Admin':
+                        return 'text-blue-500';
+                    case 'User':
+                        return 'text-green-500';
+                    default:
+                        return '';
+                }
+            }
+        },
+        { name: 'password', type: 'password', label: 'Password', width: '100px' }
     ]
 };

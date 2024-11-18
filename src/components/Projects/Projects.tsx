@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import Summary from './Summary';
-import Expenses from '../Expenses/Expenses';
 import Analytics from './Analytics';
 import Gallery from './Gallery';
 import { useLocation } from 'react-router-dom';
-import Harvests from '../Harvests/Harvests';
 import ModulePage from '../Form/page';
 import { expensesConfig } from '../../config/expenses/config';
 import { harvestsConfig } from '../../config/harvests/config';
@@ -44,8 +42,8 @@ const Projects: React.FC = () => {
 
             <div>
                 {activeTab === 'summary' && <Summary projectData={projectData} />}
-                {activeTab === 'expense' && <ModulePage config={expensesConfig} showAddNew={true} rest={projectData} />}
-                {activeTab === 'harvests' && <ModulePage config={harvestsConfig} showAddNew={true} rest={projectData} />}
+                {activeTab === 'expense' && <ModulePage config={expensesConfig} showAddNew={true} rest={projectData} showTotal={true} />}
+                {activeTab === 'harvests' && <ModulePage config={harvestsConfig} showAddNew={true} rest={projectData} showTotal={true} />}
                 {activeTab === 'analytics' && <Analytics projectData={projectData} />}
                 {activeTab === 'gallery' && <Gallery />}
             </div>

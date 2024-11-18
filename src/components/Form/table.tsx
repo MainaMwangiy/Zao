@@ -29,7 +29,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
   const fetchData = async () => {
     setLoading(true);
     const { url, payload = {} } = config.apiEndpoints.list;
-    const additionalParams = { projectid: rest?.id };
+    const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
     const tempPayload = { ...payload, ...params, page: currentPage, pageSize: itemsPerPage, ...additionalParams };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setData(response?.data || []);
@@ -93,8 +93,11 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
             {data.map((item: any) => (
               <tr key={item.id} className="border-b border-gray-200 dark:border-gray-700">
                 {config.fields.map((field) => (
-                  <td key={field.name} className="px-4 py-2 text-sm">
-                    {field.render ? field.render(item[field.name]) : item[field.name]}
+                  <td
+                    key={field.name}
+                    className={`px-4 py-2 text-sm ${field.getCustomClass ? field.getCustomClass(item) : ''}`}
+                  >
+                    {field.convertValue ? field.convertValue(item[field.name]) : (field.render ? field.render(item[field.name], item) : item[field.name])}
                   </td>
                 ))}
                 <td className="px-4 py-2 text-sm">

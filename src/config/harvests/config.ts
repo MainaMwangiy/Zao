@@ -7,8 +7,7 @@ const clientuserid = localStorage.getItem("clientuserid") || "";
 export const harvestsConfig: ModuleConfig = {
     keyField: 'Harvest',
     title: "Harvests",
-    showTitle: false,
-    showTotal: true,
+    showTitle: true,
     isImport: true,
     isExport: true,
     apiEndpoints: {

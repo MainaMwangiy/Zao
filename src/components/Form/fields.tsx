@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { FieldConfig } from "../../config/harvests/types";
 import { useField } from "formik";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 interface FormFieldProps {
   fieldConfig: FieldConfig;
@@ -8,12 +9,14 @@ interface FormFieldProps {
 
 const FormField: React.FC<FormFieldProps> = ({ fieldConfig }) => {
   const [field, meta, helpers] = useField(fieldConfig.name);
+  const [showPassword, setShowPassword] = useState(false);
 
   const renderField = () => {
     const inputBaseClass = "w-full px-3 py-2 border rounded text-gray-900 dark:text-white";
     switch (fieldConfig.type) {
       case "text":
       case "number":
+      case "string":
       case "textarea":
         return (
           <input
@@ -33,6 +36,24 @@ const FormField: React.FC<FormFieldProps> = ({ fieldConfig }) => {
               </option>
             ))}
           </select>
+        );
+      case "password":
+        return (
+          <div className="relative">
+            <input
+              {...field}
+              type={showPassword ? "text" : "password"}
+              className={`${inputBaseClass} bg-white dark:bg-gray-800 pr-10`}
+              placeholder={fieldConfig.label}
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 flex items-center px-2"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </button>
+          </div>
         );
       default:
         return null;

@@ -31,9 +31,9 @@ const App: React.FC = () => {
               <Route element={<MainLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/reports" element={<Reports />} />
-                <Route path="/expenses" element={<ModulePage config={expensesConfig} showAddNew={false} />} />
+                <Route path="/expenses" element={<ModulePage config={expensesConfig} />} />
                 <Route path="/users" element={<ModulePage config={usersConfig} showAddNew={true} />} />
-                <Route path="/harvests" element={<ModulePage config={harvestsConfig} showAddNew={true} />} />
+                <Route path="/harvests" element={<ModulePage config={harvestsConfig} />} />
                 <Route path="/transactions" element={<Transactions />} />
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/profile" element={<Profile />} />

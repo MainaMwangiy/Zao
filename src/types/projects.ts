@@ -16,6 +16,7 @@ export interface DataItem {
     amount: number;
     createdon: string;
     clientusername: string;
+    roleid: number;
 }
 export interface HarvestDataItem {
     bags: string;

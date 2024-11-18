@@ -13,9 +13,10 @@ interface ModulePageProps {
   config: ModuleConfig;
   showAddNew?: boolean;
   rest?: DataArray;
+  showTotal?: boolean;
 }
 
-const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, rest }) => {
+const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, showTotal = false, rest }) => {
   const { apiRequest } = useApi();
   const [selectedItem, setSelectedItem] = useState<DataItem | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
@@ -33,7 +34,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, res
 
   const getTotals = async () => {
     const { url = '', payload = {} } = config?.apiEndpoints?.total ?? {};
-    const additionalParams = { projectid: rest?.id };
+    const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
     const tempPayload = { ...payload, ...additionalParams };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setTotal(response?.data?.[0]?.total || 0);
@@ -52,7 +53,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, res
     <div>
       {config.showTitle && <h1>{config.title}</h1>}
       <div className="flex flex-row items-center w-full space-x-2 mb-4">
-        {config.showTotal && <>
+        {(config.showTotal || showTotal) && <>
           <div className="flex items-center bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-1 rounded-lg shadow-md">
             <p className="font-semibold text-base mr-2">{`Total ${config.title}: `}</p>
             <p className="font-bold text-lg text-red-600 dark:text-red-400">KES {total}</p>

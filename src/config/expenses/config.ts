@@ -11,10 +11,9 @@ const clientusername = clientuser?.name || '';
 export const expensesConfig: ModuleConfig = {
   keyField: 'Expense',
   title: "Expenses",
-  showTotal: true,
   isImport: true,
   isExport: true,
-  showTitle: false,
+  showTitle: true,
   apiEndpoints: {
     list: {
       url: `${utils.baseUrl}/api/expenses/list`,
@@ -56,9 +55,13 @@ export const expensesConfig: ModuleConfig = {
   },
   fields: [
     { name: "name", type: "text", label: "Name", required: true, width: "150px" },
-    { name: "amount", type: "number", label: "Amount", required: true, width: "100px" },
+    {
+      name: "amount", type: "number", label: "Amount", required: true, width: "100px", getCustomClass: (item) => item.amount > 10000 ? 'text-red-500' : '',
+    },
     { name: "clientusername", type: "text", label: "Paid By", form: false, width: "120px" },
-    { name: "status", type: "select", label: "Status", options: ["pending", "paid"], required: true, width: "100px" },
+    {
+      name: "status", type: "select", label: "Status", options: ["pending", "paid"], required: true, width: "100px", getCustomClass: (item) => item.status === 'pending' ? 'text-yellow-500' : 'text-green-500',
+    },
     { name: "notes", type: "textarea", label: "Notes", width: "200px" },
     { name: "createdon", type: "text", label: "Created On", form: false, width: "150px" },
     { name: "modifiedon", type: "text", label: "Modified On", form: false, width: "150px" },
