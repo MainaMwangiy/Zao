@@ -29,7 +29,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
   const fetchData = async () => {
     setLoading(true);
     const { url, payload = {} } = config.apiEndpoints.list;
-    const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
+    const additionalParams = !payload.hideProject ? {} : { projectid: rest?.id };
     const tempPayload = { ...payload, ...params, page: currentPage, pageSize: itemsPerPage, ...additionalParams };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setData(response?.data || []);

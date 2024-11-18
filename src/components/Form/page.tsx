@@ -34,7 +34,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
 
   const getTotals = async () => {
     const { url = '', payload = {} } = config?.apiEndpoints?.total ?? {};
-    const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
+    const additionalParams = !payload.hideProject ? {} : { projectid: rest?.id };
     const tempPayload = { ...payload, ...additionalParams };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setTotal(response?.data?.[0]?.total || 0);
