@@ -73,6 +73,6 @@ export const usersConfig: ModuleConfig = {
                 }
             }
         },
-        { name: 'password', type: 'password', label: 'Password', width: '100px' }
+        { name: 'password', type: 'password', label: 'Password', width: '100px', hide: true }
     ]
 };

@@ -75,7 +75,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
         <table className="min-w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg shadow-md">
           <thead>
             <tr className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-              {config.fields.map((field) => (
+              {config.fields.filter(field => !field?.hide).map((field) => (
                 <th
                   key={field.name}
                   className="px-4 py-2 text-left text-sm font-semibold"
@@ -92,7 +92,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
           <tbody>
             {data.map((item: any) => (
               <tr key={item.id} className="border-b border-gray-200 dark:border-gray-700">
-                {config.fields.map((field) => (
+                {config.fields.filter(field => !field?.hide).map((field) => (
                   <td
                     key={field.name}
                     className={`px-4 py-2 text-sm ${field.getCustomClass ? field.getCustomClass(item) : ''}`}

@@ -69,6 +69,7 @@ export interface FieldConfig {
   getCustomClass?: (item: any) => string;
   convertValue?: (value: any) => string;
   passKeyField?: boolean;
+  hide?: boolean;
 }
 
 export interface ApiEndpointConfig {

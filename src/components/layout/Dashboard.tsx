@@ -68,10 +68,10 @@ const Dashboard: React.FC = () => {
         clientorganizationid: clientorganizationid
       }
       const url = `${utils.baseUrl}/api/expenses/total`;
-      const response = await axios.post(url, { values }, {
+      const response = await axios.post(url, values, {
         headers: { 'Content-Type': 'application/json' },
       });
-      const projects = response.data.data[0].totalexpenses;
+      const projects = response.data.data[0].total;
       localStorage.setItem("totalexpenses", projects)
       setTotalExpenses(projects)
     } catch (error) {
@@ -85,10 +85,10 @@ const Dashboard: React.FC = () => {
         clientorganizationid: clientorganizationid
       }
       const url = `${utils.baseUrl}/api/harvests/totalharvestearnings`;
-      const response = await axios.post(url, { values }, {
+      const response = await axios.post(url, values, {
         headers: { 'Content-Type': 'application/json' },
       });
-      const projects = response.data.data[0].totalharvests;
+      const projects = response.data.data[0].total;
       setTotalHarvestEarnings(projects)
     } catch (error) {
       enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
@@ -101,7 +101,7 @@ const Dashboard: React.FC = () => {
         roleid: user?.roleid
       }
       const url = `${utils.baseUrl}/api/auth/list-strict`;
-      const response = await axios.post(url, { values }, {
+      const response = await axios.post(url, values, {
         headers: { 'Content-Type': 'application/json' }
       });
       const users = response.data.data;

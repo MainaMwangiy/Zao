@@ -51,14 +51,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
   const mode = selectedItem ? "edit" : "add";
   return (
     <div>
-      {config.showTitle && <h1>{config.title}</h1>}
       <div className="flex flex-row items-center w-full space-x-2 mb-4">
-        {(config.showTotal || showTotal) && <>
-          <div className="flex items-center bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-1 rounded-lg shadow-md">
-            <p className="font-semibold text-base mr-2">{`Total ${config.title}: `}</p>
-            <p className="font-bold text-lg text-red-600 dark:text-red-400">KES {total}</p>
-          </div>
-        </>}
+        {config.showTitle && <h1>{config.title}</h1>}
         {showAddNew && (
           <button
             className="bg-blue-600 hover:bg-blue-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
@@ -88,6 +82,15 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
             <AiOutlineDownload className="text-lg md:mr-1" />
             <span className="hidden md:inline text-sm">Export {config.title}</span>
           </button>
+        </>}
+      </div>
+
+      <div className="flex flex-row items-center w-full space-x-2 mb-4">
+        {(config.showTotal || showTotal) && <>
+          <div className="flex items-center bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-1 rounded-lg shadow-md">
+            <p className="font-semibold text-base mr-2">{`Total ${config.title}: `}</p>
+            <p className="font-bold text-lg text-red-600 dark:text-red-400">KES {total}</p>
+          </div>
         </>}
       </div>
       <Modal isOpen={isFormOpen} onClose={handleClose} title={selectedItem ? "Edit Item" : "Add Item"}>

@@ -70,6 +70,7 @@ export interface FieldConfig {
   roleid?: number;
   convertValue?: (value: any) => string;
   passKeyField?: boolean;
+  hide?: boolean;
 }
 
 export interface ApiEndpointConfig {
