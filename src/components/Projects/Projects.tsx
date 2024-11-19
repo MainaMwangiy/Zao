@@ -23,7 +23,7 @@ const Projects: React.FC = () => {
     return (
         <div className="container mx-auto px-1 py-6 dark:bg-gray-900">
             <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-200">
-                {projectData.title}
+                {projectData.projectname}
             </h1>
             <div className="tabs flex overflow-x-auto scroll-snap-x border-b border-gray-300 dark:border-gray-700 mb-4 scrollbar-hide">
                 {['Summary', 'Expense', 'Harvests', 'Analytics', 'Gallery'].map((tab) => (
