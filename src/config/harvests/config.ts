@@ -50,7 +50,7 @@ export const harvestsConfig: ModuleConfig = {
     fields: [
         { name: 'bags', type: 'number', label: 'Bags', width: '150px' },
         { name: 'unitprice', type: 'number', label: 'Unit Price', width: '150px' },
-        { name: 'amountsold', type: 'number', label: 'Amount Sold', width: '150px' },
+        { name: 'amountsold', type: 'number', label: 'Amount Sold', width: '150px', getCustomClass: (item) => item.amountsold > 10000 ? 'text-yellow-500' : '' },
         { name: 'notes', type: 'text', label: 'Notes', width: '300px' }
     ]
 };

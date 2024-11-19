@@ -9,6 +9,7 @@ interface ApiOptions {
   url: string;
   data?: any;
   id?: number | string;
+  responseType?: string;
 }
 
 export const useApi = () => {

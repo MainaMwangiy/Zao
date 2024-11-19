@@ -6,6 +6,8 @@ import Modal from "./Modal";
 import { ModuleConfig, DataItem } from "../../types";
 import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
 import { useApi } from "../../hooks/Apis";
+import { useSnackbar } from "notistack";
+import Loader from "../../hooks/Loader";
 
 interface DataArray { id?: number; }
 
@@ -17,10 +19,12 @@ interface ModulePageProps {
 }
 
 const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, showTotal = false, rest }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const { apiRequest } = useApi();
   const [selectedItem, setSelectedItem] = useState<DataItem | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const handleEdit = (item: any) => {
     setSelectedItem(item);
@@ -34,7 +38,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
 
   const getTotals = async () => {
     const { url = '', payload = {} } = config?.apiEndpoints?.total ?? {};
-    const additionalParams = !payload.hideProject ? {} : { projectid: rest?.id };
+    const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
     const tempPayload = { ...payload, ...additionalParams };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setTotal(response?.data?.[0]?.total || 0);
@@ -47,6 +51,34 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
   const refreshData = async () => {
     await getTotals();
   };
+
+  const handleExportExpenses = async () => {
+    try {
+      setLoading(true);
+      const { url = '', payload = {} } = config?.apiEndpoints?.list ?? {};
+      const additionalParams = !payload.hideProject ? {} : { projectid: rest?.id };
+      const reqParams = { isExport: true };
+      const tempPayload = { ...payload, ...additionalParams, ...reqParams };
+      const response = await apiRequest({ method: "POST", url: url, data: tempPayload, responseType: 'blob' });
+      const currentDate = new Date().toISOString().split('T')[0];
+      const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', `Expenses${currentDate}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      setLoading(false);
+    } catch (error) {
+      enqueueSnackbar("Failed to export expenses. Please try again.", { variant: "error" });
+      console.error('Error exporting expenses:', error);
+    }
+  };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   const mode = selectedItem ? "edit" : "add";
   return (
@@ -69,7 +101,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
             className="bg-green-600 hover:bg-green-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
           // onClick={handleImportExpenses}
           >
-            <AiOutlineUpload className="text-lg md:mr-1" />
+            <AiOutlineDownload className="text-lg md:mr-1" />
             <span className="hidden md:inline text-sm">Import {config.title}</span>
           </button>
         </>}
@@ -77,9 +109,9 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
         {config.isExport && <>
           <button
             className="bg-gray-300 hover:bg-gray-400 transition text-black px-3 py-2 rounded-lg shadow-md flex items-center"
-          // onClick={handleExportExpenses}
+            onClick={handleExportExpenses}
           >
-            <AiOutlineDownload className="text-lg md:mr-1" />
+            < AiOutlineUpload className="text-lg md:mr-1" />
             <span className="hidden md:inline text-sm">Export {config.title}</span>
           </button>
         </>}
