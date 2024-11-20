@@ -58,7 +58,7 @@ export const usersConfig: ModuleConfig = {
         { name: 'location', type: 'text', label: 'Location', width: '150px' },
         { name: 'status', type: 'select', label: 'Status', width: '100px', options: ["active", "inactive"] },
         {
-            name: 'roleid', type: 'select', label: 'Role', width: '150px', options: ["superadmin", "admin", "user"], passKeyField: true, convertValue: (value) => utils.getRoles(parseInt(value)) || "",
+            name: 'roleid', type: 'select', label: 'Role', width: '150px', isRole: true, options: ["superadmin", "admin", "user"], passKeyField: true, convertValue: (value) => utils.getRoles(parseInt(value)) || "",
             getCustomClass: (item) => {
                 const role = utils.getRoles(parseInt(item.roleid));
                 switch (role) {

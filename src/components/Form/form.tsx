@@ -22,7 +22,11 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
   const { apiRequest } = useApi();
   const fieldsToShow = config.fields.filter(field => field.form !== false);
   const defaultInitialValues = fieldsToShow.reduce<Record<string, any>>((acc, field) => {
-    acc[field.name] = initialValues[field.name] ?? "";
+    if (field?.isRole) {
+      acc[field.name] = utils.getRoles(initialValues[field.name]) ?? "";
+    } else {
+      acc[field.name] = initialValues[field.name] ?? "";
+    }
     return acc;
   }, { [`${config.keyField.toLowerCase()}id`]: initialValues[`${config.keyField.toLowerCase()}id`] ?? "" });
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);

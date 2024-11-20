@@ -59,13 +59,13 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
       const additionalParams = !payload.hideProject ? {} : { projectid: rest?.id };
       const reqParams = { isExport: true };
       const tempPayload = { ...payload, ...additionalParams, ...reqParams };
-      const response = await apiRequest({ method: "POST", url: url, data: tempPayload, responseType: 'blob' });
+      const response = await apiRequest({ method: "POST", url: url, data: tempPayload, responseType: 'blob', filename: config?.title });
       const currentDate = new Date().toISOString().split('T')[0];
-      const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = downloadUrl;
-      link.setAttribute('download', `Expenses${currentDate}.xlsx`);
+      link.setAttribute('download', `${config?.title}${currentDate}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.parentNode?.removeChild(link);

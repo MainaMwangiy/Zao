@@ -71,6 +71,7 @@ export interface FieldConfig {
   convertValue?: (value: any) => string;
   passKeyField?: boolean;
   hide?: boolean;
+  isRole?: boolean;
 }
 
 export interface ApiEndpointConfig {
