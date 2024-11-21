@@ -16,6 +16,8 @@ interface CardProps {
   imagesurl: string;
   name?: string;
   projectname?: string;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
 interface BlobItem {
@@ -37,7 +39,9 @@ const Card: React.FC<CardProps> = ({
   costProjectEstimation,
   imagesurl,
   name,
-  projectname
+  projectname,
+  onEdit,
+  onDelete
 }) => {
   const navigate = useNavigate();
 
@@ -73,13 +77,6 @@ const Card: React.FC<CardProps> = ({
         projectname
       },
     });
-  };
-  const deleteProject = () => {
-    console.log("Delete Project", id);
-  };
-
-  const editProject = () => {
-    console.log("Edit Project", id);
   };
 
   const imageSrc = imagesurl ? imagesurl : "https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3";
@@ -119,7 +116,7 @@ const Card: React.FC<CardProps> = ({
         </div>
         <div className="w-1/2 p-4 flex flex-col">
           <div className="flex justify-end">
-            <ActionMenu onEdit={() => editProject()} onDelete={() => deleteProject()} />
+            <ActionMenu onEdit={onEdit} onDelete={() => onDelete()} />
           </div>
           <div className="mb-4 mt-4">
             <p className="text-gray-600 dark:text-gray-400">Total Expenses</p>

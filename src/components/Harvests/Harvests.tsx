@@ -28,7 +28,7 @@ const Harvests: React.FC<HarvestsProjectProps> = ({ projectData, isProject }) =>
                 projectid: isProject ? projectid : undefined
             };
             const url = `${utils.baseUrl}/api/harvests/list`;
-            const response = await axios.post(url, { values }, {
+            const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const harvestData = response.data.data;

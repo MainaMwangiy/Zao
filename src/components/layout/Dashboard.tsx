@@ -7,6 +7,7 @@ import AddProjectModal from "../Projects/AddProjectModal";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { User, ListResponse, Organization, ProjectsProps, ClientConfig } from "../../types";
+import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
@@ -26,6 +27,8 @@ const Dashboard: React.FC = () => {
   const Orgs: Organization[] = clientOrganizationsString ? JSON.parse(clientOrganizationsString) : [];
   const clientOrganizationIdString = localStorage.getItem('clientorganizationid') || "";
   const OrgId = clientOrganizationIdString ? parseInt(JSON.parse(clientOrganizationIdString)) : null;
+  const [deleteProjectId, setDeleteProjectId] = useState<number | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   let clientConfig: ClientConfig = {};
   for (const org of Orgs) {
@@ -52,7 +55,7 @@ const Dashboard: React.FC = () => {
         clientorganizationid: clientorganizationid
       }
       const url = `${utils.baseUrl}/api/projects/list`;
-      const response = await axios.post(url, { values }, {
+      const response = await axios.post(url, values, {
         headers: { 'Content-Type': 'application/json' },
       });
       const projects = response.data.data;
@@ -116,7 +119,7 @@ const Dashboard: React.FC = () => {
       const values = {
         clientConfig: clientConfig
       }
-      const response = await axios.post<ListResponse>(`${utils.baseUrl}/api/upload/list`, { values }, {
+      const response = await axios.post<ListResponse>(`${utils.baseUrl}/api/upload/list`, values, {
         headers: { 'Content-Type': 'application/json' },
       });
       const result = response?.data?.data?.data || [];
@@ -135,6 +138,35 @@ const Dashboard: React.FC = () => {
     fetchImages();
   }, [showProjectseModal])
 
+  const handleDeleteProject = async () => {
+    if (deleteProjectId) {
+      try {
+        const url = `${utils.baseUrl}/api/projects/delete/${deleteProjectId}`;
+        await axios.post(url, {
+          projectid: deleteProjectId,
+          clientorganizationid: clientorganizationid
+        }, {
+          headers: { 'Content-Type': 'application/json' },
+        });
+        enqueueSnackbar("Project deleted successfully", { variant: "success" });
+        setShowDeleteDialog(false);
+        setDeleteProjectId(null);
+        fetchData();
+      } catch (error) {
+        enqueueSnackbar("Failed to delete project", { variant: "error" });
+      }
+    }
+  };
+
+  const handleDeleteClick = (projectId: number) => {
+    setDeleteProjectId(projectId);
+    setShowDeleteDialog(true);
+  };
+
+  const handleEdit = (item: any) => {
+    // setSelectedItem(item);
+    // setIsFormOpen(true);
+  };
   const isProjects = projects.length > 0;
   return (
     <div className="p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
@@ -230,6 +262,8 @@ const Dashboard: React.FC = () => {
               imagesurl={item?.imagesurl}
               name={item?.name}
               projectname={item?.projectname}
+              onEdit={() => handleEdit(item)}
+              onDelete={() => handleDeleteClick(Number(item.projectid))}
             />
           ))}
         </div>
@@ -238,6 +272,16 @@ const Dashboard: React.FC = () => {
         <AddProjectModal
           showProjectseModal={showProjectseModal}
           setProjectshowModal={setProjectshowModal}
+        />
+      )}
+      {showDeleteDialog && (
+        <ConfirmationDialog
+          open={showDeleteDialog}
+          title="Confirm Deletion"
+          content="Are you sure you want to delete this project?"
+          onCancel={() => setShowDeleteDialog(false)}
+          onConfirm={handleDeleteProject}
+          confirmDiscard="Delete"
         />
       )}
     </div>

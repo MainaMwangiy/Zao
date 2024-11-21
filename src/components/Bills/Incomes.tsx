@@ -64,7 +64,7 @@ const Incomes: React.FC = () => {
         }
         try {
             const url = `${utils.baseUrl}/api/expenses/total-expenses`;
-            const response = await axios.post(url, { values }, {
+            const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const investment = response.data.data[0].amount;
@@ -80,7 +80,7 @@ const Incomes: React.FC = () => {
         }
         try {
             const url = `${utils.baseUrl}/api/harvests/totalharvestearnings`;
-            const response = await axios.post(url, { values }, {
+            const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const earnings = response.data.data[0].totalharvests;
@@ -97,7 +97,7 @@ const Incomes: React.FC = () => {
         }
         try {
             const url = `${utils.baseUrl}/api/transactions/allpaid`;
-            const response = await axios.post(url, { values }, {
+            const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const paidTotals = response.data.data;
@@ -114,7 +114,7 @@ const Incomes: React.FC = () => {
         }
         try {
             const url = `${utils.baseUrl}/api/transactions/totalpaid`;
-            const response = await axios.post(url, { values }, {
+            const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const paidTotals = response.data.data[0].totalpaid;

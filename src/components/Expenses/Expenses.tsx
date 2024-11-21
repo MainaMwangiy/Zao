@@ -47,7 +47,7 @@ const Expenses: React.FC<ExpensesProjectProps> = ({ projectData, isProject }) =>
       setIsLoading(true);
       const values = params;
       const url = `${utils.baseUrl}/api/expenses/list`;
-      const response = await axios.post(url, { values }, {
+      const response = await axios.post(url, values, {
         headers: { 'Content-Type': 'application/json' },
       });
 
@@ -68,7 +68,7 @@ const Expenses: React.FC<ExpensesProjectProps> = ({ projectData, isProject }) =>
         projectid: isProject ? projectid : undefined
       }
       const url = `${utils.baseUrl}/api/expenses/total`;
-      const response = await axios.post(url, { values }, {
+      const response = await axios.post(url, values, {
         headers: { 'Content-Type': 'application/json' },
       });
       const projects = response.data.data[0].totalexpenses;

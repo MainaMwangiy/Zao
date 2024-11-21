@@ -64,7 +64,7 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
         const url = `${utils.baseUrl}/api/projects/create`;
         await axios.post(
           url,
-          { values: data },
+          data,
           {
             headers: { "Content-Type": "application/json" },
           }
