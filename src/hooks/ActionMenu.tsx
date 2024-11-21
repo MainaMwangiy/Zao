@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { AiOutlineMore } from "react-icons/ai";
+import { AiOutlineMore, AiOutlineEllipsis } from "react-icons/ai";
+import utils from "../utils";
 
 interface ActionMenuProps {
   onEdit: () => void;
@@ -33,7 +34,15 @@ const ActionMenu: React.FC<ActionMenuProps> = ({ onEdit, onDelete }) => {
         onClick={toggleMenu}
         className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full"
       >
-        <AiOutlineMore className="text-gray-600 dark:text-gray-300" size={20} />
+        <div className="flex justify-end items-center">
+          {
+            !utils.isMobile ? (
+              <AiOutlineEllipsis className="text-gray-600 dark:text-gray-300" size={20} />
+            ) : (
+              <AiOutlineMore className="text-gray-600 dark:text-gray-300" size={20} />
+            )
+          }
+        </div>
       </button>
       {isOpen && (
         <div
