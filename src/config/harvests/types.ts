@@ -93,4 +93,5 @@ export interface ModuleConfig {
   isImport: boolean;
   isExport: boolean;
   showTitle: boolean;
+  addSearch?: boolean;
 }

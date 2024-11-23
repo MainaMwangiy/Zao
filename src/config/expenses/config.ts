@@ -14,6 +14,7 @@ export const expensesConfig: ModuleConfig = {
   isImport: true,
   isExport: true,
   showTitle: true,
+  addSearch: true,
   apiEndpoints: {
     list: {
       url: `${utils.baseUrl}/api/expenses/list`,
