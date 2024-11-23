@@ -6,7 +6,7 @@ import { useSnackbar } from "notistack";
 import AddProjectModal from "../Projects/AddProjectModal";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { User, ListResponse, Organization, ProjectsProps, ClientConfig } from "../../types";
+import { ListResponse, Organization, ProjectsProps, ClientConfig } from "../../types";
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 
 const Dashboard: React.FC = () => {
@@ -16,7 +16,7 @@ const Dashboard: React.FC = () => {
   const [totalExpenses, setTotalExpenses] = useState<string>('');
   const [totalHarvestEarnings, setTotalHarvestEarnings] = useState<string>('');
   const clientuserString = localStorage.getItem('clientuser');
-  const clientuser: User | null = clientuserString ? JSON.parse(clientuserString) : null;
+  const clientuser = clientuserString ? JSON.parse(clientuserString) : null;
   const [isExpensesVisible, setIsExpensesVisible] = useState<boolean>(false);
   const [isEarningsVisible, setIsEarningsVisible] = useState<boolean>(false);
   const navigate = useNavigate();
