@@ -2,15 +2,11 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import MainLayout from "./components/layout/MainLayout";
 import Dashboard from "./components/layout/Dashboard";
-import Expenses from "./components/Expenses/Expenses";
 import Reports from "./components/Reports";
 import { DarkModeProvider } from './hooks/DarkModeContext';
 import Notifications from "./components/Notifications/index";
-import Users from "./components/Users/Users";
 import Login from "./components/auth";
 import PrivateRoute from "./hooks/PrivateRoute";
-import Harvests from "./components/Harvests/Harvests";
-import Transactions from "./components/Transactions/Transactions";
 import Profile from "./components/Profile/Profile";
 import Incomes from "./components/Bills/Incomes";
 import Projects from "./components/Projects/Projects";
@@ -19,6 +15,7 @@ import { usersConfig } from "./config/users/config";
 import { harvestsConfig } from "./config/harvests/config";
 import { expensesConfig } from "./config/expenses/config";
 import { SubmissionProvider } from "./components/Form/context";
+import { transactionsConfig } from "./config/transactions/config";
 
 const App: React.FC = () => {
   return (
@@ -34,7 +31,7 @@ const App: React.FC = () => {
                 <Route path="/expenses" element={<ModulePage config={expensesConfig} />} />
                 <Route path="/users" element={<ModulePage config={usersConfig} showAddNew={true} />} />
                 <Route path="/harvests" element={<ModulePage config={harvestsConfig} />} />
-                <Route path="/transactions" element={<Transactions />} />
+                <Route path="/transactions" element={<ModulePage config={transactionsConfig} showAddNew={true} />} />
                 <Route path="/notifications" element={<Notifications />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/my-bills" element={<Incomes />} />
