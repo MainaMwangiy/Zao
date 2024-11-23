@@ -76,10 +76,6 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
     }
   };
 
-  if (loading) {
-    return <Loader />;
-  }
-
   const mode = selectedItem ? "edit" : "add";
   return (
     <div>
@@ -125,18 +121,22 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
           </div>
         </>}
       </div>
-      <Modal isOpen={isFormOpen} onClose={handleClose} title={selectedItem ? "Edit Item" : "Add Item"}>
-        <Form
-          config={config}
-          onClose={handleClose}
-          isOpen={isFormOpen}
-          initialValues={selectedItem || {}}
-          mode={mode}
-          onDataUpdated={refreshData}
-          {...rest}
-        />
-      </Modal>
-      <Table config={config} onEdit={handleEdit} {...rest} />
+      {loading ? <Loader /> :
+        <>
+          <Modal isOpen={isFormOpen} onClose={handleClose} title={selectedItem ? "Edit Item" : "Add Item"}>
+            <Form
+              config={config}
+              onClose={handleClose}
+              isOpen={isFormOpen}
+              initialValues={selectedItem || {}}
+              mode={mode}
+              onDataUpdated={refreshData}
+              {...rest}
+            />
+          </Modal>
+          <Table config={config} onEdit={handleEdit} {...rest} />
+        </>
+      }
     </div>
   );
 };
