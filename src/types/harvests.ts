@@ -45,7 +45,7 @@ export interface HarvestsProjectProps {
         size: string;
         status: string;
         projectPlanIncluded: boolean;
-        costProjectEstimation: string;
+        costprojectestimation: string;
         id: string;
         projectid?: string | number;
     };

@@ -2,8 +2,8 @@ export interface ProjectsProps {
   name: string;
   location: string;
   size: string;
-  status: string;
-  projectplan: boolean;
+  projectstatus: string;
+  projectplan: string;
   imagesurl: string;
   projectid: string;
   roleid: number;

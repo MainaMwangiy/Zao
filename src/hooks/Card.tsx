@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -10,9 +10,9 @@ interface CardProps {
   addedBy: string;
   location: string;
   size: string;
-  status: string;
-  projectPlanIncluded: boolean;
-  costProjectEstimation: string;
+  projectstatus: string;
+  projectPlanIncluded: string;
+  costprojectestimation: string;
   imagesurl: string;
   name?: string;
   projectname?: string;
@@ -34,9 +34,9 @@ const Card: React.FC<CardProps> = ({
   addedBy,
   location,
   size,
-  status,
+  projectstatus,
   projectPlanIncluded,
-  costProjectEstimation,
+  costprojectestimation,
   imagesurl,
   name,
   projectname,
@@ -69,9 +69,9 @@ const Card: React.FC<CardProps> = ({
         addedBy,
         location,
         size,
-        status,
+        projectstatus,
         projectPlanIncluded,
-        costProjectEstimation,
+        costprojectestimation,
         imagesurl,
         name,
         projectname
@@ -80,6 +80,7 @@ const Card: React.FC<CardProps> = ({
   };
 
   const imageSrc = imagesurl ? imagesurl : "https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3";
+  const isHavingProjectPlan = projectPlanIncluded === 'Yes';
   return (
     <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md flex flex-col">
       <div className="w-full mb-4">
@@ -101,9 +102,11 @@ const Card: React.FC<CardProps> = ({
               <h3 className="mt-2 text-lg font-semibold" onClick={handleOpenTracker}>{projectname}</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">Added by: {name}, {location}</p>
               <p>Size {size} acres</p>
-              <p className="text-green-500 font-bold">{status}</p>
+              <p className="text-green-500 font-bold">{projectstatus}</p>
               <p className="mt-2 text-gray-600 dark:text-gray-400">
-                Project plan included: {projectPlanIncluded ? <span className="text-green-500">Yes</span> : <span className="text-red-500">No</span>}
+                Project plan included: <span className={isHavingProjectPlan ? "text-green-500" : "text-red-500"}>
+                  {projectPlanIncluded}
+                </span>
               </p>
               <button
                 className="mt-2 bg-green-500 text-white px-4 py-2 rounded"

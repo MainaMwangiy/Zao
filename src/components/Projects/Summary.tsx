@@ -3,7 +3,7 @@ import { SummaryProps } from '../../types';
 
 const Summary: React.FC<SummaryProps> = ({ projectData }) => {
     const totalexpenses = localStorage.getItem('totalexpenses');
-    const estimatedCosts = Number(projectData.costProjectEstimation || 0);
+    const estimatedCosts = Number(projectData.costprojectestimation || 0);
     const overdueValues = Number(totalexpenses) - estimatedCosts;
     const percentageIncrease = overdueValues / Number(totalexpenses) * 100;
     const imageSrc = projectData?.imagesurl ? projectData?.imagesurl : "https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3";

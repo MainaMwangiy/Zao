@@ -3,11 +3,12 @@ export interface ProjectProps {
     name: string;
     location: string;
     size: string;
-    status: string;
     projectplan: string;
     clientorganizationid: string;
-    costProjectEstimation: string;
+    costprojectestimation: string;
     projectname: string;
+    projectstatus: string;
+    projectid: number;
 }
 
 export interface DataItem {
@@ -39,7 +40,7 @@ export interface SummaryProps {
         size: string;
         status: string;
         projectPlanIncluded: boolean;
-        costProjectEstimation: string;
+        costprojectestimation: string;
         imagesurl: string;
         name: string;
         projectname: string;
@@ -53,7 +54,7 @@ export interface ExpensesProjectProps {
         size: string;
         status: string;
         projectPlanIncluded: boolean;
-        costProjectEstimation: string;
+        costprojectestimation: string;
         id: string;
     };
     isProject?: boolean;
@@ -67,5 +68,5 @@ export interface ProjectDataProps {
     size?: string;
     status?: string;
     projectPlanIncluded?: boolean;
-    costProjectEstimation?: string;
+    costprojectestimation?: string;
 }

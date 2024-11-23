@@ -29,6 +29,8 @@ const Dashboard: React.FC = () => {
   const OrgId = clientOrganizationIdString ? parseInt(JSON.parse(clientOrganizationIdString)) : null;
   const [deleteProjectId, setDeleteProjectId] = useState<number | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [mode, setMode] = useState('');
 
   let clientConfig: ClientConfig = {};
   for (const org of Orgs) {
@@ -164,8 +166,9 @@ const Dashboard: React.FC = () => {
   };
 
   const handleEdit = (item: any) => {
-    // setSelectedItem(item);
-    // setIsFormOpen(true);
+    setSelectedItem(item);
+    setProjectshowModal(true);
+    setMode('edit');
   };
   const isProjects = projects.length > 0;
   return (
@@ -256,9 +259,9 @@ const Dashboard: React.FC = () => {
               addedBy={user?.name}
               location={item?.location}
               size={item.size}
-              status={item.status}
+              projectstatus={item.projectstatus}
               projectPlanIncluded={item.projectplan}
-              costProjectEstimation={item.costprojectestimation}
+              costprojectestimation={item.costprojectestimation}
               imagesurl={item?.imagesurl}
               name={item?.name}
               projectname={item?.projectname}
@@ -272,6 +275,8 @@ const Dashboard: React.FC = () => {
         <AddProjectModal
           showProjectseModal={showProjectseModal}
           setProjectshowModal={setProjectshowModal}
+          selectedItem={selectedItem}
+          mode={mode}
         />
       )}
       {showDeleteDialog && (
