@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ActionMenu from "./ActionMenu";
+import utils from "../utils";
+import axios from "axios";
+import { useSnackbar } from "notistack";
 
 interface CardProps {
   id: string;
@@ -41,25 +44,66 @@ const Card: React.FC<CardProps> = ({
   name,
   projectname,
   onEdit,
-  onDelete
+  onDelete,
 }) => {
   const navigate = useNavigate();
-
+  const { enqueueSnackbar } = useSnackbar();
   const gallery = localStorage.getItem("gallery");
   const images: BlobItem[] = gallery ? JSON.parse(gallery) : [];
   const [isExpensesVisible, setIsExpensesVisible] = useState(false);
   const [isEarningsVisible, setIsEarningsVisible] = useState(false);
-  const expenses = 200000;
-  const earnings = 300000;
+  const [expenses, setExpenses] = useState(0);
+  const [earnings, setEarnings] = useState(0);
+  const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 
   const toggleExpensesVisibility = () =>
     setIsExpensesVisible(!isExpensesVisible);
   const toggleEarningsVisibility = () =>
     setIsEarningsVisible(!isEarningsVisible);
 
-  const formatPlaceholder = (value: number) => {
-    return "*".repeat(value.toString().length);
+  const formatPlaceholder = (value: number | string | null | undefined) => {
+    return value ? "*".repeat(value.toString().length) : "";
   };
+  const fetchTotalExpenses = async () => {
+    try {
+      const values = {
+        clientorganizationid: clientorganizationid,
+        projectid: id
+      }
+      const url = `${utils.baseUrl}/api/expenses/total`;
+      const response = await axios.post(url, values, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const projects = response.data.data[0].total;
+      localStorage.setItem("totalexpenses", projects)
+      setExpenses(projects)
+    } catch (error) {
+      enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
+    }
+  }
+
+  const fetchTotalEarningsFromHarvest = async () => {
+    try {
+      const values = {
+        clientorganizationid: clientorganizationid,
+        projectid: id
+      }
+      const url = `${utils.baseUrl}/api/harvests/totalharvestearnings`;
+      const response = await axios.post(url, values, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const projects = response.data.data[0].total;
+      setEarnings(projects)
+    } catch (error) {
+      enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
+    }
+  }
+
+  useEffect(() => {
+    fetchTotalExpenses();
+    fetchTotalEarningsFromHarvest();
+  }, [])
+
 
   const handleOpenTracker = () => {
     navigate(`/projects/${id}`, {
