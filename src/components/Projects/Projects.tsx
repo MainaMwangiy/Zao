@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Summary from './Summary';
-import Expenses from '../Expenses/Expenses';
 import Analytics from './Analytics';
 import Gallery from './Gallery';
 import { useLocation } from 'react-router-dom';
-import Harvests from '../Harvests/Harvests';
+import ModulePage from '../Form/page';
+import { expensesConfig } from '../../config/expenses/config';
+import { harvestsConfig } from '../../config/harvests/config';
 
 const Projects: React.FC = () => {
     const [activeTab, setActiveTab] = useState<string>('summary');
@@ -22,7 +23,7 @@ const Projects: React.FC = () => {
     return (
         <div className="container mx-auto px-1 py-6 dark:bg-gray-900">
             <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-200">
-                {projectData.title}
+                {projectData.projectname}
             </h1>
             <div className="tabs flex overflow-x-auto scroll-snap-x border-b border-gray-300 dark:border-gray-700 mb-4 scrollbar-hide">
                 {['Summary', 'Expense', 'Harvests', 'Analytics', 'Gallery'].map((tab) => (
@@ -41,8 +42,8 @@ const Projects: React.FC = () => {
 
             <div>
                 {activeTab === 'summary' && <Summary projectData={projectData} />}
-                {activeTab === 'expense' && <Expenses projectData={projectData} isProject={true} />}
-                {activeTab === 'harvests' && <Harvests projectData={projectData} isProject={true} />}
+                {activeTab === 'expense' && <ModulePage config={expensesConfig} showAddNew={true} rest={projectData} showTotal={true} />}
+                {activeTab === 'harvests' && <ModulePage config={harvestsConfig} showAddNew={true} rest={projectData} showTotal={true} />}
                 {activeTab === 'analytics' && <Analytics projectData={projectData} />}
                 {activeTab === 'gallery' && <Gallery />}
             </div>

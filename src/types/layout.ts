@@ -2,12 +2,15 @@ export interface ProjectsProps {
   name: string;
   location: string;
   size: string;
-  status: string;
-  projectplan: boolean;
+  projectstatus: string;
+  projectplan: string;
   imagesurl: string;
   projectid: string;
   roleid: number;
   costprojectestimation: string;
+  projectname: string;
+  earnings: number;
+  expenses: number;
 }
 
 export type ClientConfig = {
@@ -46,7 +49,7 @@ export type ListResponse = {
 };
 
 export interface SidebarProps {
-  isOpen?: boolean,
+  isOpen?: boolean;
   toggleSidebar?: () => void;
 }
 
