@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ActionMenu from "./ActionMenu";
-import utils from "../utils";
-import axios from "axios";
-import { useSnackbar } from "notistack";
-
 interface CardProps {
   id: string;
   title: string;
@@ -21,6 +17,8 @@ interface CardProps {
   projectname?: string;
   onEdit: () => void;
   onDelete: () => void;
+  expenses: number;
+  earnings: number;
 }
 
 interface BlobItem {
@@ -45,16 +43,14 @@ const Card: React.FC<CardProps> = ({
   projectname,
   onEdit,
   onDelete,
+  expenses,
+  earnings,
 }) => {
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
   const gallery = localStorage.getItem("gallery");
   const images: BlobItem[] = gallery ? JSON.parse(gallery) : [];
   const [isExpensesVisible, setIsExpensesVisible] = useState(false);
   const [isEarningsVisible, setIsEarningsVisible] = useState(false);
-  const [expenses, setExpenses] = useState(0);
-  const [earnings, setEarnings] = useState(0);
-  const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 
   const toggleExpensesVisibility = () =>
     setIsExpensesVisible(!isExpensesVisible);
@@ -64,46 +60,6 @@ const Card: React.FC<CardProps> = ({
   const formatPlaceholder = (value: number | string | null | undefined) => {
     return value ? "*".repeat(value.toString().length) : "";
   };
-  const fetchTotalExpenses = async () => {
-    try {
-      const values = {
-        clientorganizationid: clientorganizationid,
-        projectid: id
-      }
-      const url = `${utils.baseUrl}/api/expenses/total`;
-      const response = await axios.post(url, values, {
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const projects = response.data.data[0].total;
-      localStorage.setItem("totalexpenses", projects)
-      setExpenses(projects)
-    } catch (error) {
-      enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
-    }
-  }
-
-  const fetchTotalEarningsFromHarvest = async () => {
-    try {
-      const values = {
-        clientorganizationid: clientorganizationid,
-        projectid: id
-      }
-      const url = `${utils.baseUrl}/api/harvests/totalharvestearnings`;
-      const response = await axios.post(url, values, {
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const projects = response.data.data[0].total;
-      setEarnings(projects)
-    } catch (error) {
-      enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
-    }
-  }
-
-  useEffect(() => {
-    fetchTotalExpenses();
-    fetchTotalEarningsFromHarvest();
-  }, [])
-
 
   const handleOpenTracker = () => {
     navigate(`/projects/${id}`, {
@@ -123,8 +79,10 @@ const Card: React.FC<CardProps> = ({
     });
   };
 
-  const imageSrc = imagesurl ? imagesurl : "https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3";
-  const isHavingProjectPlan = projectPlanIncluded === 'Yes';
+  const imageSrc = imagesurl
+    ? imagesurl
+    : "https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3";
+  const isHavingProjectPlan = projectPlanIncluded === "Yes";
   return (
     <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md flex flex-col">
       <div className="w-full mb-4">
@@ -143,12 +101,24 @@ const Card: React.FC<CardProps> = ({
         <div className="w-1/2 p-4">
           <div className="flex-1">
             <div>
-              <h3 className="mt-2 text-lg font-semibold" onClick={handleOpenTracker}>{projectname}</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Added by: {name}, {location}</p>
+              <h3
+                className="mt-2 text-lg font-semibold"
+                onClick={handleOpenTracker}
+              >
+                {projectname}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Added by: {name}, {location}
+              </p>
               <p>Size {size} acres</p>
               <p className="text-green-500 font-bold">{projectstatus}</p>
               <p className="mt-2 text-gray-600 dark:text-gray-400">
-                Project plan included: <span className={isHavingProjectPlan ? "text-green-500" : "text-red-500"}>
+                Project plan included:{" "}
+                <span
+                  className={
+                    isHavingProjectPlan ? "text-green-500" : "text-red-500"
+                  }
+                >
                   {projectPlanIncluded}
                 </span>
               </p>
@@ -169,7 +139,9 @@ const Card: React.FC<CardProps> = ({
             <p className="text-gray-600 dark:text-gray-400">Total Expenses</p>
             <div className="flex items-center">
               <p className="text-red-500 text-2xl font-semibold mr-2 font-mono">
-                {isExpensesVisible ? `KES ${expenses || 0}` : `KES ${formatPlaceholder(expenses || 0)}`}
+                {isExpensesVisible
+                  ? `KES ${expenses || 0}`
+                  : `KES ${formatPlaceholder(expenses || 0)}`}
               </p>
               <button
                 onClick={toggleExpensesVisibility}
@@ -187,7 +159,9 @@ const Card: React.FC<CardProps> = ({
             <p className="text-gray-600 dark:text-gray-400">Total Earnings</p>
             <div className="flex items-center">
               <p className="text-green-500 text-2xl font-semibold mr-2 font-mono">
-                {isEarningsVisible ? `KES ${earnings || 0}` : `KES ${formatPlaceholder(earnings || 0)}`}
+                {isEarningsVisible
+                  ? `KES ${earnings || 0}`
+                  : `KES ${formatPlaceholder(earnings || 0)}`}
               </p>
               <button
                 onClick={toggleEarningsVisibility}

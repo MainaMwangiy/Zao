@@ -9,6 +9,8 @@ export interface ProjectProps {
     projectname: string;
     projectstatus: string;
     projectid: number;
+    expenses: number;
+    earnings: number;
 }
 
 export interface DataItem {

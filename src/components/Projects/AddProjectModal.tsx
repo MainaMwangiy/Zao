@@ -31,14 +31,14 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
   showProjectseModal,
   setProjectshowModal,
   selectedItem,
-  mode
+  mode,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const clientUser = localStorage.getItem("clientuser") || "{}"
-  const userDetails = JSON.parse(clientUser)
+  const clientUser = localStorage.getItem("clientuser") || "{}";
+  const userDetails = JSON.parse(clientUser);
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
-  const isUpdate = mode === 'edit';
+  const isUpdate = mode === "edit";
 
   const initialValues = {
     name: selectedItem?.name || "",
@@ -49,7 +49,9 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
     costprojectestimation: selectedItem?.costprojectestimation || "",
     projectname: selectedItem?.projectname || "",
     projectstatus: selectedItem?.projectstatus || "",
-    projectid: selectedItem?.projectid || 0
+    projectid: selectedItem?.projectid || 0,
+    earnings: selectedItem?.earnings || 0,
+    expenses: selectedItem?.expenses || 0,
   };
 
   const formik = useFormik<ProjectProps>({
@@ -58,19 +60,21 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
     onSubmit: async values => {
       try {
         let url = "";
-        const clientOrganizationId = localStorage.getItem("clientorganizationid") || "";
+        const clientOrganizationId =
+          localStorage.getItem("clientorganizationid") || "";
         const data = {
           ...values,
           clientorganizationid: clientOrganizationId,
-          clientuserid: userDetails.clientuserid
-
+          clientuserid: userDetails.clientuserid,
         };
         if (isUpdate) {
           url = `${utils.baseUrl}/api/projects/update/${values.projectid}`;
         } else {
           url = `${utils.baseUrl}/api/projects/create`;
         }
-        await axios.post(url, data, { headers: { "Content-Type": "application/json" } });
+        await axios.post(url, data, {
+          headers: { "Content-Type": "application/json" },
+        });
         enqueueSnackbar("Project added successfully!", { variant: "success" });
         formik.resetForm();
       } catch (error) {
@@ -115,7 +119,6 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
     setShowCancelConfirmation(false);
   };
 
-
   return (
     <div>
       {/* Button to open the modal */}
@@ -135,7 +138,7 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
             </h2>
 
             {/* Form */}
-            <form >
+            <form>
               <div className="grid grid-cols-1 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-900 dark:text-gray-200">
@@ -211,11 +214,12 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
                     <option value="ongoing">Ongoing</option>
                     <option value="completed">Completed</option>
                   </select>
-                  {formik.touched.projectstatus && formik.errors.projectstatus && (
-                    <div className="text-red-500 text-sm">
-                      {formik.errors.projectstatus}
-                    </div>
-                  )}
+                  {formik.touched.projectstatus &&
+                    formik.errors.projectstatus && (
+                      <div className="text-red-500 text-sm">
+                        {formik.errors.projectstatus}
+                      </div>
+                    )}
                 </div>
               </div>
 
@@ -284,9 +288,19 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
       )}
       <ConfirmationDialog
         open={showConfirmationDialog || showCancelConfirmation}
-        title={showConfirmationDialog ? "Confirm Submission" : "Unsaved Changes"}
-        content={showConfirmationDialog ? "Are you sure you want to submit these details?" : "You have unsaved changes. Are you sure you want to discard them?"}
-        onCancel={() => showConfirmationDialog ? setShowConfirmationDialog(false) : setShowCancelConfirmation(false)}
+        title={
+          showConfirmationDialog ? "Confirm Submission" : "Unsaved Changes"
+        }
+        content={
+          showConfirmationDialog
+            ? "Are you sure you want to submit these details?"
+            : "You have unsaved changes. Are you sure you want to discard them?"
+        }
+        onCancel={() =>
+          showConfirmationDialog
+            ? setShowConfirmationDialog(false)
+            : setShowCancelConfirmation(false)
+        }
         onConfirm={showConfirmationDialog ? onConfirm : confirmCancel}
         confirmDiscard={showConfirmationDialog ? "Submit" : "Discard"}
       />
