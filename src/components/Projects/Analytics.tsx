@@ -23,7 +23,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ projectData }) => {
                 projectid: projectid
             };
             const url = `${utils.baseUrl}/api/expenses/analytics`;
-            const response = await axios.post(url, { values }, {
+            const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -40,7 +40,7 @@ const Analytics: React.FC<AnalyticsProps> = ({ projectData }) => {
                 projectid: projectid
             };
             const url = `${utils.baseUrl}/api/harvests/analytics`;
-            const response = await axios.post(url, { values }, {
+            const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
             setHarvestData(response.data.data);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import utils from '../../utils';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
-import { ClientConfig, Organization, Transaction, User } from '../../types';
+import { ClientConfig, Organization, Transaction } from '../../types';
 
 
 const Incomes: React.FC = () => {
@@ -28,10 +28,10 @@ const Incomes: React.FC = () => {
             clientConfig = org.appconfig;
         }
     }
-    let users: User[] = [];
+    let users: any[] = [];
     if (usersString) {
         try {
-            users = JSON.parse(usersString) as User[];
+            users = JSON.parse(usersString) as any[];
         } catch (error) {
             console.error('Error parsing users from localStorage', error);
         }
@@ -40,7 +40,7 @@ const Incomes: React.FC = () => {
 
     if (clientuserid) {
         const userIdAsNumber = Number(clientuserid);
-        const loggedInUser: User | undefined = users.find(user => user.clientuserid === userIdAsNumber);
+        const loggedInUser: any | undefined = users.find(user => user.clientuserid === userIdAsNumber);
         if (loggedInUser?.name) {
             clientusername = loggedInUser.name || '';
         }
@@ -64,7 +64,7 @@ const Incomes: React.FC = () => {
         }
         try {
             const url = `${utils.baseUrl}/api/expenses/total-expenses`;
-            const response = await axios.post(url, { values }, {
+            const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const investment = response.data.data[0].amount;
@@ -80,7 +80,7 @@ const Incomes: React.FC = () => {
         }
         try {
             const url = `${utils.baseUrl}/api/harvests/totalharvestearnings`;
-            const response = await axios.post(url, { values }, {
+            const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const earnings = response.data.data[0].totalharvests;
@@ -97,7 +97,7 @@ const Incomes: React.FC = () => {
         }
         try {
             const url = `${utils.baseUrl}/api/transactions/allpaid`;
-            const response = await axios.post(url, { values }, {
+            const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const paidTotals = response.data.data;
@@ -114,7 +114,7 @@ const Incomes: React.FC = () => {
         }
         try {
             const url = `${utils.baseUrl}/api/transactions/totalpaid`;
-            const response = await axios.post(url, { values }, {
+            const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
             const paidTotals = response.data.data[0].totalpaid;
