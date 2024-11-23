@@ -169,7 +169,7 @@ const Card: React.FC<CardProps> = ({
             <p className="text-gray-600 dark:text-gray-400">Total Expenses</p>
             <div className="flex items-center">
               <p className="text-red-500 text-2xl font-semibold mr-2 font-mono">
-                {isExpensesVisible ? `KES ${expenses}` : `KES ${formatPlaceholder(expenses)}`}
+                {isExpensesVisible ? `KES ${expenses || 0}` : `KES ${formatPlaceholder(expenses || 0)}`}
               </p>
               <button
                 onClick={toggleExpensesVisibility}
@@ -187,7 +187,7 @@ const Card: React.FC<CardProps> = ({
             <p className="text-gray-600 dark:text-gray-400">Total Earnings</p>
             <div className="flex items-center">
               <p className="text-green-500 text-2xl font-semibold mr-2 font-mono">
-                {isEarningsVisible ? `KES ${earnings}` : `KES ${formatPlaceholder(earnings)}`}
+                {isEarningsVisible ? `KES ${earnings || 0}` : `KES ${formatPlaceholder(earnings || 0)}`}
               </p>
               <button
                 onClick={toggleEarningsVisibility}
