@@ -88,7 +88,7 @@ const Incomes: React.FC = () => {
             const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
-            const paidTotals = response.data.data[0].totalpaid;
+            const paidTotals = response.data.data[0].total;
             setEarningsPerUser(paidTotals)
         } catch (error) {
             enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
