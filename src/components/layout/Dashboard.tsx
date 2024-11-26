@@ -204,7 +204,7 @@ const Dashboard: React.FC = () => {
     <div className="p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 mt-2">
         {/* Welcome Message */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-2">
             {" "}
             Welcome {clientuser ? clientuser.name : "Guest"}!
@@ -286,7 +286,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Recent Projects */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-2">My Recent Projects</h2>
           {isProjects && (
             <p className="text-sm text-gray-600 dark:text-gray-400">

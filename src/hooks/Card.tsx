@@ -98,7 +98,7 @@ const Card: React.FC<CardProps> = ({
         )}
       </div>
       <div className="flex">
-        <div className="w-1/2 p-4">
+        <div className="w-1/2 p-1">
           <div className="flex-1">
             <div>
               <h3
