@@ -7,9 +7,7 @@ import { ClientConfig, Organization, Transaction } from '../../types';
 
 const Incomes: React.FC = () => {
     const [investment, setInvestment] = useState(0);
-    const [earnings, setEarnings] = useState(0);
     const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [newTransaction, setNewTransaction] = useState<number | string>('');
     const [earningsPerUser, setEarningsPerUser] = useState(0);
     const { enqueueSnackbar } = useSnackbar();
 
@@ -46,17 +44,6 @@ const Incomes: React.FC = () => {
         }
     }
 
-
-    const handleAddTransaction = () => {
-        const transactionValue = Number(newTransaction);
-        if (!isNaN(transactionValue) && transactionValue > 0) {
-            setTransactions([...transactions, { transactionid: Date.now(), amount: transactionValue, clientuserid: Number(clientuserid), notes: '', createdon: '', modifiedon: '', isdeleted: 0, name: '', recipientuserid: 0 }]);
-            setInvestment((prevInvestment) => prevInvestment - transactionValue);
-            setNewTransaction('');
-        } else {
-            alert('Please enter a valid transaction amount');
-        }
-    };
     const fetchTotalUserExpense = async () => {
         const values = {
             clientusername: clientusername,
@@ -69,22 +56,6 @@ const Incomes: React.FC = () => {
             });
             const investment = response.data.data[0].amount;
             setInvestment(investment)
-        } catch (error) {
-            enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
-        }
-    }
-    const fetchTotalUserEarnings = async () => {
-        const values = {
-            clientusername: clientusername,
-            clientorganizationid: clientorganizationid
-        }
-        try {
-            const url = `${utils.baseUrl}/api/harvests/totalharvestearnings`;
-            const response = await axios.post(url, values, {
-                headers: { 'Content-Type': 'application/json' },
-            });
-            const earnings = response.data.data[0].totalharvests;
-            setEarnings(earnings)
         } catch (error) {
             enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
         }
@@ -117,7 +88,7 @@ const Incomes: React.FC = () => {
             const response = await axios.post(url, values, {
                 headers: { 'Content-Type': 'application/json' },
             });
-            const paidTotals = response.data.data[0].totalpaid;
+            const paidTotals = response.data.data[0].total;
             setEarningsPerUser(paidTotals)
         } catch (error) {
             enqueueSnackbar("Total Expenses Loading Failed. Please try again.", { variant: "error" });
@@ -125,7 +96,6 @@ const Incomes: React.FC = () => {
     }
 
     useEffect(() => {
-        fetchTotalUserEarnings();
         fetchTotalUserExpense();
         fetchAllPaidTransactions();
         fetchAllPaidTransactionsPerUser();
