@@ -101,7 +101,9 @@ const Card: React.FC<CardProps> = ({
           <img
             src={imageSrc}
             alt="Project"
-            className="w-full h-full object-cover rounded-lg mb-4"
+            className="
+        w-full h-auto object-cover rounded-lg mb-4
+        sm:max-w-full md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl mx-auto"
             onClick={handleOpenTracker}
           />
         )}
@@ -110,7 +112,7 @@ const Card: React.FC<CardProps> = ({
         <div className="w-1/2 p-1">
           <div className="flex-1">
             <div>
-            <h3
+              <h3
                 className={`mt-2 text-lg font-semibold cursor-pointer ${!isExpanded && shouldTruncate ? 'truncate' : ''} w-full`}
                 onClick={toggleText}
               >
