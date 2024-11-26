@@ -40,7 +40,7 @@ const Card: React.FC<CardProps> = ({
   costprojectestimation,
   imagesurl,
   name,
-  projectname,
+  projectname = '',
   onEdit,
   onDelete,
   expenses,
@@ -51,6 +51,15 @@ const Card: React.FC<CardProps> = ({
   const images: BlobItem[] = gallery ? JSON.parse(gallery) : [];
   const [isExpensesVisible, setIsExpensesVisible] = useState(false);
   const [isEarningsVisible, setIsEarningsVisible] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const shouldTruncate = projectname?.length > 15;
+
+  const toggleText = () => {
+    if (shouldTruncate) {
+      setIsExpanded(!isExpanded);
+    }
+    handleOpenTracker();
+  };
 
   const toggleExpensesVisibility = () =>
     setIsExpensesVisible(!isExpensesVisible);
@@ -92,18 +101,20 @@ const Card: React.FC<CardProps> = ({
           <img
             src={imageSrc}
             alt="Project"
-            className="w-full h-full object-cover rounded-lg mb-4"
+            className="
+        w-full h-auto object-cover rounded-lg mb-4
+        sm:max-w-full md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl mx-auto"
             onClick={handleOpenTracker}
           />
         )}
       </div>
       <div className="flex">
-        <div className="w-1/2 p-4">
+        <div className="w-1/2 p-1">
           <div className="flex-1">
             <div>
               <h3
-                className="mt-2 text-lg font-semibold"
-                onClick={handleOpenTracker}
+                className={`mt-2 text-lg font-semibold cursor-pointer ${!isExpanded && shouldTruncate ? 'truncate' : ''} w-full`}
+                onClick={toggleText}
               >
                 {projectname}
               </h3>
