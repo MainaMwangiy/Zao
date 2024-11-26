@@ -8,6 +8,8 @@ import Loader from "../../hooks/Loader";
 import { useSubmissionContext } from "./context";
 import SearchInput from "../../hooks/SearchInput";
 import { useDebounce } from "use-debounce";
+import dayjs from "dayjs";
+import utils from "../../utils";
 
 interface GenericTableProps {
   config: ModuleConfig;
@@ -106,7 +108,9 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
                       key={field.name}
                       className={`px-4 py-2 text-sm ${field.getCustomClass ? field.getCustomClass(item) : ''}`}
                     >
-                      {field.convertValue ? field.convertValue(item[field.name]) : (field.render ? field.render(item[field.name], item) : item[field.name])}
+                      {field.type === 'date' ? dayjs(item[field.name]).format(utils.dateFormat) :
+                        (field.convertValue ? field.convertValue(item[field.name]) :
+                          (field.render ? field.render(item[field.name], item) : item[field.name]))}
                     </td>
                   ))}
                   <td className="px-4 py-2 text-sm">

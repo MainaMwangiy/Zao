@@ -55,6 +55,15 @@ const FormField: React.FC<FormFieldProps> = ({ fieldConfig }) => {
             </button>
           </div>
         );
+      case "date":
+        return (
+          <input
+            {...field}
+            type="date"
+            className={`${inputBaseClass} bg-white dark:bg-gray-800`}
+            placeholder={fieldConfig.label}
+          />
+        );
       default:
         return null;
     }
