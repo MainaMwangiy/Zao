@@ -8,6 +8,8 @@ import Loader from "../../hooks/Loader";
 import { useSubmissionContext } from "./context";
 import SearchInput from "../../hooks/SearchInput";
 import { useDebounce } from "use-debounce";
+import dayjs from "dayjs";
+import utils from "../../utils";
 
 interface GenericTableProps {
   config: ModuleConfig;
@@ -76,6 +78,18 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
     fetchData();
   }, [config, currentPage, submissionState, debouncedSearchTerm]);
 
+  const renderCellContent = (field: any, item: any) => {
+    if (field.type === 'date' && item[field.name]) {
+      return dayjs(item[field.name]).format(utils.dateFormat);
+    } else if (field.convertValue) {
+      return field.convertValue(item[field.name]);
+    } else if (field.render) {
+      return field.render(item[field.name], item);
+    } else {
+      return item[field.name];
+    }
+  };
+
   return (
     <>
       <div className="overflow-x-auto">
@@ -106,7 +120,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
                       key={field.name}
                       className={`px-4 py-2 text-sm ${field.getCustomClass ? field.getCustomClass(item) : ''}`}
                     >
-                      {field.convertValue ? field.convertValue(item[field.name]) : (field.render ? field.render(item[field.name], item) : item[field.name])}
+                      {renderCellContent(field, item)}
                     </td>
                   ))}
                   <td className="px-4 py-2 text-sm">
