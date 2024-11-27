@@ -6,7 +6,7 @@ const user = localStorage.getItem('clientuser') || "{}";
 const clientuser = JSON.parse(user);
 const clientuserid = clientuser?.clientuserid;
 const clientusers = localStorage.getItem('clientuser') || '';
-const roles = JSON.parse(clientusers);
+const roles = clientusers ? JSON.parse(clientusers) : {};
 
 export const usersConfig: ModuleConfig = {
     keyField: "User",
