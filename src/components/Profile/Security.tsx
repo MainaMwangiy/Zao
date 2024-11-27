@@ -11,6 +11,7 @@ const Security: React.FC = () => {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
+    const clientorganizationid = localStorage.getItem("clientorganizationid");
 
     const formik = useFormik({
         initialValues: {
@@ -32,6 +33,7 @@ const Security: React.FC = () => {
                     clientuserid: localStorage.getItem('clientuserid'),
                     password: values.currentPassword,
                     newpassword: values.newPassword,
+                    clientorganizationid: clientorganizationid
                 };
 
                 await axios.post(url, payload, {

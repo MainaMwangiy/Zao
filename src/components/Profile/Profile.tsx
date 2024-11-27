@@ -47,7 +47,7 @@ const Profile: React.FC = () => {
                     clientuserid: user?.clientuserid
                 }
                 const url = `${utils.baseUrl}/api/auth/update/${user?.clientuserid}`;
-                await axios.post(url, { values: data }, {
+                await axios.post(url, data , {
                     headers: { "Content-Type": "application/json" },
                 });
                 enqueueSnackbar("User updated successfully.", { variant: "success" });
