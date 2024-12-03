@@ -9,11 +9,13 @@ import utils from "../../utils";
 import { useNavigate } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { useSnackbar } from "notistack";
+import { useDispatch } from "react-redux";
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const fetchData = async () => {
     try {
@@ -173,6 +175,7 @@ const Login: React.FC = () => {
             {/* Google SSO Button */}
             <button
               type="button"
+              onClick={() => utils.googleSignIn({ navigate, dispatch })}
               className="w-full flex justify-center items-center py-2 mb-4 bg-white border rounded-md shadow-md text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600 transition duration-300"
             >
               <FcGoogle className="mr-2" />

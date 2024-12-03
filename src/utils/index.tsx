@@ -1,3 +1,10 @@
+import { getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, UserCredential } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { v4 as uuidv4 } from 'uuid';
+import { useApi } from "../hooks/Apis";
+import { Dispatch } from 'redux';
+import axios from "axios";
+
 interface UserData {
   name: string;
   email: string;
@@ -20,6 +27,25 @@ interface Organization {
   }
 }
 
+interface ClientUsers {
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  image_url: string | null;
+}
+
+interface GoogleSignInProps {
+  navigate: (path: string) => void;
+  dispatch: Dispatch; 
+}
+
+interface ApiResponse {
+  status: number;
+  data: {
+    user_id: string;
+  };
+}
+
 const clientOrgs = localStorage.getItem("clientorganizations") || '[]';
 const clientOrgId = localStorage.getItem("clientorganizationid") || '';
 const orgs: Organization[] = JSON.parse(clientOrgs);
@@ -27,12 +53,40 @@ const org = orgs.filter((item: Organization) => item.clientorganizationid === Nu
 const { appconfig } = org[0] || {};
 const { dateFormat } = appconfig || {};
 
+// const firebaseConfig = {
+//   apiKey: process.env.REACT_APP_GITHUB_SSO_API_KEY,
+//   authDomain: process.env.REACT_APP_GITHUB_SSO_AUTH_DOMAIN,
+//   projectId: process.env.REACT_APP_GITHUB_SSO_PROJECT_ID,
+//   storageBucket: process.env.REACT_APP_GITHUB_SSO_STORAGE_BUCKET,
+//   messagingSenderId: process.env.REACT_APP_GITHUB_SSO_MESSAGING_SENDER_ID,
+//   appId: process.env.REACT_APP_GITHUB_SSO_APP_ID,
+//   measurementId: process.env.REACT_APP_GITHUB_SSO_MEASUREMENT_ID
+// };
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAwEfwfSG3bti6hrkg5Icl5sAXXjpdqrsU",
+  authDomain: "zao-sso.firebaseapp.com",
+  projectId: "zao-sso",
+  storageBucket: "zao-sso.firebasestorage.app",
+  messagingSenderId: "367968202361",
+  appId: "1:367968202361:web:6caa2da69fb35c88842ea8"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const gitHubProvider = new GithubAuthProvider();
+const googleProvider = new GoogleAuthProvider();
+
 const utils = {
   isMobile: window.matchMedia("(max-width: 767px)").matches,
   isTablet: window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches,
   isDesktop: window.matchMedia("(min-width: 1025px)").matches,
   baseUrl: process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_BACKEND_URL : process.env.REACT_APP_DEV_BACKEND_URL,
   dateFormat: dateFormat || 'MM-DD-YYYY',
+  firebaseConfig: firebaseConfig,
+  app: app,
+  auth: auth,
+  gitHubProvider: gitHubProvider,
+  googleProvider: googleProvider,
   getRoles: (roleId: number): 'SuperAdmin' | 'Admin' | 'User' | undefined => {
     switch (roleId) {
       case 1:
@@ -75,6 +129,53 @@ const utils = {
       }));
     }
     return [];
+  },
+  googleSignIn: async ({ navigate, dispatch }: GoogleSignInProps): Promise<void> => {
+    // const token = localStorage.getItem('token');
+    // const isTokenAbsent = !token;
+    // if (getAuth().currentUser && isTokenAbsent) {
+    //   navigate('/dashboard');
+    //   return;
+    // }
+    try {
+      const result: UserCredential = await signInWithPopup(getAuth(), new GoogleAuthProvider());
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential?.accessToken;
+      if (!token) {
+        throw new Error('No token found from Google sign-in');
+      }
+      localStorage.setItem('token', token);
+      const user = result.user;
+      const body = {
+        user_id: uuidv4(),
+        email: user.email,
+        name: user.displayName,
+        image_url: user.photoURL,
+        role: 3,
+        provider: 'google',
+        isSSO: true,
+        token
+      };
+      const response = await axios.post(`${utils.baseUrl}/api/auth/sso`, body, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (response?.status === 200) {
+        const userData = response.data;
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('token', token);
+        localStorage.setItem('clientuserid', userData?.clientuserid);
+        localStorage.setItem('clientuser', JSON.stringify(userData));
+        localStorage.setItem('clientorganizationid', `${userData?.clientorganizationid}`);
+        dispatch({ type: 'LOAD_USER', payload: user });
+        navigate('/dashboard');
+      } else {
+        throw new Error('Failed to fetch user data');
+      }
+    } catch (error) {
+      console.error('Google sign-in failed:', error);
+      localStorage.removeItem('token');
+      navigate('/login');
+    }
   }
 };
 

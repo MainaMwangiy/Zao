@@ -25,19 +25,13 @@ const Dashboard: React.FC = () => {
   const [isExpensesVisible, setIsExpensesVisible] = useState<boolean>(false);
   const [isEarningsVisible, setIsEarningsVisible] = useState<boolean>(false);
   const navigate = useNavigate();
-  const clientorganizationid =
-    localStorage.getItem("clientorganizationid") || "";
+  const clientorganizationid = localStorage.getItem("clientorganizationid") || "";
   const clientusers = localStorage.getItem("clientuser") || "";
-  const user = JSON.parse(clientusers);
+  const user = clientusers ? JSON.parse(clientusers) : {};
   const clientOrganizationsString = localStorage.getItem("clientorganizations");
-  const Orgs: Organization[] = clientOrganizationsString
-    ? JSON.parse(clientOrganizationsString)
-    : [];
-  const clientOrganizationIdString =
-    localStorage.getItem("clientorganizationid") || "";
-  const OrgId = clientOrganizationIdString
-    ? parseInt(JSON.parse(clientOrganizationIdString))
-    : null;
+  const Orgs: Organization[] = clientOrganizationsString  ? JSON.parse(clientOrganizationsString) : [];
+  const clientOrganizationIdString = localStorage.getItem("clientorganizationid") || "";
+  const OrgId = clientOrganizationIdString  ? parseInt(JSON.parse(clientOrganizationIdString))  : null;
   const [deleteProjectId, setDeleteProjectId] = useState<number | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
