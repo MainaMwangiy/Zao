@@ -36,7 +36,7 @@ interface ClientUsers {
 
 interface GoogleSignInProps {
   navigate: (path: string) => void;
-  dispatch: Dispatch; 
+  dispatch: Dispatch;
 }
 
 interface ApiResponse {
@@ -52,24 +52,15 @@ const orgs: Organization[] = JSON.parse(clientOrgs);
 const org = orgs.filter((item: Organization) => item.clientorganizationid === Number(clientOrgId));
 const { appconfig } = org[0] || {};
 const { dateFormat } = appconfig || {};
-
-// const firebaseConfig = {
-//   apiKey: process.env.REACT_APP_GITHUB_SSO_API_KEY,
-//   authDomain: process.env.REACT_APP_GITHUB_SSO_AUTH_DOMAIN,
-//   projectId: process.env.REACT_APP_GITHUB_SSO_PROJECT_ID,
-//   storageBucket: process.env.REACT_APP_GITHUB_SSO_STORAGE_BUCKET,
-//   messagingSenderId: process.env.REACT_APP_GITHUB_SSO_MESSAGING_SENDER_ID,
-//   appId: process.env.REACT_APP_GITHUB_SSO_APP_ID,
-//   measurementId: process.env.REACT_APP_GITHUB_SSO_MEASUREMENT_ID
-// };
+console.log("test", process.env)
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAwEfwfSG3bti6hrkg5Icl5sAXXjpdqrsU",
-  authDomain: "zao-sso.firebaseapp.com",
-  projectId: "zao-sso",
-  storageBucket: "zao-sso.firebasestorage.app",
-  messagingSenderId: "367968202361",
-  appId: "1:367968202361:web:6caa2da69fb35c88842ea8"
+  apiKey: process.env.REACT_APP_GOOGLE_SSO_API_KEY,
+  authDomain: process.env.REACT_APP_GOOGLE_SSO_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_GOOGLE_SSO_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_GOOGLE_SSO_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_GOOGLE_SSO_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_GOOGLE_SSO_APP_ID
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -131,12 +122,6 @@ const utils = {
     return [];
   },
   googleSignIn: async ({ navigate, dispatch }: GoogleSignInProps): Promise<void> => {
-    // const token = localStorage.getItem('token');
-    // const isTokenAbsent = !token;
-    // if (getAuth().currentUser && isTokenAbsent) {
-    //   navigate('/dashboard');
-    //   return;
-    // }
     try {
       const result: UserCredential = await signInWithPopup(getAuth(), new GoogleAuthProvider());
       const credential = GoogleAuthProvider.credentialFromResult(result);
