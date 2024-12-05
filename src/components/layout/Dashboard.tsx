@@ -13,6 +13,7 @@ import {
   ClientConfig,
 } from "../../types";
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
+import Loader from "../../hooks/Loader";
 
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
@@ -29,9 +30,9 @@ const Dashboard: React.FC = () => {
   const clientusers = localStorage.getItem("clientuser") || "";
   const user = clientusers ? JSON.parse(clientusers) : {};
   const clientOrganizationsString = localStorage.getItem("clientorganizations");
-  const Orgs: Organization[] = clientOrganizationsString  ? JSON.parse(clientOrganizationsString) : [];
+  const Orgs: Organization[] = clientOrganizationsString ? JSON.parse(clientOrganizationsString) : [];
   const clientOrganizationIdString = localStorage.getItem("clientorganizationid") || "";
-  const OrgId = clientOrganizationIdString  ? parseInt(JSON.parse(clientOrganizationIdString))  : null;
+  const OrgId = clientOrganizationIdString ? parseInt(JSON.parse(clientOrganizationIdString)) : null;
   const [deleteProjectId, setDeleteProjectId] = useState<number | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -242,8 +243,8 @@ const Dashboard: React.FC = () => {
                     {isEarningsVisible
                       ? `KES ${Number(totalHarvestEarnings) || 0}`
                       : `KES ${formatPlaceholder(
-                          Number(totalHarvestEarnings) || 0
-                        )}`}
+                        Number(totalHarvestEarnings) || 0
+                      )}`}
                   </p>
                   <button
                     onClick={toggleEarningsVisibility}
@@ -304,51 +305,60 @@ const Dashboard: React.FC = () => {
       {/* Market Section */}
       <div className="my-6">
         <h2 className="text-xl font-bold mb-4">Projects</h2>
-
-        {/* Responsive Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-          {/* Dynamically load cards from projectsData */}
-          {projects.map((item, index) => (
-            <Card
-              key={index}
-              id={item.projectid}
-              title={item.name}
-              addedBy={user?.name}
-              location={item?.location}
-              size={item.size}
-              projectstatus={item.projectstatus}
-              projectPlanIncluded={item.projectplan}
-              costprojectestimation={item.costprojectestimation}
-              imagesurl={item?.imagesurl}
-              name={item?.name}
-              projectname={item?.projectname}
-              onEdit={() => handleEdit(item)}
-              onDelete={() => handleDeleteClick(Number(item.projectid))}
-              expenses={item?.expenses}
-              earnings={item?.earnings}
-            />
-          ))}
-        </div>
+        {projects.length > 0 ?
+          <>
+            {/* Responsive Cards */}
+            < div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              {/* Dynamically load cards from projectsData */}
+              {projects.map((item, index) => (
+                <Card
+                  key={index}
+                  id={item.projectid}
+                  title={item.name}
+                  addedBy={user?.name}
+                  location={item?.location}
+                  size={item.size}
+                  projectstatus={item.projectstatus}
+                  projectPlanIncluded={item.projectplan}
+                  costprojectestimation={item.costprojectestimation}
+                  imagesurl={item?.imagesurl}
+                  name={item?.name}
+                  projectname={item?.projectname}
+                  onEdit={() => handleEdit(item)}
+                  onDelete={() => handleDeleteClick(Number(item.projectid))}
+                  expenses={item?.expenses}
+                  earnings={item?.earnings}
+                />
+              ))}
+            </div>
+          </>
+          :
+          <> <Loader /></>
+        }
       </div>
-      {showProjectseModal && (
-        <AddProjectModal
-          showProjectseModal={showProjectseModal}
-          setProjectshowModal={setProjectshowModal}
-          selectedItem={selectedItem}
-          mode={mode}
-        />
-      )}
-      {showDeleteDialog && (
-        <ConfirmationDialog
-          open={showDeleteDialog}
-          title="Confirm Deletion"
-          content="Are you sure you want to delete this project?"
-          onCancel={() => setShowDeleteDialog(false)}
-          onConfirm={handleDeleteProject}
-          confirmDiscard="Delete"
-        />
-      )}
-    </div>
+      {
+        showProjectseModal && (
+          <AddProjectModal
+            showProjectseModal={showProjectseModal}
+            setProjectshowModal={setProjectshowModal}
+            selectedItem={selectedItem}
+            mode={mode}
+          />
+        )
+      }
+      {
+        showDeleteDialog && (
+          <ConfirmationDialog
+            open={showDeleteDialog}
+            title="Confirm Deletion"
+            content="Are you sure you want to delete this project?"
+            onCancel={() => setShowDeleteDialog(false)}
+            onConfirm={handleDeleteProject}
+            confirmDiscard="Delete"
+          />
+        )
+      }
+    </div >
   );
 };
 
