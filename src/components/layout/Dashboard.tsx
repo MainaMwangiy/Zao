@@ -14,6 +14,8 @@ import {
 } from "../../types";
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 import Loader from "../../hooks/Loader";
+import { Tooltip } from "@mui/material";
+import InfoIcon from '@mui/icons-material/Info';
 
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
@@ -200,9 +202,11 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 mt-2">
         {/* Welcome Message */}
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-2">
-            {" "}
-            Welcome {clientuser ? clientuser.name : "Guest"}!
+          <h2 className="text-2xl font-bold mb-2 flex justify-between items-center">
+            <span>Welcome {clientuser ? clientuser.name : "Guest"}!</span>
+            <Tooltip title="Show earnings and expenses" arrow>
+              <InfoIcon className="text-gray-500 cursor-pointer" />
+            </Tooltip>
           </h2>
 
           <div className="flex justify-between items-center mb-4 space-x-8">
@@ -282,7 +286,12 @@ const Dashboard: React.FC = () => {
 
         {/* Recent Projects */}
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-2">My Recent Projects</h2>
+          <h2 className="text-2xl font-bold mb-2 flex justify-between items-center">
+            <span>My Recent Projects</span>
+            <Tooltip title="List of my projects" arrow>
+              <InfoIcon className="text-gray-500 cursor-pointer" />
+            </Tooltip>
+          </h2>
           {isProjects && (
             <p className="text-sm text-gray-600 dark:text-gray-400">
               {projects.length} projects available
