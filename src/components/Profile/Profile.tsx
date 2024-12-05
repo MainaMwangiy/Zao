@@ -28,12 +28,14 @@ const Profile: React.FC = () => {
     const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
     const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
-    const imageSrc = '';
     const clientorganizationid = localStorage.getItem("clientorganizationid");
     const clientusers = localStorage.getItem("clientuser") || "";
     const user = JSON.parse(clientusers);
     const roleid = user?.roleid;
-
+    const storedUser = localStorage.getItem('clientuser');
+    const clientUser = storedUser ? JSON.parse(storedUser) : {};
+    const { image_url } = clientUser || {};
+    const imageSrc = image_url ? image_url : '';
     const formik = useFormik({
         initialValues: initialValues,
         validationSchema,
@@ -47,7 +49,7 @@ const Profile: React.FC = () => {
                     clientuserid: user?.clientuserid
                 }
                 const url = `${utils.baseUrl}/api/auth/update/${user?.clientuserid}`;
-                await axios.post(url, data , {
+                await axios.post(url, data, {
                     headers: { "Content-Type": "application/json" },
                 });
                 enqueueSnackbar("User updated successfully.", { variant: "success" });
@@ -59,14 +61,12 @@ const Profile: React.FC = () => {
     });
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('clientuser');
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
+        if (clientUser) {
             formik.setValues({
-                name: parsedUser.name || '',
-                email: parsedUser.email || '',
-                location: parsedUser.location || '',
-                roleid: parsedUser.roleid || undefined
+                name: clientUser.name || '',
+                email: clientUser.email || '',
+                location: clientUser.location || '',
+                roleid: clientUser.roleid || undefined
             });
         }
     }, []);
@@ -118,7 +118,7 @@ const Profile: React.FC = () => {
                             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                                 <div className="flex items-center space-x-6">
                                     {imageSrc ? (
-                                        <img src={imageSrc} alt="Profile" className="w-24 h-24 rounded-full" />
+                                        <img src={imageSrc} alt="Profile" className="w-14 h-14 rounded-full" />
                                     ) : (
                                         <FaUserCircle className="text-gray-500" size={96} />
                                     )}

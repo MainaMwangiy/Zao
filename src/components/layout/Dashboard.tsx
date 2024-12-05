@@ -13,6 +13,9 @@ import {
   ClientConfig,
 } from "../../types";
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
+import Loader from "../../hooks/Loader";
+import { Tooltip } from "@mui/material";
+import InfoIcon from '@mui/icons-material/Info';
 
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
@@ -25,19 +28,13 @@ const Dashboard: React.FC = () => {
   const [isExpensesVisible, setIsExpensesVisible] = useState<boolean>(false);
   const [isEarningsVisible, setIsEarningsVisible] = useState<boolean>(false);
   const navigate = useNavigate();
-  const clientorganizationid =
-    localStorage.getItem("clientorganizationid") || "";
+  const clientorganizationid = localStorage.getItem("clientorganizationid") || "";
   const clientusers = localStorage.getItem("clientuser") || "";
-  const user = JSON.parse(clientusers);
+  const user = clientusers ? JSON.parse(clientusers) : {};
   const clientOrganizationsString = localStorage.getItem("clientorganizations");
-  const Orgs: Organization[] = clientOrganizationsString
-    ? JSON.parse(clientOrganizationsString)
-    : [];
-  const clientOrganizationIdString =
-    localStorage.getItem("clientorganizationid") || "";
-  const OrgId = clientOrganizationIdString
-    ? parseInt(JSON.parse(clientOrganizationIdString))
-    : null;
+  const Orgs: Organization[] = clientOrganizationsString ? JSON.parse(clientOrganizationsString) : [];
+  const clientOrganizationIdString = localStorage.getItem("clientorganizationid") || "";
+  const OrgId = clientOrganizationIdString ? parseInt(JSON.parse(clientOrganizationIdString)) : null;
   const [deleteProjectId, setDeleteProjectId] = useState<number | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -205,9 +202,11 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 mt-2">
         {/* Welcome Message */}
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-2">
-            {" "}
-            Welcome {clientuser ? clientuser.name : "Guest"}!
+          <h2 className="text-2xl font-bold mb-2 flex justify-between items-center">
+            <span>Welcome {clientuser ? clientuser.name : "Guest"}!</span>
+            <Tooltip title="Show earnings and expenses" arrow>
+              <InfoIcon className="text-gray-500 cursor-pointer" />
+            </Tooltip>
           </h2>
 
           <div className="flex justify-between items-center mb-4 space-x-8">
@@ -248,8 +247,8 @@ const Dashboard: React.FC = () => {
                     {isEarningsVisible
                       ? `KES ${Number(totalHarvestEarnings) || 0}`
                       : `KES ${formatPlaceholder(
-                          Number(totalHarvestEarnings) || 0
-                        )}`}
+                        Number(totalHarvestEarnings) || 0
+                      )}`}
                   </p>
                   <button
                     onClick={toggleEarningsVisibility}
@@ -287,7 +286,12 @@ const Dashboard: React.FC = () => {
 
         {/* Recent Projects */}
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-2">My Recent Projects</h2>
+          <h2 className="text-2xl font-bold mb-2 flex justify-between items-center">
+            <span>My Recent Projects</span>
+            <Tooltip title="List of my projects" arrow>
+              <InfoIcon className="text-gray-500 cursor-pointer" />
+            </Tooltip>
+          </h2>
           {isProjects && (
             <p className="text-sm text-gray-600 dark:text-gray-400">
               {projects.length} projects available
@@ -310,51 +314,60 @@ const Dashboard: React.FC = () => {
       {/* Market Section */}
       <div className="my-6">
         <h2 className="text-xl font-bold mb-4">Projects</h2>
-
-        {/* Responsive Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-          {/* Dynamically load cards from projectsData */}
-          {projects.map((item, index) => (
-            <Card
-              key={index}
-              id={item.projectid}
-              title={item.name}
-              addedBy={user?.name}
-              location={item?.location}
-              size={item.size}
-              projectstatus={item.projectstatus}
-              projectPlanIncluded={item.projectplan}
-              costprojectestimation={item.costprojectestimation}
-              imagesurl={item?.imagesurl}
-              name={item?.name}
-              projectname={item?.projectname}
-              onEdit={() => handleEdit(item)}
-              onDelete={() => handleDeleteClick(Number(item.projectid))}
-              expenses={item?.expenses}
-              earnings={item?.earnings}
-            />
-          ))}
-        </div>
+        {projects.length > 0 ?
+          <>
+            {/* Responsive Cards */}
+            < div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              {/* Dynamically load cards from projectsData */}
+              {projects.map((item, index) => (
+                <Card
+                  key={index}
+                  id={item.projectid}
+                  title={item.name}
+                  addedBy={user?.name}
+                  location={item?.location}
+                  size={item.size}
+                  projectstatus={item.projectstatus}
+                  projectPlanIncluded={item.projectplan}
+                  costprojectestimation={item.costprojectestimation}
+                  imagesurl={item?.imagesurl}
+                  name={item?.name}
+                  projectname={item?.projectname}
+                  onEdit={() => handleEdit(item)}
+                  onDelete={() => handleDeleteClick(Number(item.projectid))}
+                  expenses={item?.expenses}
+                  earnings={item?.earnings}
+                />
+              ))}
+            </div>
+          </>
+          :
+          <> <Loader /></>
+        }
       </div>
-      {showProjectseModal && (
-        <AddProjectModal
-          showProjectseModal={showProjectseModal}
-          setProjectshowModal={setProjectshowModal}
-          selectedItem={selectedItem}
-          mode={mode}
-        />
-      )}
-      {showDeleteDialog && (
-        <ConfirmationDialog
-          open={showDeleteDialog}
-          title="Confirm Deletion"
-          content="Are you sure you want to delete this project?"
-          onCancel={() => setShowDeleteDialog(false)}
-          onConfirm={handleDeleteProject}
-          confirmDiscard="Delete"
-        />
-      )}
-    </div>
+      {
+        showProjectseModal && (
+          <AddProjectModal
+            showProjectseModal={showProjectseModal}
+            setProjectshowModal={setProjectshowModal}
+            selectedItem={selectedItem}
+            mode={mode}
+          />
+        )
+      }
+      {
+        showDeleteDialog && (
+          <ConfirmationDialog
+            open={showDeleteDialog}
+            title="Confirm Deletion"
+            content="Are you sure you want to delete this project?"
+            onCancel={() => setShowDeleteDialog(false)}
+            onConfirm={handleDeleteProject}
+            confirmDiscard="Delete"
+          />
+        )
+      }
+    </div >
   );
 };
 

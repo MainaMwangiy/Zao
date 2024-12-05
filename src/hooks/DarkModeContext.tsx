@@ -18,6 +18,9 @@ export const useDarkMode = () => {
 export const DarkModeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const savedMode = localStorage.getItem('darkMode');
+    if (savedMode === null) {
+      return true;
+    }
     return savedMode === 'true';
   });
 
