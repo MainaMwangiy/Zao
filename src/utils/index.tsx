@@ -55,8 +55,8 @@ const { dateFormat } = appconfig || {};
 console.log("test", process.env)
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_GOOGLE_SSO_API_KEY,
-  authDomain: process.env.REACT_APP_GOOGLE_SSO_AUTH_DOMAIN,
+  apiKey: process.env.REACT_APP_GOOGLE_SSO_API,
+  authDomain: process.env.REACT_APP_GOOGLE_SSO_DOMAIN,
   projectId: process.env.REACT_APP_GOOGLE_SSO_PROJECT_ID,
   storageBucket: process.env.REACT_APP_GOOGLE_SSO_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_GOOGLE_SSO_MESSAGING_SENDER_ID,
