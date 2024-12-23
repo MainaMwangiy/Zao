@@ -1,8 +1,6 @@
 import utils from "../../utils";
 import { ModuleConfig } from "../harvests/types";
 
-const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
-const clientOrganizationId = localStorage.getItem('clientorganizationid') || "";
 const user = localStorage.getItem('clientuser') || "{}";
 const clientuser = JSON.parse(user);
 const clientuserid = clientuser?.clientuserid;
@@ -17,15 +15,11 @@ export const expensesConfig: ModuleConfig = {
   addSearch: true,
   apiEndpoints: {
     list: {
-      url: `${utils.baseUrl}/api/expenses/list`,
-      payload: {
-        clientorganizationid: clientorganizationid
-      }
+      url: `${utils.baseUrl}/api/expenses/list`
     },
     create: {
       url: `${utils.baseUrl}/api/expenses/create`,
       payload: {
-        clientorganizationid: clientOrganizationId,
         createdbyuserid: clientuserid,
         modifiedbyuserid: clientuserid,
         clientuserid: clientuserid || "",
@@ -37,21 +31,14 @@ export const expensesConfig: ModuleConfig = {
       payload: {
         createdbyuserid: clientuserid,
         modifiedbyuserid: clientuserid,
-        clientorganizationid: clientorganizationid,
         clientusername: clientusername
       }
     },
     delete: {
-      url: `${utils.baseUrl}/api/expenses/delete`,
-      payload: {
-        clientorganizationid: clientOrganizationId
-      }
+      url: `${utils.baseUrl}/api/expenses/delete`
     },
     total: {
-      url: `${utils.baseUrl}/api/expenses/total`,
-      payload: {
-        clientorganizationid: clientorganizationid
-      }
+      url: `${utils.baseUrl}/api/expenses/total`
     }
   },
   fields: [

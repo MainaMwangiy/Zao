@@ -16,15 +16,17 @@ interface ModulePageProps {
   showAddNew?: boolean;
   rest?: DataArray;
   showTotal?: boolean;
+  hideActionMenu?: boolean;
 }
 
-const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, showTotal = false, rest }) => {
+const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, showTotal = false, hideActionMenu, rest }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { apiRequest } = useApi();
   const [selectedItem, setSelectedItem] = useState<DataItem | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 
   const handleEdit = (item: any) => {
     setSelectedItem(item);
@@ -39,7 +41,8 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
   const getTotals = async () => {
     const { url = '', payload = {} } = config?.apiEndpoints?.total ?? {};
     const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
-    const tempPayload = { ...payload, ...additionalParams };
+    const mandatoryParams = { clientorganizationid: clientorganizationid};
+    const tempPayload = { ...payload, ...additionalParams, ...mandatoryParams };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setTotal(response?.data?.[0]?.total || 0);
   }
@@ -134,7 +137,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
               {...rest}
             />
           </Modal>
-          <Table config={config} onEdit={handleEdit} {...rest} />
+          <Table config={config} onEdit={handleEdit} hideActionMenu={hideActionMenu} {...rest} />
         </>
       }
     </div>
