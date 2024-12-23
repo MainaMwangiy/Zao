@@ -16,9 +16,10 @@ interface GenericTableProps {
   onEdit: (item: any) => void;
   params?: Record<string, any>;
   id?: number;
+  hideActionMenu?: boolean;
 }
 
-const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config, onEdit, params, showAddNew = false, ...rest }) => {
+const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideActionMenu, ...rest }) => {
   const key = `${config?.keyField.toLowerCase()}id`;
   const { apiRequest } = useApi();
   const [data, setData] = useState<any[]>([]);
@@ -130,7 +131,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
                     </td>
                   ))}
                   <td className="px-4 py-2 text-sm">
-                    <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDeleteClick(item[key] || 0)} />
+                    <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDeleteClick(item[key] || 0)} config={config} hideActionMenu={hideActionMenu} />
                   </td>
                 </tr>
               ))}

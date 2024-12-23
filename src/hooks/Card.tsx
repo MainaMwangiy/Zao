@@ -144,7 +144,7 @@ const Card: React.FC<CardProps> = ({
         </div>
         <div className="w-1/2 p-4 flex flex-col">
           <div className="flex justify-end">
-            <ActionMenu onEdit={onEdit} onDelete={() => onDelete()} />
+            <ActionMenu onEdit={onEdit} onDelete={() => onDelete()} hideActionMenu={true} />
           </div>
           <div className="mb-4 mt-4">
             <p className="text-gray-600 dark:text-gray-400">Total Expenses</p>

@@ -13,6 +13,7 @@ export const usersConfig: ModuleConfig = {
     showTitle: true,
     isImport: false,
     isExport: true,
+    hideActionMenu: true,
     apiEndpoints: {
         list: {
             url: `${utils.baseUrl}/api/auth/list`,

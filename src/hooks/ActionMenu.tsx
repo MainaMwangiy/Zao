@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineMore, AiOutlineEllipsis } from "react-icons/ai";
 import utils from "../utils";
+import { ModuleConfig } from "../types";
 
 interface ActionMenuProps {
   onEdit: () => void;
   onDelete: () => void;
+  hideActionMenu?: boolean;
+  config?: ModuleConfig;
 }
 
-const ActionMenu: React.FC<ActionMenuProps> = ({ onEdit, onDelete }) => {
+const ActionMenu: React.FC<ActionMenuProps> = ({ onEdit, onDelete, hideActionMenu, config }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -49,6 +52,8 @@ const ActionMenu: React.FC<ActionMenuProps> = ({ onEdit, onDelete }) => {
           className="absolute right-0 mt-2 w-24 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 
                      shadow-lg rounded-lg z-10"
         >
+          
+     {(hideActionMenu || config?.hideActionMenu) && 
           <button
             onClick={() => {
               onEdit();
@@ -58,6 +63,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({ onEdit, onDelete }) => {
           >
             Edit
           </button>
+      }
           <button
             onClick={() => {
               onDelete();

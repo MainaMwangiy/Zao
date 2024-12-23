@@ -16,9 +16,10 @@ interface ModulePageProps {
   showAddNew?: boolean;
   rest?: DataArray;
   showTotal?: boolean;
+  hideActionMenu?: boolean;
 }
 
-const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, showTotal = false, rest }) => {
+const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, showTotal = false, hideActionMenu, rest }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { apiRequest } = useApi();
   const [selectedItem, setSelectedItem] = useState<DataItem | null>(null);
@@ -136,7 +137,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
               {...rest}
             />
           </Modal>
-          <Table config={config} onEdit={handleEdit} {...rest} />
+          <Table config={config} onEdit={handleEdit} hideActionMenu={hideActionMenu} {...rest} />
         </>
       }
     </div>

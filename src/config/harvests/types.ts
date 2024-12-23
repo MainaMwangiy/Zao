@@ -42,4 +42,5 @@ export interface ModuleConfig {
   isExport: boolean;
   showTitle: boolean;
   addSearch?: boolean;
+  hideActionMenu?: boolean;
 }
