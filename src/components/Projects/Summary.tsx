@@ -48,7 +48,7 @@ const Summary: React.FC<SummaryProps> = ({ projectData }) => {
                                         <td className="py-2 px-4">Costs</td>
                                         <td className="py-2 px-4">KES {estimatedCosts}</td>
                                         <td className="py-2 px-4">KES {totalexpenses}</td>
-                                        <td className="py-2 px-4">KES {overdueValues} (+{percentageIncrease.toFixed(2)}%)</td>
+                                        <td className="py-2 px-4">KES {overdueValues} ({percentageIncrease.toFixed(2)}%)</td>
                                     </tr>
                                     {/* Add more rows as needed */}
                                 </tbody>

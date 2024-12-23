@@ -1,7 +1,6 @@
 import utils from "../../utils";
 import { ModuleConfig } from "./types";
 
-const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 const clientuserid = localStorage.getItem("clientuserid") || "";
 
 export const harvestsConfig: ModuleConfig = {
@@ -12,39 +11,28 @@ export const harvestsConfig: ModuleConfig = {
     isExport: true,
     apiEndpoints: {
         list: {
-            url: `${utils.baseUrl}/api/harvests/list`,
-            payload: {
-                clientorganizationid: clientorganizationid
-            }
+            url: `${utils.baseUrl}/api/harvests/list`
         },
         create: {
             url: `${utils.baseUrl}/api/harvests/create`,
             payload: {
                 harvestid: 0,
                 createdbyuserid: clientuserid,
-                modifiedbyuserid: clientuserid,
-                clientorganizationid: clientorganizationid
+                modifiedbyuserid: clientuserid
             }
         },
         update: {
             url: `${utils.baseUrl}/api/harvests/update`,
             payload: {
                 createdbyuserid: clientuserid,
-                modifiedbyuserid: clientuserid,
-                clientorganizationid: clientorganizationid
+                modifiedbyuserid: clientuserid
             }
         },
         delete: {
-            url: `${utils.baseUrl}/api/harvests/delete`,
-            payload: {
-                clientorganizationid: clientorganizationid
-            }
+            url: `${utils.baseUrl}/api/harvests/delete`
         },
         total: {
-            url: `${utils.baseUrl}/api/harvests/total`,
-            payload: {
-                clientorganizationid: clientorganizationid
-            }
+            url: `${utils.baseUrl}/api/harvests/total`
         }
     },
     fields: [

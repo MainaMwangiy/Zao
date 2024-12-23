@@ -16,9 +16,10 @@ interface GenericTableProps {
   onEdit: (item: any) => void;
   params?: Record<string, any>;
   id?: number;
+  hideActionMenu?: boolean;
 }
 
-const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config, onEdit, params, showAddNew = false, ...rest }) => {
+const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideActionMenu, ...rest }) => {
   const key = `${config?.keyField.toLowerCase()}id`;
   const { apiRequest } = useApi();
   const [data, setData] = useState<any[]>([]);
@@ -31,18 +32,21 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
   const { submissionState } = useSubmissionContext();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [debouncedSearchTerm] = useDebounce(searchTerm, 1000);
+  const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 
   const fetchData = async () => {
     setLoading(true);
     const { url, payload = {} } = config.apiEndpoints.list;
     const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
+    const mandatoryParams = { clientorganizationid: clientorganizationid};
     const tempPayload = {
       ...payload,
       ...params,
       page: currentPage,
       pageSize: itemsPerPage,
       searchTerm: debouncedSearchTerm,
-      ...additionalParams
+      ...additionalParams,
+      ...mandatoryParams
     };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setData(response?.data || []);
@@ -52,9 +56,12 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
 
   const confirmDeleteExpense = async () => {
     setLoading(true);
+    const { payload } = config.apiEndpoints.delete;
+    const mandatoryParams = { clientorganizationid: clientorganizationid};
+    const tempParams = { ...payload, ...mandatoryParams }
     if (deleteId !== null) {
       const data = {
-        ...config.apiEndpoints.delete.payload,
+        ...tempParams,
         [key]: deleteId,
       };
       await apiRequest({ method: "POST", url: `${config.apiEndpoints.delete.url}/${deleteId}`, data: data });
@@ -124,7 +131,7 @@ const Table: React.FC<GenericTableProps & { showAddNew?: boolean }> = ({ config,
                     </td>
                   ))}
                   <td className="px-4 py-2 text-sm">
-                    <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDeleteClick(item[key] || 0)} />
+                    <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDeleteClick(item[key] || 0)} config={config} hideActionMenu={hideActionMenu} />
                   </td>
                 </tr>
               ))}

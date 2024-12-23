@@ -35,6 +35,7 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
   const { setSubmissionState } = useSubmissionContext();
+  const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 
   const validationSchema = Yup.object(
     fieldsToShow.reduce<Record<string, any>>((schema, field) => {
@@ -51,7 +52,6 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
     onSubmit: async (values) => {
       const staticValues = { ...values };
       config.fields.forEach(field => {
-        debugger
         if (field?.passKeyField && values[field.name]) {
           staticValues[field.name] = utils.getRolesId(values[field.name]);
         }
@@ -60,8 +60,9 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
       const endpoint = isUpdate ? config.apiEndpoints.update : config.apiEndpoints.create;
       const url = isUpdate && id ? `${endpoint.url}/${id}` : endpoint.url;
       const defaultPayload = endpoint.payload || {};
+      const mandatoryParams = { clientorganizationid: clientorganizationid};
       const additionalParams = endpoint?.payload?.hideProject ? {} : { projectid: rest?.id };
-      const requestData = { ...defaultPayload, ...staticValues, ...additionalParams };
+      const requestData = { ...defaultPayload, ...staticValues, ...additionalParams, ...mandatoryParams };
       await apiRequest({ method: "POST", url, data: requestData });
       setSubmissionState(true);
       onClose();
