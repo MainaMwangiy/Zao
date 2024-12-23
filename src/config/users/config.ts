@@ -1,7 +1,6 @@
 import utils from "../../utils";
 import { ModuleConfig } from "./types";
 
-const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
 const user = localStorage.getItem('clientuser') || "{}";
 const clientuser = JSON.parse(user);
 const clientuserid = clientuser?.clientuserid;
@@ -18,7 +17,6 @@ export const usersConfig: ModuleConfig = {
         list: {
             url: `${utils.baseUrl}/api/auth/list`,
             payload: {
-                clientorganizationid: clientorganizationid,
                 roleid: roles?.roleid
             },
             hideProject: true
@@ -26,7 +24,6 @@ export const usersConfig: ModuleConfig = {
         create: {
             url: `${utils.baseUrl}/api/auth/create`,
             payload: {
-                clientorganizationid,
                 createdbyuserid: clientuserid,
                 modifiedbyuserid: clientuserid
             }
@@ -34,7 +31,6 @@ export const usersConfig: ModuleConfig = {
         update: {
             url: `${utils.baseUrl}/api/auth/update`,
             payload: {
-                clientorganizationid,
                 modifiedbyuserid: clientuserid
             }
         },
@@ -42,10 +38,7 @@ export const usersConfig: ModuleConfig = {
             url: `${utils.baseUrl}/api/auth/delete`
         },
         total: {
-            url: `${utils.baseUrl}/api/harvests/total`,
-            payload: {
-                clientorganizationid: clientorganizationid
-            }
+            url: `${utils.baseUrl}/api/harvests/total`
         }
     },
     fields: [
