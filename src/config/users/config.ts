@@ -1,11 +1,17 @@
 import utils from "../../utils";
+import { constants } from "../../utils/constants";
 import { ModuleConfig } from "./types";
 
-const user = localStorage.getItem('clientuser') || "{}";
+const user = localStorage.getItem("clientuser") || "{}";
 const clientuser = JSON.parse(user);
 const clientuserid = clientuser?.clientuserid;
-const clientusers = localStorage.getItem('clientuser') || '';
+const clientusers = localStorage.getItem("clientuser") || "";
 const roles = clientusers ? JSON.parse(clientusers) : {};
+const clientorganizations = localStorage.getItem("clientorganizations") || "";
+const allOrganizations = JSON.parse(clientorganizations).map(
+  (organization: any) => organization.name
+);
+const isSuperAdmin = roles.roleid === constants.SUPER_ADMIN_ID;
 
 export const usersConfig: ModuleConfig = {
     keyField: "User",
@@ -51,6 +57,7 @@ export const usersConfig: ModuleConfig = {
         { name: 'email', type: 'string', label: 'Email', width: '100px' },
         { name: 'location', type: 'text', label: 'Location', width: '150px' },
         { name: 'status', type: 'select', label: 'Status', width: '100px', options: ["active", "inactive"] },
+        { name: "clientorganization", type: "select", label: "Client Organization", width: "100px", options: allOrganizations, hide: true, isSuperAdmin: isSuperAdmin },
         {
             name: 'roleid', type: 'select', label: 'Role', width: '150px', isRole: true, options: ["superadmin", "admin", "user"], passKeyField: true, convertValue: (value) => utils.getRoles(parseInt(value)) || "",
             getCustomClass: (item) => {

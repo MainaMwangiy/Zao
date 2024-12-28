@@ -35,7 +35,11 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
   const { setSubmissionState } = useSubmissionContext();
-  const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
+  const clientorganizationid = localStorage.getItem("clientorganizationid") || "";
+  const clientusers = localStorage.getItem("clientuser") || "";
+  const roles = clientusers ? JSON.parse(clientusers) : {};
+  const clientorganizations = localStorage.getItem("clientorganizations") || "";
+  const allOrganizations = JSON.parse(clientorganizations) || [];
 
   const validationSchema = Yup.object(
     fieldsToShow.reduce<Record<string, any>>((schema, field) => {
@@ -60,7 +64,15 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
       const endpoint = isUpdate ? config.apiEndpoints.update : config.apiEndpoints.create;
       const url = isUpdate && id ? `${endpoint.url}/${id}` : endpoint.url;
       const defaultPayload = endpoint.payload || {};
-      const mandatoryParams = { clientorganizationid: clientorganizationid};
+      const isSuperAdmin = roles?.roleid === constants.SUPER_ADMIN_ID;
+      let getOrganoization;
+      for (const item of allOrganizations) {
+        if (item.name.includes(staticValues?.clientorganization)) {
+          getOrganoization = item;
+        }
+      }
+      const filterOrganizations = isSuperAdmin ? getOrganoization.clientorganizationid : clientorganizationid;
+      const mandatoryParams = { clientorganizationid: filterOrganizations };
       const additionalParams = endpoint?.payload?.hideProject ? {} : { projectid: rest?.id };
       const requestData = { ...defaultPayload, ...staticValues, ...additionalParams, ...mandatoryParams };
       await apiRequest({ method: "POST", url, data: requestData });
@@ -109,13 +121,27 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
 
   const formContent = (
     <FormikProvider value={formik}>
-      <form onSubmit={(e) => e.preventDefault()}>
-        {fieldsToShow.map((fieldConfig) => (
-          <FormField key={fieldConfig.name} fieldConfig={fieldConfig} />
-        ))}
+      <form onSubmit={e => e.preventDefault()}>
+        {fieldsToShow
+          .filter(fieldConfig => fieldConfig?.isSuperAdmin !== false)
+          .map(fieldConfig => (
+            <FormField key={fieldConfig.name} fieldConfig={fieldConfig} />
+          ))}
         <div className="flex justify-end space-x-2 mt-4">
-          <button type="button" onClick={onCancel} className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-md transition duration-300">Cancel</button>
-          <button type="submit" onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md transition duration-300">{isUpdate ? 'Update' : 'Submit'}</button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-md transition duration-300"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md transition duration-300"
+          >
+            {isUpdate ? "Update" : "Submit"}
+          </button>
         </div>
       </form>
     </FormikProvider>
