@@ -5,7 +5,7 @@ export interface Colors {
 
 export interface FieldConfig {
   name: string;
-  type: 'text' | 'number' | 'select' | 'textarea' | 'string' | 'password';
+  type: "text" | "number" | "select" | "textarea" | "string" | "password";
   label: string;
   options?: string[];
   required?: boolean;
@@ -20,6 +20,7 @@ export interface FieldConfig {
   passKeyField?: boolean;
   hide?: boolean;
   isRole?: boolean;
+  isSuperAdmin?: boolean;
 }
 
 export interface ApiEndpointConfig {
