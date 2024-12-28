@@ -52,7 +52,6 @@ const orgs: Organization[] = JSON.parse(clientOrgs);
 const org = orgs.filter((item: Organization) => item.clientorganizationid === Number(clientOrgId));
 const { appconfig } = org[0] || {};
 const { dateFormat } = appconfig || {};
-console.log("test", process.env)
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_GOOGLE_SSO_API,
