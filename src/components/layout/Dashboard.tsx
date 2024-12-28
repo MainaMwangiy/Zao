@@ -15,7 +15,7 @@ import {
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 import Loader from "../../hooks/Loader";
 import { Tooltip } from "@mui/material";
-import InfoIcon from '@mui/icons-material/Info';
+import InfoIcon from "@mui/icons-material/Info";
 
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
@@ -314,10 +314,10 @@ const Dashboard: React.FC = () => {
       {/* Market Section */}
       <div className="my-6">
         <h2 className="text-xl font-bold mb-4">Projects</h2>
-        {projects.length > 0 ?
+        {projects.length > 0 && (
           <>
             {/* Responsive Cards */}
-            < div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {/* Dynamically load cards from projectsData */}
               {projects.map((item, index) => (
                 <Card
@@ -341,9 +341,10 @@ const Dashboard: React.FC = () => {
               ))}
             </div>
           </>
-          :
-          <> <Loader /></>
-        }
+        )}
+        {projects.length === 0 && (
+          <>No projects added. Please add new project</>
+        )}
       </div>
       {
         showProjectseModal && (

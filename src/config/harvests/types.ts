@@ -19,6 +19,7 @@ export interface FieldConfig {
   passKeyField?: boolean;
   hide?: boolean;
   isRole?: boolean;
+  isSuperAdmin?: boolean;
 }
 
 export interface ApiEndpointConfig {
