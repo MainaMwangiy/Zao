@@ -12,7 +12,6 @@ const allOrganizations = JSON.parse(clientorganizations).map(
   (organization: any) => organization.name
 );
 const isSuperAdmin = roles.roleid === constants.SUPER_ADMIN_ID;
-
 export const usersConfig: ModuleConfig = {
     keyField: "User",
     title: "Users",
