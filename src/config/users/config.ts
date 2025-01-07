@@ -7,10 +7,22 @@ const clientuser = JSON.parse(user);
 const clientuserid = clientuser?.clientuserid;
 const clientusers = localStorage.getItem("clientuser") || "";
 const roles = clientusers ? JSON.parse(clientusers) : {};
-const clientorganizations = localStorage.getItem("clientorganizations") || "";
-const allOrganizations = JSON.parse(clientorganizations).map(
-  (organization: any) => organization.name
-);
+const clientorganizations = localStorage.getItem("clientorganizations") || "[]";
+
+let allOrganizations: string[] = [];
+try {
+  const parsedOrganizations = JSON.parse(clientorganizations);
+  if (Array.isArray(parsedOrganizations)) {
+    allOrganizations = parsedOrganizations.map(
+      (organization: any) => organization?.name || "Unknown"
+    );
+  } else {
+    console.warn("Invalid data format: Expected an array.");
+  }
+} catch (error) {
+  console.error("Error parsing clientorganizations:", error);
+}
+
 const isSuperAdmin = roles.roleid === constants.SUPER_ADMIN_ID;
 export const usersConfig: ModuleConfig = {
     keyField: "User",
