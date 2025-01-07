@@ -18,8 +18,11 @@ import { SubmissionProvider } from "./components/Form/context";
 import { transactionsConfig } from "./config/transactions/config";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import { clientOrganizationConfig } from "./config/clientorganization/config";
+import utils from "./utils";
 
 const App: React.FC = () => {
+  const isSuperAdmin = utils.isSuperAdmin;
   return (
     <Provider store={store}>
       <DarkModeProvider>
@@ -39,6 +42,7 @@ const App: React.FC = () => {
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/my-bills" element={<Incomes />} />
                   <Route path="/projects/:projectId" element={<Projects />} />
+                  {isSuperAdmin && <Route path="/clientorganization" element={<ModulePage config={clientOrganizationConfig} showAddNew={true} />} /> }
                 </Route>
                 <Route path="/" element={<Navigate to="/dashboard" />} />
               </Route>

@@ -28,7 +28,7 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
       const val = tempFieldValue.toLowerCase();
       acc[field.name] = val ?? "";
     } else {
-      acc[field.name] = fieldValue ?? "";
+      acc[field.name] = typeof fieldValue === "object" && fieldValue !== null ? JSON.stringify(fieldValue) : fieldValue ?? "";
     }
     return acc;
   }, { [`${config.keyField.toLowerCase()}id`]: initialValues[`${config.keyField.toLowerCase()}id`] ?? "" });
@@ -36,8 +36,6 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
   const { setSubmissionState } = useSubmissionContext();
   const clientorganizationid = localStorage.getItem("clientorganizationid") || "";
-  const clientusers = localStorage.getItem("clientuser") || "";
-  const roles = clientusers ? JSON.parse(clientusers) : {};
   const clientorganizations = localStorage.getItem("clientorganizations") || "";
   const allOrganizations = JSON.parse(clientorganizations) || [];
 
@@ -64,14 +62,13 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
       const endpoint = isUpdate ? config.apiEndpoints.update : config.apiEndpoints.create;
       const url = isUpdate && id ? `${endpoint.url}/${id}` : endpoint.url;
       const defaultPayload = endpoint.payload || {};
-      const isSuperAdmin = roles?.roleid === constants.SUPER_ADMIN_ID;
-      let getOrganoization;
+      let getOrganization;
       for (const item of allOrganizations) {
-        if (item.name.includes(staticValues?.clientorganization)) {
-          getOrganoization = item;
+        if (item.name.includes(staticValues?.clientorganization || staticValues?.name)) {
+          getOrganization = item;
         }
       }
-      const filterOrganizations = isSuperAdmin ? getOrganoization.clientorganizationid : clientorganizationid;
+      const filterOrganizations = utils.isSuperAdmin ? getOrganization?.clientorganizationid : clientorganizationid;
       const mandatoryParams = { clientorganizationid: filterOrganizations };
       const additionalParams = endpoint?.payload?.hideProject ? {} : { projectid: rest?.id };
       const requestData = { ...defaultPayload, ...staticValues, ...additionalParams, ...mandatoryParams };

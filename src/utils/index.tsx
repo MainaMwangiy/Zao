@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useApi } from "../hooks/Apis";
 import { Dispatch } from 'redux';
 import axios from "axios";
+import { constants } from "./constants";
 
 interface UserData {
   name: string;
@@ -66,6 +67,10 @@ const auth = getAuth(app);
 const gitHubProvider = new GithubAuthProvider();
 const googleProvider = new GoogleAuthProvider();
 
+const clientusers = localStorage.getItem("clientuser") || "";
+const roles = clientusers ? JSON.parse(clientusers) : {};
+const isSuperAdmin = roles?.roleid === constants.SUPER_ADMIN_ID;
+
 const utils = {
   isMobile: window.matchMedia("(max-width: 767px)").matches,
   isTablet: window.matchMedia("(min-width: 768px) and (max-width: 1024px)").matches,
@@ -77,6 +82,7 @@ const utils = {
   auth: auth,
   gitHubProvider: gitHubProvider,
   googleProvider: googleProvider,
+  isSuperAdmin: isSuperAdmin,
   getRoles: (roleId: number): 'SuperAdmin' | 'Admin' | 'User' | undefined => {
     switch (roleId) {
       case 1:

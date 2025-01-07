@@ -1,3 +1,19 @@
+export interface AppConfig {
+  dateFormat: string;
+  showGallery: boolean;
+}
+
+export interface Organization {
+  clientorganizationid: number;
+  name: string;
+  appconfig: AppConfig;
+  createdon: string;
+  createdbyuserid: number;
+  modifiedon: string;
+  modifiedbyuserid: number;
+  isdeleted: number;
+}
+
 export interface Colors {
   pending: string;
   paid: string;
@@ -5,16 +21,17 @@ export interface Colors {
 
 export interface FieldConfig {
   name: string;
-  type: 'text' | 'number' | 'select' | 'textarea' | 'string' | 'password' | 'date' | 'json';
+  type: "text" | "number" | "select" | "textarea" | "string" | "password" | 'json';
   label: string;
   options?: string[];
   required?: boolean;
   width?: string;
   colors?: Colors;
-  form?: boolean;
   render?: (value: any, item?: any) => JSX.Element | string;
   onEvent?: (item: any) => void;
   getCustomClass?: (item: any) => string;
+  form?: boolean;
+  roleid?: number;
   convertValue?: (value: any) => string;
   passKeyField?: boolean;
   hide?: boolean;
@@ -25,6 +42,7 @@ export interface FieldConfig {
 export interface ApiEndpointConfig {
   url: string;
   payload?: Record<string, any>;
+  hideProject?: boolean;
 }
 
 export interface ModuleConfig {
@@ -42,6 +60,5 @@ export interface ModuleConfig {
   isImport: boolean;
   isExport: boolean;
   showTitle: boolean;
-  addSearch?: boolean;
   hideActionMenu?: boolean;
 }
