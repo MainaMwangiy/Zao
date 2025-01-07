@@ -28,7 +28,7 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
       const val = tempFieldValue.toLowerCase();
       acc[field.name] = val ?? "";
     } else {
-      acc[field.name] = fieldValue ?? "";
+      acc[field.name] = typeof fieldValue === "object" && fieldValue !== null ? JSON.stringify(fieldValue) : fieldValue ?? "";
     }
     return acc;
   }, { [`${config.keyField.toLowerCase()}id`]: initialValues[`${config.keyField.toLowerCase()}id`] ?? "" });

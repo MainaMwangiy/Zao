@@ -64,6 +64,24 @@ const FormField: React.FC<FormFieldProps> = ({ fieldConfig }) => {
             placeholder={fieldConfig.label}
           />
         );
+        case "json":
+          return (
+            <textarea
+              {...field}
+              className="w-full px-3 py-2 border rounded text-gray-900 dark:text-white bg-white dark:bg-gray-800"
+              placeholder={`Enter ${fieldConfig.label} in JSON format`}
+              rows={6}
+              value={typeof field.value === "object" && field.value !== null ? JSON.stringify(field.value, null, 2) : field.value || ""}
+              onChange={(e) => {
+                try {
+                  const parsed = JSON.parse(e.target.value);
+                  helpers.setValue(parsed);
+                } catch {
+                  helpers.setValue(e.target.value);
+                }
+              }}
+          />          
+          );        
       default:
         return null;
     }

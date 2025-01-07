@@ -88,6 +88,12 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
   const renderCellContent = (field: any, item: any) => {
     if (field.type === 'date' && item[field.name]) {
       return dayjs(item[field.name]).format(utils.dateFormat);
+    } else if (field.type === "json" && item[field.name]) {
+      return (
+        <pre className="whitespace-pre-wrap">
+          {JSON.stringify(item[field.name], null, 2)}
+        </pre>
+      );
     } else if (field.convertValue) {
       return field.convertValue(item[field.name]);
     } else if (field.render) {

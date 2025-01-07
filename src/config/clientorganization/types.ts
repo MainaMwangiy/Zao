@@ -21,7 +21,7 @@ export interface Colors {
 
 export interface FieldConfig {
   name: string;
-  type: "text" | "number" | "select" | "textarea" | "string" | "password";
+  type: "text" | "number" | "select" | "textarea" | "string" | "password" | 'json';
   label: string;
   options?: string[];
   required?: boolean;

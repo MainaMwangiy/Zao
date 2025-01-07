@@ -2,8 +2,8 @@ import utils from "../../utils";
 import { ModuleConfig } from "./types";
 
 export const clientOrganizationConfig: ModuleConfig = {
-    keyField: "clientorganizationid",
-    title: "Organizations",
+    keyField: "Clientorganization",
+    title: "Clientorganization",
     showTitle: true,
     isImport: true,
     isExport: true,
@@ -27,6 +27,6 @@ export const clientOrganizationConfig: ModuleConfig = {
     },
     fields: [
         { name: "name", type: "text", label: "Organization Name", width: "200px" },
-        { name: "appconfig", type: "text", label: "Config", width: "150px", hide: true },
+        { name: "appconfig", type: "json", label: "Config", width: "150px"},
     ],
 };

@@ -5,7 +5,7 @@ export interface Colors {
 
 export interface FieldConfig {
   name: string;
-  type: 'text' | 'number' | 'select' | 'textarea' | 'string' | 'password' | 'date';
+  type: 'text' | 'number' | 'select' | 'textarea' | 'string' | 'password' | 'date' | 'json';
   label: string;
   options?: string[];
   required?: boolean;
