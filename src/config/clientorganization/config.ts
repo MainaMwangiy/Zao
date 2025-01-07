@@ -1,6 +1,7 @@
 import utils from "../../utils";
 import { ModuleConfig } from "./types";
 
+const clientuserid = localStorage.getItem("clientuserid") || "";
 export const clientOrganizationConfig: ModuleConfig = {
     keyField: "Clientorganization",
     title: "Clientorganization",
@@ -13,13 +14,21 @@ export const clientOrganizationConfig: ModuleConfig = {
             url: `${utils.baseUrl}/api/clientorganizations/list`
         },
         create: {
-            url: `${utils.baseUrl}/api/clientorganizations/create`
+            url: `${utils.baseUrl}/api/clientorganizations/create`,
+            payload: {
+                createdbyuserid: clientuserid,
+                modifiedbyuserid: clientuserid
+            }
         },
         update: {
-            url: `${utils.baseUrl}/api/clientorganizations/update`
+            url: `${utils.baseUrl}/api/clientorganizations/update`,
+            payload: {
+                createdbyuserid: clientuserid,
+                modifiedbyuserid: clientuserid
+            }
         },
         delete: {
-            url: `${utils.baseUrl}/api/clientorganizations/delete`,
+            url: `${utils.baseUrl}/api/clientorganizations/delete`
         },
         total: {
             url: `${utils.baseUrl}/api/harvests/total`
