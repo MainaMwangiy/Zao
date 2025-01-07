@@ -18,6 +18,7 @@ import { SubmissionProvider } from "./components/Form/context";
 import { transactionsConfig } from "./config/transactions/config";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import { clientOrganizationConfig } from "./config/clientorganization/config";
 
 const App: React.FC = () => {
   return (
@@ -39,6 +40,7 @@ const App: React.FC = () => {
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/my-bills" element={<Incomes />} />
                   <Route path="/projects/:projectId" element={<Projects />} />
+                  <Route path="/clientorganization" element={<ModulePage config={clientOrganizationConfig} showAddNew={true} />} />
                 </Route>
                 <Route path="/" element={<Navigate to="/dashboard" />} />
               </Route>
