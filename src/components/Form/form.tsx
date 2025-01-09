@@ -73,11 +73,13 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
       const defaultPayload = endpoint.payload || {};
       let getOrganization;
       for (const item of allOrganizations) {
-        if (item.name.includes(staticValues?.clientorganization || staticValues?.name)) {
+        const keyFieldLower = keyField.toLowerCase(); 
+        const dynamicKeyId = `${keyFieldLower}id`;
+        if (item[dynamicKeyId] === staticValues[dynamicKeyId]) {
           getOrganization = item;
         }
       }
-      const filterOrganizations = utils.isSuperAdmin ? getOrganization?.clientorganizationid : clientorganizationid;
+      const filterOrganizations = (utils.isSuperAdmin && getOrganization?.clientorganizationid !== undefined) ? getOrganization.clientorganizationid : clientorganizationid;
       const mandatoryParams = { clientorganizationid: filterOrganizations };
       const additionalParams = endpoint?.payload?.hideProject ? {} : { projectid: rest?.id };
       const requestData = { ...defaultPayload, ...staticValues, ...additionalParams, ...mandatoryParams };
