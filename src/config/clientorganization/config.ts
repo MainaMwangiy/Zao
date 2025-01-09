@@ -9,6 +9,7 @@ export const clientOrganizationConfig: ModuleConfig = {
     isImport: true,
     isExport: true,
     hideActionMenu: true,
+    skipKeyField: true,
     apiEndpoints: {
         list: {
             url: `${utils.baseUrl}/api/clientorganizations/list`

@@ -46,4 +46,5 @@ export interface ModuleConfig {
   showTitle: boolean;
   hideActionMenu?: boolean;
   customKeyField?:string;
+  skipKeyField?:boolean;
 }
