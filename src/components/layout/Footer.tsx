@@ -1,4 +1,5 @@
 const Footer: React.FC = () => {
+  const currentYear = new Date().getFullYear(); 
   return (
     <footer className="bg-white shadow-lg dark:bg-gray-900 text-gray-900 dark:text-gray-100 py-4 mt-8">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
@@ -13,7 +14,7 @@ const Footer: React.FC = () => {
           </ul>
         </div> */}
         <div className="text-center md:text-right">
-          <span>© 2024 Zao. All rights reserved.</span>
+          <span>© {currentYear} Zao. All rights reserved.</span>
         </div>
       </div>
     </footer>
