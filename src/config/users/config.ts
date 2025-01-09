@@ -31,6 +31,7 @@ export const usersConfig: ModuleConfig = {
     isImport: false,
     isExport: true,
     hideActionMenu: true,
+    customKeyField: "ClientUser",
     apiEndpoints: {
         list: {
             url: `${utils.baseUrl}/api/auth/list`,

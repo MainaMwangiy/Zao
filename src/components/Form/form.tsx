@@ -16,10 +16,12 @@ interface GenericFormProps {
   isOpen: boolean;
   initialValues?: Record<string, any>;
 }
+const getKeyField = (config: any) => config.customKeyField || config.keyField;
 
 const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: any }> = ({ config, onClose, isOpen, initialValues = {}, mode, ...rest }) => {
   const isUpdate = mode === 'edit';
   const { apiRequest } = useApi();
+  const keyField = getKeyField(config);
   const fieldsToShow = config.fields.filter(field => field.form !== false);
   const defaultInitialValues = fieldsToShow.reduce<Record<string, any>>((acc, field) => {
     const fieldValue = initialValues[field.name];
@@ -31,13 +33,20 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
       acc[field.name] = typeof fieldValue === "object" && fieldValue !== null ? JSON.stringify(fieldValue) : fieldValue ?? "";
     }
     return acc;
-  }, { [`${config.keyField.toLowerCase()}id`]: initialValues[`${config.keyField.toLowerCase()}id`] ?? "" });
+  }, { [`${keyField.toLowerCase()}id`]: initialValues[`${keyField.toLowerCase()}id`] ?? "" });
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
   const { setSubmissionState } = useSubmissionContext();
   const clientorganizationid = localStorage.getItem("clientorganizationid") || "";
   const clientorganizations = localStorage.getItem("clientorganizations") || "";
-  const allOrganizations = JSON.parse(clientorganizations) || [];
+  let allOrganizations: any[] = [];
+  if (clientorganizations && clientorganizations.trim() !== '') {
+    try {
+      allOrganizations = JSON.parse(clientorganizations);
+    } catch (e) {
+      console.error("Failed to parse clientorganizations:", e);
+    }
+  }
 
   const validationSchema = Yup.object(
     fieldsToShow.reduce<Record<string, any>>((schema, field) => {
@@ -58,7 +67,7 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
           staticValues[field.name] = utils.getRolesId(values[field.name]);
         }
       });
-      const id = staticValues[`${config?.keyField.toLowerCase()}id`];
+      const id = staticValues[`${keyField.toLowerCase()}id`];
       const endpoint = isUpdate ? config.apiEndpoints.update : config.apiEndpoints.create;
       const url = isUpdate && id ? `${endpoint.url}/${id}` : endpoint.url;
       const defaultPayload = endpoint.payload || {};
