@@ -42,4 +42,6 @@ export interface ModuleConfig {
   isImport: boolean;
   isExport: boolean;
   showTitle: boolean;
+  customKeyField?:string;
+  skipKeyField?:boolean;
 }

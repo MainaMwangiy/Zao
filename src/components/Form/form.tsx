@@ -79,10 +79,11 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
           getOrganization = item;
         }
       }
+      const skipMandatory = config?.skipKeyField;
       const filterOrganizations = (utils.isSuperAdmin && getOrganization?.clientorganizationid !== undefined) ? getOrganization.clientorganizationid : clientorganizationid;
       const mandatoryParams = { clientorganizationid: filterOrganizations };
       const additionalParams = endpoint?.payload?.hideProject ? {} : { projectid: rest?.id };
-      const requestData = { ...defaultPayload, ...staticValues, ...additionalParams, ...mandatoryParams };
+      const requestData = { ...defaultPayload, ...staticValues, ...additionalParams, ...(!skipMandatory && isUpdate && mandatoryParams)};
       await apiRequest({ method: "POST", url, data: requestData });
       setSubmissionState(true);
       onClose();
