@@ -20,7 +20,8 @@ interface GenericTableProps {
 }
 
 const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideActionMenu, ...rest }) => {
-  const key = `${config?.keyField.toLowerCase()}id`;
+  const key = utils.getKeyField(config);
+  const keyField = `${key}id`;
   const { apiRequest } = useApi();
   const [data, setData] = useState<any[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -38,7 +39,7 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
     setLoading(true);
     const { url, payload = {} } = config.apiEndpoints.list;
     const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
-    const mandatoryParams = { clientorganizationid: clientorganizationid};
+    const mandatoryParams = { clientorganizationid: clientorganizationid };
     const tempPayload = {
       ...payload,
       ...params,
@@ -57,12 +58,12 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
   const confirmDeleteExpense = async () => {
     setLoading(true);
     const { payload } = config.apiEndpoints.delete;
-    const mandatoryParams = { clientorganizationid: clientorganizationid};
+    const mandatoryParams = { clientorganizationid: clientorganizationid };
     const tempParams = { ...payload, ...mandatoryParams }
     if (deleteId !== null) {
       const data = {
         ...tempParams,
-        [key]: deleteId,
+        [keyField]: deleteId,
       };
       await apiRequest({ method: "POST", url: `${config.apiEndpoints.delete.url}/${deleteId}`, data: data });
       fetchData();
@@ -127,7 +128,7 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
             </thead>
             <tbody>
               {data.map((item: any) => (
-                <tr key={item.id} className="border-b border-gray-200 dark:border-gray-700">
+                <tr key={item.id || item[keyField]} className="border-b border-gray-200 dark:border-gray-700">
                   {config.fields.filter(field => !field?.hide).map((field) => (
                     <td
                       key={field.name}
@@ -137,7 +138,7 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
                     </td>
                   ))}
                   <td className="px-4 py-2 text-sm">
-                    <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDeleteClick(item[key] || 0)} config={config} hideActionMenu={hideActionMenu} />
+                    <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDeleteClick(item[keyField] || 0)} config={config} hideActionMenu={hideActionMenu} />
                   </td>
                 </tr>
               ))}

@@ -16,12 +16,11 @@ interface GenericFormProps {
   isOpen: boolean;
   initialValues?: Record<string, any>;
 }
-const getKeyField = (config: any) => config.customKeyField || config.keyField;
 
 const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: any }> = ({ config, onClose, isOpen, initialValues = {}, mode, ...rest }) => {
   const isUpdate = mode === 'edit';
   const { apiRequest } = useApi();
-  const keyField = getKeyField(config);
+  const keyField = utils.getKeyField(config);
   const fieldsToShow = config.fields.filter(field => field.form !== false);
   const defaultInitialValues = fieldsToShow.reduce<Record<string, any>>((acc, field) => {
     const fieldValue = initialValues[field.name];
@@ -73,7 +72,7 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
       const defaultPayload = endpoint.payload || {};
       let getOrganization;
       for (const item of allOrganizations) {
-        const keyFieldLower = keyField.toLowerCase(); 
+        const keyFieldLower = keyField.toLowerCase();
         const dynamicKeyId = `${keyFieldLower}id`;
         if (item[dynamicKeyId] === staticValues[dynamicKeyId]) {
           getOrganization = item;
@@ -83,7 +82,7 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
       const filterOrganizations = (utils.isSuperAdmin && getOrganization?.clientorganizationid !== undefined) ? getOrganization.clientorganizationid : clientorganizationid;
       const mandatoryParams = { clientorganizationid: filterOrganizations };
       const additionalParams = endpoint?.payload?.hideProject ? {} : { projectid: rest?.id };
-      const requestData = { ...defaultPayload, ...staticValues, ...additionalParams, ...(!skipMandatory && isUpdate && mandatoryParams)};
+      const requestData = { ...defaultPayload, ...staticValues, ...additionalParams, ...(!skipMandatory && isUpdate && mandatoryParams) };
       await apiRequest({ method: "POST", url, data: requestData });
       setSubmissionState(true);
       onClose();
