@@ -74,15 +74,21 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
       for (const item of allOrganizations) {
         const keyFieldLower = keyField.toLowerCase();
         const dynamicKeyId = `${keyFieldLower}id`;
+        if (!isUpdate) {
+          getOrganization = item;
+          break;
+        }
         if (item[dynamicKeyId] === staticValues[dynamicKeyId]) {
           getOrganization = item;
+          break;
         }
       }
       const skipMandatory = config?.skipKeyField;
-      const filterOrganizations = (utils.isSuperAdmin && getOrganization?.clientorganizationid !== undefined) ? getOrganization.clientorganizationid : clientorganizationid;
-      const mandatoryParams = { clientorganizationid: filterOrganizations };
+      const cnd = !skipMandatory || isUpdate;
+      const filterOrganizations = ((utils.isSuperAdmin && getOrganization?.clientorganizationid !== undefined)) ? getOrganization.clientorganizationid : clientorganizationid;
+      const mandatoryParams = !isUpdate ? { clientorganizationid: filterOrganizations } : { clientorganizationid: clientorganizationid };
       const additionalParams = endpoint?.payload?.hideProject ? {} : { projectid: rest?.id };
-      const requestData = { ...defaultPayload, ...staticValues, ...additionalParams, ...(!skipMandatory && isUpdate && mandatoryParams) };
+      const requestData = { ...defaultPayload, ...staticValues, ...additionalParams, ...(cnd ? mandatoryParams : {}) };
       await apiRequest({ method: "POST", url, data: requestData });
       setSubmissionState(true);
       onClose();
