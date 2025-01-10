@@ -61,6 +61,7 @@ export interface ModuleConfig {
   isExport: boolean;
   showTitle: boolean;
   hideActionMenu?: boolean;
-  skipKeyField?:boolean;
-  customKeyField?:string;
+  skipKeyField?: boolean;
+  customKeyField?: string;
+  updateLocal?: boolean;
 }

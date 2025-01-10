@@ -22,6 +22,7 @@ interface GenericTableProps {
 const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideActionMenu, ...rest }) => {
   const key = utils.getKeyField(config);
   const keyField = `${key}id`;
+  let localKey = `${key}s`;
   const { apiRequest } = useApi();
   const [data, setData] = useState<any[]>([]);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -34,7 +35,7 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [debouncedSearchTerm] = useDebounce(searchTerm, 1000);
   const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
-
+  const updateLocal = config?.updateLocal;
   const fetchData = async () => {
     setLoading(true);
     const { url, payload = {} } = config.apiEndpoints.list;
@@ -52,6 +53,9 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setData(response?.data || []);
     setTotalItems(response?.totalItems || 0);
+    if (updateLocal) {
+      localStorage.setItem(localKey, JSON.stringify(response?.data))
+    }
     setLoading(false);
   };
 

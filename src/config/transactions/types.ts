@@ -42,5 +42,6 @@ export interface ModuleConfig {
   isImport: boolean;
   isExport: boolean;
   showTitle: boolean;
-  skipKeyField?:boolean;
+  skipKeyField?: boolean;
+  updateLocal?: boolean;
 }

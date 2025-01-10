@@ -10,6 +10,7 @@ export const clientOrganizationConfig: ModuleConfig = {
     isExport: true,
     hideActionMenu: true,
     skipKeyField: true,
+    updateLocal: true,
     apiEndpoints: {
         list: {
             url: `${utils.baseUrl}/api/clientorganizations/list`
@@ -37,6 +38,6 @@ export const clientOrganizationConfig: ModuleConfig = {
     },
     fields: [
         { name: "name", type: "text", label: "Organization Name", width: "200px" },
-        { name: "appconfig", type: "json", label: "Config", width: "150px"},
+        { name: "appconfig", type: "json", label: "Config", width: "150px" },
     ],
 };
