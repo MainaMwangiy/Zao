@@ -337,6 +337,7 @@ const Dashboard: React.FC = () => {
                   onDelete={() => handleDeleteClick(Number(item.projectid))}
                   expenses={item?.expenses}
                   earnings={item?.earnings}
+                  clientConfig={clientConfig}
                 />
               ))}
             </div>
