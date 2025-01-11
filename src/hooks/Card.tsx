@@ -3,6 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ActionMenu from "./ActionMenu";
+
+interface ClientConfig {
+  dateFormat?: Date | string;
+  sendBackup?: boolean;
+  showGallery?: boolean;
+}
 interface CardProps {
   id: string;
   title: string;
@@ -19,6 +25,7 @@ interface CardProps {
   onDelete: () => void;
   expenses: number;
   earnings: number;
+  clientConfig?: ClientConfig;
 }
 
 interface BlobItem {
@@ -45,6 +52,7 @@ const Card: React.FC<CardProps> = ({
   onDelete,
   expenses,
   earnings,
+  clientConfig
 }) => {
   const navigate = useNavigate();
   const gallery = localStorage.getItem("gallery");
@@ -95,7 +103,7 @@ const Card: React.FC<CardProps> = ({
   return (
     <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md flex flex-col">
       <div className="w-full mb-4">
-        {images.length > 0 ? (
+        {(images.length > 0 && clientConfig?.showGallery) ? (
           <Carousel images={images} />
         ) : (
           <img

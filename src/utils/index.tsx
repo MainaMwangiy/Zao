@@ -166,6 +166,10 @@ const utils = {
       localStorage.removeItem('token');
       navigate('/login');
     }
+  },
+  getKeyField: (config: any): string => {
+    const field = config.customKeyField || config.keyField || '';
+    return field.toLowerCase();
   }
 };
 
