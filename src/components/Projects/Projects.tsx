@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Summary from './Summary';
 import Analytics from './Analytics';
 import Gallery from './Gallery';
@@ -11,6 +11,10 @@ const Projects: React.FC = () => {
     const [activeTab, setActiveTab] = useState<string>('summary');
     const location = useLocation();
     const projectData = location.state;
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [activeTab]);
 
     if (!projectData) {
         return (
