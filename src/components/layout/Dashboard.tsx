@@ -163,6 +163,13 @@ const Dashboard: React.FC = () => {
   }, [showProjectseModal]);
 
   const handleDeleteProject = async () => {
+    const project = projects.find(item => Number(item?.projectid) === deleteProjectId);
+    const status = project?.projectstatus;
+    if (status !== 'completed') {
+      setShowDeleteDialog(false);
+      enqueueSnackbar("Cannot delete ongoing project", { variant: "error" });
+      return;
+    }
     if (deleteProjectId) {
       try {
         const url = `${utils.baseUrl}/api/projects/delete/${deleteProjectId}`;
@@ -266,7 +273,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Project Status: Ongoing
+            {`Client Status: ${clientuser?.status}`}
           </p>
 
           <div className="flex items-center mt-4">
