@@ -4,7 +4,7 @@ import Table from "./table";
 import Modal from "./Modal";
 
 import { ModuleConfig, DataItem } from "../../types";
-import { AiOutlineDownload, AiOutlinePlus, AiOutlineUpload } from "react-icons/ai";
+import { AiOutlineDownload, AiOutlinePlus, AiOutlineReload, AiOutlineUpload } from "react-icons/ai";
 import { useApi } from "../../hooks/Apis";
 import { useSnackbar } from "notistack";
 import Loader from "../../hooks/Loader";
@@ -27,6 +27,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const clientorganizationid = localStorage.getItem('clientorganizationid') || "";
+  const [refreshCount, setRefreshCount] = useState(0);
 
   const handleEdit = (item: any) => {
     setSelectedItem(item);
@@ -41,7 +42,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
   const getTotals = async () => {
     const { url = '', payload = {} } = config?.apiEndpoints?.total ?? {};
     const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
-    const mandatoryParams = { clientorganizationid: clientorganizationid};
+    const mandatoryParams = { clientorganizationid: clientorganizationid };
     const tempPayload = { ...payload, ...additionalParams, ...mandatoryParams };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setTotal(response?.data?.[0]?.total || 0);
@@ -52,6 +53,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
   }, [])
 
   const refreshData = async () => {
+    setRefreshCount(prev => prev + 1);
     await getTotals();
   };
 
@@ -95,6 +97,13 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
             <span className="hidden md:inline text-sm">Add New</span>
           </button>
         )}
+        <button
+          className="bg-teal-600 hover:bg-teal-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
+          onClick={refreshData}
+        >
+          <AiOutlineReload className="text-lg md:mr-1" />
+          <span className="hidden md:inline text-sm">Refresh</span>
+        </button>
         {config.isImport && <>
           <button
             className="bg-green-600 hover:bg-green-700 transition text-white px-3 py-2 rounded-lg shadow-md flex items-center"
@@ -137,7 +146,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
               {...rest}
             />
           </Modal>
-          <Table config={config} onEdit={handleEdit} hideActionMenu={hideActionMenu} {...rest} />
+          <Table config={config} onEdit={handleEdit} hideActionMenu={hideActionMenu} refreshCount={refreshCount} {...rest} />
         </>
       }
     </div>
