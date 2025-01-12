@@ -11,6 +11,7 @@ export interface ProjectsProps {
   projectname: string;
   earnings: number;
   expenses: number;
+  status?: string;
 }
 
 export type ClientConfig = {
