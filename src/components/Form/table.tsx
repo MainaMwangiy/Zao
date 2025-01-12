@@ -17,9 +17,10 @@ interface GenericTableProps {
   params?: Record<string, any>;
   id?: number;
   hideActionMenu?: boolean;
+  refreshCount?: number;
 }
 
-const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideActionMenu, ...rest }) => {
+const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideActionMenu, refreshCount, ...rest }) => {
   const key = utils.getKeyField(config);
   const keyField = `${key}id`;
   let localKey = `${key}s`;
@@ -88,7 +89,7 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
 
   useEffect(() => {
     fetchData();
-  }, [config, currentPage, submissionState, debouncedSearchTerm]);
+  }, [config, currentPage, submissionState, debouncedSearchTerm, refreshCount]);
 
   const renderCellContent = (field: any, item: any) => {
     if (field.type === 'date' && item[field.name]) {
