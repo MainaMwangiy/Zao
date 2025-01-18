@@ -13,7 +13,6 @@ import {
   ClientConfig,
 } from "../../types";
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
-import Loader from "../../hooks/Loader";
 import { Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 
