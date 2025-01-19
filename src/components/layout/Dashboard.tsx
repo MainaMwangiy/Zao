@@ -19,7 +19,32 @@ import Form from "../Form/form";
 import Modal from "../Form/Modal";
 import Loader from "../../hooks/Loader";
 import { projectsConfig } from "../../config/projects/config";
-
+import AIFarming from "../../assets/AIFarming.png";
+import CartoonFarm from "../../assets/CartoonFarm.jpg";
+import DigitalFarming from "../../assets/DigitalFarming.jpg";
+import FarmScene from "../../assets/FarmScene.webp";
+import GreenFarm from "../../assets/GreenFarm.png";
+import MultiFunctionalAgriculture from "../../assets/MultiFunctionalAgriculture.jpg";
+import SelfDrivingFarming from "../../assets/SelfDrivingFarming.webp";
+import SubsistenceFarming from "../../assets//SubsistenceFarming.webp";
+import WheatFarming from "../../assets/WheatFarming.jpg";
+import AnimalCropFarming from "../../assets/AnimalCropFarming.jpg";
+import TruckFarming from "../../assets/TruckFarming.webp";
+import AgricultureCartoon from "../../assets/AgricultureCartoon.jpg";
+const allImageUrls = [
+  AIFarming,
+  CartoonFarm,
+  DigitalFarming,
+  FarmScene,
+  GreenFarm,
+  MultiFunctionalAgriculture,
+  SelfDrivingFarming,
+  SubsistenceFarming,
+  WheatFarming,
+  AnimalCropFarming,
+  TruckFarming,
+  AgricultureCartoon
+];
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
   const { enqueueSnackbar } = useSnackbar();
@@ -74,15 +99,24 @@ const Dashboard: React.FC = () => {
       const response = await axios.post(url, values, {
         headers: { "Content-Type": "application/json" },
       });
-      const projects = response.data.data;
-      setProjects(projects);
-      localStorage.setItem("projects", JSON.stringify(projects));
+      let fetchedProjects = response.data.data;
+      fetchedProjects = fetchedProjects.map((project: any, index: number) => {
+        const imageIndex = index % allImageUrls.length;
+        return {
+          ...project,
+          imagesurl: allImageUrls[imageIndex]
+        };
+      });
+  
+      setProjects(fetchedProjects);
+      localStorage.setItem("projects", JSON.stringify(fetchedProjects));
     } catch (error) {
       enqueueSnackbar("User Loading Failed. Please try again.", {
         variant: "error",
       });
     }
   };
+  
   const fetchTotalExpenses = async () => {
     try {
       const values = {
