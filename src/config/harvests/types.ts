@@ -47,4 +47,5 @@ export interface ModuleConfig {
   customKeyField?: string;
   skipKeyField?: boolean;
   updateLocal?: boolean;
+  limit?: boolean;
 }

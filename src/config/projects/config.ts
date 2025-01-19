@@ -1,11 +1,15 @@
 import utils from "../../utils";
+import { constants } from "../../utils/constants";
 import { ModuleConfig } from "../harvests/types";
 
 const user = localStorage.getItem('clientuser') || "{}";
 const clientuser = JSON.parse(user);
 const clientuserid = clientuser?.clientuserid;
 const clientusername = clientuser?.name || '';
-
+const projects = localStorage.getItem('projects') || "{}";
+const projectsTemp = JSON.parse(projects);
+const projectsLen = projectsTemp.length | 0;
+const limit = projectsLen >= constants.PROJECTS_NUMBER_LIMIT;
 export const projectsConfig: ModuleConfig = {
   keyField: 'Project',
   title: "Projects",
@@ -13,6 +17,7 @@ export const projectsConfig: ModuleConfig = {
   isExport: true,
   showTitle: true,
   addSearch: true,
+  limit: limit,
   apiEndpoints: {
     create: {
       url: `${utils.baseUrl}/api/projects/create`,
