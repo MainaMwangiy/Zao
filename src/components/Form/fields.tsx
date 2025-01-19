@@ -10,6 +10,30 @@ interface FormFieldProps {
 const FormField: React.FC<FormFieldProps> = ({ fieldConfig }) => {
   const [field, meta, helpers] = useField(fieldConfig.name);
   const [showPassword, setShowPassword] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("image", file);
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      onUploadProgress: (progressEvent: ProgressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        setUploadProgress(percentCompleted);
+      }
+    };
+    try {
+      // const response = await axios.post("api/image-upload-url", formData, config);
+      // helpers.setValue(response.data.url);  // Assuming the API returns the URL of the uploaded image
+      setUploadProgress(0);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
 
   const renderField = () => {
     const inputBaseClass = "w-full px-3 py-2 border rounded text-gray-900 dark:text-white";
@@ -81,7 +105,21 @@ const FormField: React.FC<FormFieldProps> = ({ fieldConfig }) => {
                 }
               }}
           />          
-          );        
+          ); 
+          case "image":
+            return (
+              <div className="flex flex-col">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="mb-2"
+                />
+                {uploadProgress > 0 && (
+                  <progress value={uploadProgress} max="100">{uploadProgress}%</progress>
+                )}
+              </div>
+            );     
       default:
         return null;
     }

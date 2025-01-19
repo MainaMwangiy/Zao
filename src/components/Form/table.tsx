@@ -39,7 +39,7 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
   const updateLocal = config?.updateLocal;
   const fetchData = async () => {
     setLoading(true);
-    const { url, payload = {} } = config.apiEndpoints.list;
+    const { url='', payload = {} } = config.apiEndpoints.list || {};
     const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
     const mandatoryParams = { clientorganizationid: clientorganizationid };
     const tempPayload = {

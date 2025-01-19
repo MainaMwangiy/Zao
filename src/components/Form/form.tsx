@@ -9,6 +9,7 @@ import { useApi } from "../../hooks/Apis";
 import { constants } from "../../utils/constants";
 import { useSubmissionContext } from "./context";
 import utils from "../../utils";
+import { useSnackbar } from "notistack";
 
 interface GenericFormProps {
   config: ModuleConfig;
@@ -16,9 +17,11 @@ interface GenericFormProps {
   isOpen: boolean;
   initialValues?: Record<string, any>;
 }
+type Mode = 'edit' | 'add' | null; 
 
-const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: any }> = ({ config, onClose, isOpen, initialValues = {}, mode, ...rest }) => {
+const Form: React.FC<GenericFormProps & { mode: Mode, [key: string]: any }> = ({ config, onClose, isOpen, initialValues = {}, mode, ...rest }) => {
   const isUpdate = mode === 'edit';
+  const limitCreate = config?.limit && !isUpdate;
   const { apiRequest } = useApi();
   const keyField = utils.getKeyField(config);
   const fieldsToShow = config.fields.filter(field => field.form !== false);
@@ -36,6 +39,7 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
   const { setSubmissionState } = useSubmissionContext();
+  const { enqueueSnackbar } = useSnackbar();
   const clientorganizationid = localStorage.getItem("clientorganizationid") || "";
   const clientorganizations = localStorage.getItem("clientorganizations") || "";
   let allOrganizations: any[] = [];
@@ -43,7 +47,7 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
     try {
       allOrganizations = JSON.parse(clientorganizations);
     } catch (e) {
-      console.error("Failed to parse clientorganizations:", e);
+      enqueueSnackbar("Failed to parse clientorganizations:", { variant: "error" });
     }
   }
 
@@ -102,6 +106,11 @@ const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: a
 
   const { dirty } = formik;
   const handleSubmit = () => {
+    if(limitCreate){
+      enqueueSnackbar("You cannot add new project. Please contact support", { variant: "error" });
+      onClose();
+      return;
+    }
     if (dirty) {
       setShowConfirmationDialog(true);
     } else {

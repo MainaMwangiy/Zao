@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ActionMenu from "./ActionMenu";
-import placeHolderImage from "../assets/placeHolderImage.png";
 interface ClientConfig {
   dateFormat?: Date | string;
   sendBackup?: boolean;
@@ -18,7 +17,7 @@ interface CardProps {
   projectstatus: string;
   projectPlanIncluded: string;
   costprojectestimation: string;
-  imagesurl: string;
+  imagesurl?: string;
   name?: string;
   projectname?: string;
   onEdit: () => void;
@@ -96,7 +95,7 @@ const Card: React.FC<CardProps> = ({
     });
   };
 
-  const imageSrc = imagesurl  ? imagesurl : placeHolderImage;
+  const imageSrc =  imagesurl;
   const isHavingProjectPlan = projectPlanIncluded === "Yes";
   return (
     <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md flex flex-col">
