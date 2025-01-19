@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ActionMenu from "./ActionMenu";
-
 interface ClientConfig {
   dateFormat?: Date | string;
   sendBackup?: boolean;
@@ -18,7 +17,7 @@ interface CardProps {
   projectstatus: string;
   projectPlanIncluded: string;
   costprojectestimation: string;
-  imagesurl: string;
+  imagesurl?: string;
   name?: string;
   projectname?: string;
   onEdit: () => void;
@@ -96,9 +95,7 @@ const Card: React.FC<CardProps> = ({
     });
   };
 
-  const imageSrc = imagesurl
-    ? imagesurl
-    : "https://nsra83gx72pwujdb.public.blob.vercel-storage.com/blob-2LLFFCrEiYgZ7ha8hV7zXIhbm5spC3";
+  const imageSrc =  imagesurl;
   const isHavingProjectPlan = projectPlanIncluded === "Yes";
   return (
     <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md flex flex-col">
@@ -109,9 +106,8 @@ const Card: React.FC<CardProps> = ({
           <img
             src={imageSrc}
             alt="Project"
-            className="
-        w-full h-auto object-cover rounded-lg mb-4
-        sm:max-w-full md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl mx-auto"
+            style={{ height: "180px" }}
+            className="w-full h-auto object-cover rounded-lg mb-4 sm:max-w-full md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl mx-auto"
             onClick={handleOpenTracker}
           />
         )}

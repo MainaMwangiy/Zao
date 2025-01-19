@@ -1,7 +1,6 @@
 import { getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, UserCredential } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { v4 as uuidv4 } from 'uuid';
-import { useApi } from "../hooks/Apis";
 import { Dispatch } from 'redux';
 import axios from "axios";
 import { constants } from "./constants";
@@ -27,24 +26,9 @@ interface Organization {
     dateFormat?: string;
   }
 }
-
-interface ClientUsers {
-  name: string | null;
-  email: string | null;
-  phone: string | null;
-  image_url: string | null;
-}
-
 interface GoogleSignInProps {
   navigate: (path: string) => void;
   dispatch: Dispatch;
-}
-
-interface ApiResponse {
-  status: number;
-  data: {
-    user_id: string;
-  };
 }
 
 const clientOrgs = localStorage.getItem("clientorganizations") || '[]';

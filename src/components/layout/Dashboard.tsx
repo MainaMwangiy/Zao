@@ -13,10 +13,38 @@ import {
   ClientConfig,
 } from "../../types";
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
-import Loader from "../../hooks/Loader";
 import { Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-
+import Form from "../Form/form";
+import Modal from "../Form/Modal";
+import Loader from "../../hooks/Loader";
+import { projectsConfig } from "../../config/projects/config";
+import AIFarming from "../../assets/AIFarming.png";
+import CartoonFarm from "../../assets/CartoonFarm.jpg";
+import DigitalFarming from "../../assets/DigitalFarming.jpg";
+import FarmScene from "../../assets/FarmScene.webp";
+import GreenFarm from "../../assets/GreenFarm.png";
+import MultiFunctionalAgriculture from "../../assets/MultiFunctionalAgriculture.jpg";
+import SelfDrivingFarming from "../../assets/SelfDrivingFarming.webp";
+import SubsistenceFarming from "../../assets//SubsistenceFarming.webp";
+import WheatFarming from "../../assets/WheatFarming.jpg";
+import AnimalCropFarming from "../../assets/AnimalCropFarming.jpg";
+import TruckFarming from "../../assets/TruckFarming.webp";
+import AgricultureCartoon from "../../assets/AgricultureCartoon.jpg";
+const allImageUrls = [
+  AIFarming,
+  CartoonFarm,
+  DigitalFarming,
+  FarmScene,
+  GreenFarm,
+  MultiFunctionalAgriculture,
+  SelfDrivingFarming,
+  SubsistenceFarming,
+  WheatFarming,
+  AnimalCropFarming,
+  TruckFarming,
+  AgricultureCartoon
+];
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
   const { enqueueSnackbar } = useSnackbar();
@@ -38,7 +66,10 @@ const Dashboard: React.FC = () => {
   const [deleteProjectId, setDeleteProjectId] = useState<number | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [mode, setMode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const [refreshCount, setRefreshCount] = useState(0);
+  const [mode, setMode] = useState<'edit' | 'add' | null>('add');
 
   let clientConfig: ClientConfig = {};
   for (const org of Orgs) {
@@ -68,15 +99,24 @@ const Dashboard: React.FC = () => {
       const response = await axios.post(url, values, {
         headers: { "Content-Type": "application/json" },
       });
-      const projects = response.data.data;
-      setProjects(projects);
-      localStorage.setItem("projects", JSON.stringify(projects));
+      let fetchedProjects = response.data.data;
+      fetchedProjects = fetchedProjects.map((project: any, index: number) => {
+        const imageIndex = index % allImageUrls.length;
+        return {
+          ...project,
+          imagesurl: allImageUrls[imageIndex]
+        };
+      });
+  
+      setProjects(fetchedProjects);
+      localStorage.setItem("projects", JSON.stringify(fetchedProjects));
     } catch (error) {
       enqueueSnackbar("User Loading Failed. Please try again.", {
         variant: "error",
       });
     }
   };
+  
   const fetchTotalExpenses = async () => {
     try {
       const values = {
@@ -201,9 +241,20 @@ const Dashboard: React.FC = () => {
   const handleEdit = (item: any) => {
     setSelectedItem(item);
     setProjectshowModal(true);
-    setMode("edit");
+    setMode('edit');
+    setIsFormOpen(true);
   };
   const isProjects = projects.length > 0;
+  
+  const handleClose = () => {
+    setIsFormOpen(false);
+    setSelectedItem(null);
+  };
+
+  const refreshData = async () => {
+    setRefreshCount(prev => prev + 1);
+  };
+
   return (
     <div className="p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 mt-2">
@@ -311,7 +362,10 @@ const Dashboard: React.FC = () => {
           )}
           <button
             className="mt-4 bg-pink-500 text-white px-2 py-2 rounded"
-            onClick={() => setProjectshowModal(true)}
+            onClick={() => {
+              setSelectedItem(null);
+              setIsFormOpen(true);
+            }}
           >
             Add Project
           </button>
@@ -355,16 +409,6 @@ const Dashboard: React.FC = () => {
         )}
       </div>
       {
-        showProjectseModal && (
-          <AddProjectModal
-            showProjectseModal={showProjectseModal}
-            setProjectshowModal={setProjectshowModal}
-            selectedItem={selectedItem}
-            mode={mode}
-          />
-        )
-      }
-      {
         showDeleteDialog && (
           <ConfirmationDialog
             open={showDeleteDialog}
@@ -375,6 +419,20 @@ const Dashboard: React.FC = () => {
             confirmDiscard="Delete"
           />
         )
+      }
+      {loading ? <Loader /> :
+        <>
+          <Modal isOpen={isFormOpen} onClose={handleClose} title={selectedItem ? "Edit Item" : "Add Item"}>
+            <Form
+              config={projectsConfig}
+              onClose={handleClose}
+              isOpen={isFormOpen}
+              initialValues={selectedItem || {}}
+              mode={mode}
+              onDataUpdated={refreshData}
+            />
+          </Modal>
+        </>
       }
     </div >
   );

@@ -5,7 +5,7 @@ export interface Colors {
 
 export interface FieldConfig {
   name: string;
-  type: 'text' | 'number' | 'select' | 'textarea' | 'string' | 'password' | 'date' | 'json' | 'image';
+  type: "text" | "number" | "select" | "textarea" | "string" | "password" | "file";
   label: string;
   options?: string[];
   required?: boolean;
@@ -31,7 +31,7 @@ export interface ModuleConfig {
   keyField: string;
   title: string;
   apiEndpoints: {
-    list?: ApiEndpointConfig;
+    list: ApiEndpointConfig;
     create: ApiEndpointConfig;
     update: ApiEndpointConfig;
     delete: ApiEndpointConfig;
@@ -42,10 +42,7 @@ export interface ModuleConfig {
   isImport: boolean;
   isExport: boolean;
   showTitle: boolean;
-  addSearch?: boolean;
-  hideActionMenu?: boolean;
   customKeyField?: string;
   skipKeyField?: boolean;
   updateLocal?: boolean;
-  limit?: boolean;
 }

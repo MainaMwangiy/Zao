@@ -4,7 +4,7 @@ export interface ProjectsProps {
   size: string;
   projectstatus: string;
   projectplan: string;
-  imagesurl: string;
+  imagesurl?: string;
   projectid: string;
   roleid: number;
   costprojectestimation: string;
