@@ -15,6 +15,10 @@ import {
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
 import { Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
+import Form from "../Form/form";
+import Modal from "../Form/Modal";
+import Loader from "../../hooks/Loader";
+import { projectsConfig } from "../../config/projects/config";
 
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
@@ -37,7 +41,10 @@ const Dashboard: React.FC = () => {
   const [deleteProjectId, setDeleteProjectId] = useState<number | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [mode, setMode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const [refreshCount, setRefreshCount] = useState(0);
+  const [mode, setMode] = useState<'edit' | 'add' | null>('add');
 
   let clientConfig: ClientConfig = {};
   for (const org of Orgs) {
@@ -200,9 +207,20 @@ const Dashboard: React.FC = () => {
   const handleEdit = (item: any) => {
     setSelectedItem(item);
     setProjectshowModal(true);
-    setMode("edit");
+    setMode('edit');
+    setIsFormOpen(true);
   };
   const isProjects = projects.length > 0;
+  
+  const handleClose = () => {
+    setIsFormOpen(false);
+    setSelectedItem(null);
+  };
+
+  const refreshData = async () => {
+    setRefreshCount(prev => prev + 1);
+  };
+
   return (
     <div className="p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 mt-2">
@@ -310,7 +328,10 @@ const Dashboard: React.FC = () => {
           )}
           <button
             className="mt-4 bg-pink-500 text-white px-2 py-2 rounded"
-            onClick={() => setProjectshowModal(true)}
+            onClick={() => {
+              setSelectedItem(null);
+              setIsFormOpen(true);
+            }}
           >
             Add Project
           </button>
@@ -354,16 +375,6 @@ const Dashboard: React.FC = () => {
         )}
       </div>
       {
-        showProjectseModal && (
-          <AddProjectModal
-            showProjectseModal={showProjectseModal}
-            setProjectshowModal={setProjectshowModal}
-            selectedItem={selectedItem}
-            mode={mode}
-          />
-        )
-      }
-      {
         showDeleteDialog && (
           <ConfirmationDialog
             open={showDeleteDialog}
@@ -374,6 +385,20 @@ const Dashboard: React.FC = () => {
             confirmDiscard="Delete"
           />
         )
+      }
+      {loading ? <Loader /> :
+        <>
+          <Modal isOpen={isFormOpen} onClose={handleClose} title={selectedItem ? "Edit Item" : "Add Item"}>
+            <Form
+              config={projectsConfig}
+              onClose={handleClose}
+              isOpen={isFormOpen}
+              initialValues={selectedItem || {}}
+              mode={mode}
+              onDataUpdated={refreshData}
+            />
+          </Modal>
+        </>
       }
     </div >
   );
