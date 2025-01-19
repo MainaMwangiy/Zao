@@ -16,8 +16,9 @@ interface GenericFormProps {
   isOpen: boolean;
   initialValues?: Record<string, any>;
 }
+type Mode = 'edit' | 'add' | null; 
 
-const Form: React.FC<GenericFormProps & { mode: 'edit' | 'add', [key: string]: any }> = ({ config, onClose, isOpen, initialValues = {}, mode, ...rest }) => {
+const Form: React.FC<GenericFormProps & { mode: Mode, [key: string]: any }> = ({ config, onClose, isOpen, initialValues = {}, mode, ...rest }) => {
   const isUpdate = mode === 'edit';
   const { apiRequest } = useApi();
   const keyField = utils.getKeyField(config);
