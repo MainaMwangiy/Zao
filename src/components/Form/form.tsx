@@ -91,7 +91,8 @@ const Form: React.FC<GenericFormProps & { mode: Mode, [key: string]: any }> = ({
       const cnd = !skipMandatory || isUpdate;
       const filterOrganizations = ((utils.isSuperAdmin && getOrganization?.clientorganizationid !== undefined)) ? getOrganization.clientorganizationid : clientorganizationid;
       const mandatoryParams = !isUpdate ? { clientorganizationid: filterOrganizations } : { clientorganizationid: clientorganizationid };
-      const additionalParams = endpoint?.payload?.hideProject ? {} : { projectid: rest?.id };
+      const isProject = keyField.toLowerCase() === "project";
+      const additionalParams = endpoint?.payload?.hideProject ? {} : { projectid: isProject ? id : rest?.id };
       const requestData = { ...defaultPayload, ...staticValues, ...additionalParams, ...(cnd ? mandatoryParams : {}) };
       await apiRequest({ method: "POST", url, data: requestData });
       setSubmissionState(true);
