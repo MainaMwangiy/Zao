@@ -62,9 +62,14 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
       setLoading(true);
       const { url = '', payload = {} } = config?.apiEndpoints?.list ?? {};
       const additionalParams = !payload.hideProject ? {} : { projectid: rest?.id };
-      const reqParams = { isExport: true };
+      const reqParams = { isExport: true, clientorganizationid: clientorganizationid };
       const tempPayload = { ...payload, ...additionalParams, ...reqParams };
       const response = await apiRequest({ method: "POST", url: url, data: tempPayload, responseType: 'blob', filename: config?.title });
+      if(!response) {
+        enqueueSnackbar("Failed to export expenses. Please try again.", { variant: "error" });
+        setLoading(false);
+        return;
+      }
       const currentDate = new Date().toISOString().split('T')[0];
       const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       const downloadUrl = window.URL.createObjectURL(blob);
