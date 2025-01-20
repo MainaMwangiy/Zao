@@ -117,7 +117,7 @@ const Card: React.FC<CardProps> = ({
         <ActionMenu onEdit={onEdit} onDelete={() => onDelete()} hideActionMenu={true} />
       </div>
       <div className="flex">
-        <div className="w-1/2 p-4">
+        <div className="w-1/2 p-1">
           <div className="flex-1">
             <div>
               <h3
@@ -150,7 +150,7 @@ const Card: React.FC<CardProps> = ({
             </div>
           </div>
         </div>
-        <div className="w-1/2 p-4 flex flex-col">
+        <div className="w-1/2 p-1 flex flex-col">
           <div className="mb-4 mt-2">
             <p className="text-gray-600 dark:text-gray-400">Total Expenses</p>
             <div className="flex items-center">
