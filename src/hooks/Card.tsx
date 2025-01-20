@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ActionMenu from "./ActionMenu";
+import utils from "../utils";
 interface ClientConfig {
   dateFormat?: Date | string;
   sendBackup?: boolean;
@@ -60,7 +61,7 @@ const Card: React.FC<CardProps> = ({
   const [isEarningsVisible, setIsEarningsVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const shouldTruncate = projectname?.length > 15;
-
+  const isMobile = utils.isMobile;
   const toggleText = () => {
     if (shouldTruncate) {
       setIsExpanded(!isExpanded);
@@ -95,25 +96,28 @@ const Card: React.FC<CardProps> = ({
     });
   };
 
-  const imageSrc =  imagesurl;
+  const imageSrc = imagesurl;
   const isHavingProjectPlan = projectPlanIncluded === "Yes";
   return (
     <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md flex flex-col">
-      <div className="w-full mb-4">
+      <div className="w-full">
         {(images.length > 0 && clientConfig?.showGallery) ? (
           <Carousel images={images} />
         ) : (
           <img
             src={imageSrc}
             alt="Project"
-            style={{ height: "180px" }}
+            style={{ height: isMobile ? "180px" : "300px" }}
             className="w-full h-auto object-cover rounded-lg mb-4 sm:max-w-full md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl mx-auto"
             onClick={handleOpenTracker}
           />
         )}
       </div>
+      <div className="flex justify-end">
+        <ActionMenu onEdit={onEdit} onDelete={() => onDelete()} hideActionMenu={true} />
+      </div>
       <div className="flex">
-        <div className="w-1/2 p-1">
+        <div className="w-1/2 p-4">
           <div className="flex-1">
             <div>
               <h3
@@ -147,10 +151,7 @@ const Card: React.FC<CardProps> = ({
           </div>
         </div>
         <div className="w-1/2 p-4 flex flex-col">
-          <div className="flex justify-end">
-            <ActionMenu onEdit={onEdit} onDelete={() => onDelete()} hideActionMenu={true} />
-          </div>
-          <div className="mb-4 mt-4">
+          <div className="mb-4 mt-2">
             <p className="text-gray-600 dark:text-gray-400">Total Expenses</p>
             <div className="flex items-center">
               <p className="text-red-500 text-2xl font-semibold mr-2 font-mono">
