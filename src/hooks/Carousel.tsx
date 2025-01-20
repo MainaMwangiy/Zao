@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import utils from "../utils";
 
 interface BlobItem {
     url: string;
@@ -14,6 +15,7 @@ interface CarouselProps {
 
 const Carousel: React.FC<CarouselProps> = ({ images }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const isMobile = utils.isMobile;
 
     const nextSlide = () => {
         setCurrentIndex((prevIndex) =>
@@ -35,6 +37,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
                     src={images[currentIndex]?.url}
                     alt={`Slide ${currentIndex}`}
                     className="w-full h-full object-cover"
+                    style={{ height: isMobile ? "180px" : "300px" }}
                 />
             </div>
 
