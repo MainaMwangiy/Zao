@@ -110,9 +110,9 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
   };
 
   return (
-    <>
+    <>       
+     {config?.addSearch && <SearchInput placeholder="Search for expenses" searchTerm={debouncedSearchTerm} setSearchTerm={setSearchTerm} />}
       <div className="overflow-x-auto">
-        {config?.addSearch && <SearchInput placeholder="Search for expenses" searchTerm={debouncedSearchTerm} setSearchTerm={setSearchTerm} />}
         {loading ? <Loader /> :
           <table className="min-w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg shadow-md">
             <thead>
