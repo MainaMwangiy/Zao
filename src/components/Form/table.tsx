@@ -39,7 +39,7 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
   const updateLocal = config?.updateLocal;
   const fetchData = async () => {
     setLoading(true);
-    const { url='', payload = {} } = config.apiEndpoints.list || {};
+    const { url = '', payload = {} } = config.apiEndpoints.list || {};
     const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
     const mandatoryParams = { clientorganizationid: clientorganizationid };
     const tempPayload = {
@@ -96,7 +96,7 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
       return dayjs(item[field.name]).format(utils.dateFormat);
     } else if (field.type === "json" && item[field.name]) {
       return (
-        <pre className="whitespace-pre-wrap">
+        <pre className="whitespace-pre-wrap text-sm">
           {JSON.stringify(item[field.name], null, 2)}
         </pre>
       );
@@ -110,46 +110,61 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
   };
 
   return (
-    <>       
-     {config?.addSearch && <SearchInput placeholder="Search for expenses" searchTerm={debouncedSearchTerm} setSearchTerm={setSearchTerm} />}
-      <div className="overflow-x-auto">
-        {loading ? <Loader /> :
-          <table className="min-w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg shadow-md">
-            <thead>
-              <tr className="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+    <div className="space-y-4">
+      {config?.addSearch && (
+        <SearchInput
+          placeholder="Search for expenses"
+          searchTerm={debouncedSearchTerm}
+          setSearchTerm={setSearchTerm}
+        />
+      )}
+      {/* <div className="overflow-x-auto "> */}
+      <div className="overflow-x-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+        {loading ? (<Loader />) : (
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+            <thead className="bg-gray-50 dark:bg-gray-900">
+              <tr>
                 {config.fields.filter(field => !field?.hide).map((field) => (
                   <th
                     key={field.name}
-                    className="px-4 py-2 text-left text-sm font-semibold"
+                    className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider"
                     style={{ minWidth: field.width || "150px" }}
                   >
                     {field.label}
                   </th>
                 ))}
-                <th className="px-4 py-2 text-left text-sm font-semibold" style={{ minWidth: "80px" }}>
+                <th
+                  className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider"
+                  style={{ minWidth: "80px" }}
+                >
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {data.map((item: any) => (
-                <tr key={item.id || item[keyField]} className="border-b border-gray-200 dark:border-gray-700">
+                <tr key={item.id || item[keyField]} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                   {config.fields.filter(field => !field?.hide).map((field) => (
                     <td
                       key={field.name}
-                      className={`px-4 py-2 text-sm ${field.getCustomClass ? field.getCustomClass(item) : ''}`}
+                      className={`px-6 py-4 text-sm text-gray-900 dark:text-gray-100 ${field.getCustomClass ? field.getCustomClass(item) : ''}`}
                     >
                       {renderCellContent(field, item)}
                     </td>
                   ))}
-                  <td className="px-4 py-2 text-sm">
-                    <ActionMenu onEdit={() => onEdit(item)} onDelete={() => handleDeleteClick(item[keyField] || 0)} config={config} hideActionMenu={hideActionMenu} />
+                  <td className="px-6 py-4 text-sm">
+                    <ActionMenu
+                      onEdit={() => onEdit(item)}
+                      onDelete={() => handleDeleteClick(item[keyField] || 0)}
+                      config={config}
+                      hideActionMenu={hideActionMenu}
+                    />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        }
+        )}
         {showDeleteDialog && (
           <ConfirmationDialog
             open={showDeleteDialog}
@@ -167,7 +182,7 @@ const Table: React.FC<GenericTableProps> = ({ config, onEdit, params, hideAction
         itemsPerPage={itemsPerPage}
         onPageChange={handlePageChange}
       />
-    </>
+    </div>
   );
 };
 

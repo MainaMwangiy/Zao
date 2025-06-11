@@ -17,7 +17,7 @@ interface GenericFormProps {
   isOpen: boolean;
   initialValues?: Record<string, any>;
 }
-type Mode = 'edit' | 'add' | null; 
+type Mode = 'edit' | 'add' | null;
 
 const Form: React.FC<GenericFormProps & { mode: Mode, [key: string]: any }> = ({ config, onClose, isOpen, initialValues = {}, mode, ...rest }) => {
   const isUpdate = mode === 'edit';
@@ -107,7 +107,7 @@ const Form: React.FC<GenericFormProps & { mode: Mode, [key: string]: any }> = ({
 
   const { dirty } = formik;
   const handleSubmit = () => {
-    if(limitCreate){
+    if (limitCreate) {
       enqueueSnackbar("You cannot add new project. Please contact support", { variant: "error" });
       onClose();
       return;
@@ -145,24 +145,24 @@ const Form: React.FC<GenericFormProps & { mode: Mode, [key: string]: any }> = ({
 
   const formContent = (
     <FormikProvider value={formik}>
-      <form onSubmit={e => e.preventDefault()}>
+      <form onSubmit={e => e.preventDefault()} className="space-y-6">
         {fieldsToShow
           .filter(fieldConfig => fieldConfig?.isSuperAdmin !== false)
           .map(fieldConfig => (
             <FormField key={fieldConfig.name} fieldConfig={fieldConfig} />
           ))}
-        <div className="flex justify-end space-x-2 mt-4">
+        <div className="flex justify-end space-x-3">
           <button
             type="button"
             onClick={onCancel}
-            className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-md transition duration-300"
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors duration-200 text-sm font-medium"
           >
             Cancel
           </button>
           <button
             type="submit"
             onClick={handleSubmit}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md transition duration-300"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
           >
             {isUpdate ? "Update" : "Submit"}
           </button>
