@@ -42,7 +42,7 @@ export const expensesConfig: ModuleConfig = {
     }
   },
   fields: [
-    { name: "name", type: "text", label: "Name", required: true, width: "150px" },
+    { name: "name", type: "text", label: "Name", required: true, width: "200px" },
     {
       name: "amount", type: "number", label: "Amount", required: true, width: "100px", getCustomClass: (item) => item.amount > 10000 ? 'text-red-500' : '',
     },
@@ -51,8 +51,8 @@ export const expensesConfig: ModuleConfig = {
       name: "status", type: "select", label: "Status", options: ["pending", "paid"], required: true, width: "100px", getCustomClass: (item) => item.status === 'pending' ? 'text-yellow-500' : 'text-green-500',
     },
     { name: "notes", type: "textarea", label: "Notes", width: "200px" },
-    { name: "createdon", type: "date", label: "Created On", form: false, width: "150px" },
-    { name: "modifiedon", type: "date", label: "Modified On", form: false, width: "150px" },
+    { name: "createdon", type: "date", label: "Created On", form: false, width: "200px" },
+    { name: "modifiedon", type: "date", label: "Modified On", form: false, width: "200px" },
     { name: "createdbyusername", type: "text", label: "Created By", form: false, width: "120px" },
     { name: "modifiedbyusername", type: "text", label: "Modified By", form: false, width: "120px" },
   ],
