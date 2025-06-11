@@ -114,7 +114,12 @@ const Card: React.FC<CardProps> = ({
         )}
       </div>
       <div className="flex justify-end">
-        <ActionMenu onEdit={onEdit} onDelete={() => onDelete()} hideActionMenu={true} />
+        <ActionMenu
+          onEdit={onEdit}
+          onDelete={() => onDelete()}
+          hideActionMenu={true}
+          useNormalActions={true}
+        />
       </div>
       <div className="flex">
         <div className="w-1/2 p-1">
