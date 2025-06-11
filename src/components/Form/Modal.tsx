@@ -15,9 +15,11 @@ const Modal: React.FC<ModalProps & { [key: string]: any }> = ({ isOpen, onClose,
     mainTitle = mode === 'edit' ? `Edit ${config?.keyField}` : `Add ${config?.keyField}`;
   }
   return (
-    <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-40 flex justify-center items-center p-4">
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-lg w-full shadow-xl" {...rest}>
-        {mainTitle && <div className="text-lg font-bold mb-4">{mainTitle}</div>}
+    <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-lg p-6">
+        {mainTitle && (
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">{mainTitle}</h2>
+        )}
         {children}
       </div>
     </div>

@@ -46,11 +46,11 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
     const tempPayload = { ...payload, ...additionalParams, ...mandatoryParams };
     const response = await apiRequest({ method: "POST", url: url, data: tempPayload });
     setTotal(response?.data?.[0]?.total || 0);
-  }
+  };
 
   useEffect(() => {
     getTotals();
-  }, [])
+  }, []);
 
   const refreshData = async () => {
     setRefreshCount(prev => prev + 1);
@@ -61,11 +61,17 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
     try {
       setLoading(true);
       const { url = '', payload = {} } = config?.apiEndpoints?.list ?? {};
-      const additionalParams = !payload.hideProject ? {} : { projectid: rest?.id };
+      const additionalParams = payload.hideProject ? {} : { projectid: rest?.id };
       const reqParams = { isExport: true, clientorganizationid: clientorganizationid };
       const tempPayload = { ...payload, ...additionalParams, ...reqParams };
-      const response = await apiRequest({ method: "POST", url: url, data: tempPayload, responseType: 'blob', filename: config?.title });
-      if(!response) {
+      const response = await apiRequest({
+        method: "POST",
+        url: url,
+        data: tempPayload,
+        responseType: 'blob',
+        filename: config?.title
+      });
+      if (!response) {
         enqueueSnackbar("Failed to export expenses. Please try again.", { variant: "error" });
         setLoading(false);
         return;
@@ -75,7 +81,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = downloadUrl;
-      link.setAttribute('download', `${config?.title}${currentDate}.xlsx`);
+      link.setAttribute('download', `${config?.title}_${currentDate}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.parentNode?.removeChild(link);
@@ -83,6 +89,7 @@ const ModulePage: React.FC<ModulePageProps> = ({ config, showAddNew = false, sho
     } catch (error) {
       enqueueSnackbar("Failed to export expenses. Please try again.", { variant: "error" });
       console.error('Error exporting expenses:', error);
+      setLoading(false);
     }
   };
 
