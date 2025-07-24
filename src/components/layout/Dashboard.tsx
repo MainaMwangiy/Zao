@@ -26,11 +26,13 @@ import FarmScene from "../../assets/FarmScene.webp";
 import GreenFarm from "../../assets/GreenFarm.png";
 import MultiFunctionalAgriculture from "../../assets/MultiFunctionalAgriculture.jpg";
 import SelfDrivingFarming from "../../assets/SelfDrivingFarming.webp";
-import SubsistenceFarming from "../../assets//SubsistenceFarming.webp";
+import SubsistenceFarming from "../../assets/SubsistenceFarming.webp";
 import WheatFarming from "../../assets/WheatFarming.jpg";
 import AnimalCropFarming from "../../assets/AnimalCropFarming.jpg";
 import TruckFarming from "../../assets/TruckFarming.webp";
 import AgricultureCartoon from "../../assets/AgricultureCartoon.jpg";
+import DataRefreshContext from "../../hooks/DataRefreshContext";
+
 const allImageUrls = [
   AIFarming,
   CartoonFarm,
@@ -43,8 +45,9 @@ const allImageUrls = [
   WheatFarming,
   AnimalCropFarming,
   TruckFarming,
-  AgricultureCartoon
+  AgricultureCartoon,
 ];
+
 const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<ProjectsProps[]>([]);
   const { enqueueSnackbar } = useSnackbar();
@@ -70,6 +73,7 @@ const Dashboard: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [refreshCount, setRefreshCount] = useState(0);
   const [mode, setMode] = useState<'edit' | 'add' | null>('add');
+  const isProjects = projects.length > 0;
 
   let clientConfig: ClientConfig = {};
   for (const org of Orgs) {
@@ -107,7 +111,7 @@ const Dashboard: React.FC = () => {
           imagesurl: allImageUrls[imageIndex]
         };
       });
-  
+
       setProjects(fetchedProjects);
       localStorage.setItem("projects", JSON.stringify(fetchedProjects));
     } catch (error) {
@@ -116,7 +120,7 @@ const Dashboard: React.FC = () => {
       });
     }
   };
-  
+
   const fetchTotalExpenses = async () => {
     try {
       const values = {
@@ -200,7 +204,7 @@ const Dashboard: React.FC = () => {
     fetchTotalEarningsFromHarvest();
     fetchUsersData();
     fetchImages();
-  }, [showProjectseModal]);
+  }, [showProjectseModal, isProjects, refreshCount]);
 
   const handleDeleteProject = async () => {
     const project = projects.find(item => Number(item?.projectid) === deleteProjectId);
@@ -244,8 +248,7 @@ const Dashboard: React.FC = () => {
     setMode('edit');
     setIsFormOpen(true);
   };
-  const isProjects = projects.length > 0;
-  
+
   const handleClose = () => {
     setIsFormOpen(false);
     setSelectedItem(null);
@@ -256,160 +259,157 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 mt-2">
-        {/* Welcome Message */}
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-2 flex justify-between items-center">
-            <span>Welcome {clientuser ? clientuser.name : "Guest"}!</span>
-            <Tooltip title="Show earnings and expenses" arrow>
-              <InfoIcon className="text-gray-500 cursor-pointer" />
-            </Tooltip>
-          </h2>
+    <DataRefreshContext.Provider value={{ refreshData }}>
+      <div className="p-2 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-lg">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 mt-2">
+          {/* Welcome Message */}
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-2 flex justify-between items-center">
+              <span>Welcome {clientuser ? clientuser.name : "Guest"}!</span>
+              <Tooltip title="Show earnings and expenses" arrow>
+                <InfoIcon className="text-gray-500 cursor-pointer" />
+              </Tooltip>
+            </h2>
 
-          <div className="flex justify-between items-center mb-4 space-x-8">
-            {/* Total Expenses Section */}
-            <div className="flex items-center space-x-4">
-              <div>
-                <p className="text-gray-600 dark:text-gray-400 mb-1">
-                  Total Expenses
-                </p>
-                <div className="flex items-center">
-                  <p className="text-red-500 text-2xl font-semibold mr-2 font-mono">
-                    {isExpensesVisible
-                      ? `KES ${Number(totalExpenses) || 0}`
-                      : `KES ${formatPlaceholder(Number(totalExpenses) || 0)}`}
+            <div className="flex justify-between items-center mb-4 space-x-8">
+              {/* Total Expenses Section */}
+              <div className="flex items-center space-x-4">
+                <div>
+                  <p className="text-gray-600 dark:text-gray-400 mb-1">
+                    Total Expenses
                   </p>
-                  <button
-                    onClick={toggleExpensesVisibility}
-                    className="focus:outline-none"
-                  >
-                    {isExpensesVisible ? (
-                      <FaEyeSlash className="text-gray-600 dark:text-gray-400 text-xl" />
-                    ) : (
-                      <FaEye className="text-gray-600 dark:text-gray-400 text-xl" />
-                    )}
-                  </button>
+                  <div className="flex items-center">
+                    <p className="text-red-500 text-2xl font-semibold mr-2 font-mono">
+                      {isExpensesVisible
+                        ? `KES ${Number(totalExpenses) || 0}`
+                        : `KES ${formatPlaceholder(Number(totalExpenses) || 0)}`}
+                    </p>
+                    <button
+                      onClick={toggleExpensesVisibility}
+                      className="focus:outline-none"
+                    >
+                      {isExpensesVisible ? (
+                        <FaEyeSlash className="text-gray-600 dark:text-gray-400 text-xl" />
+                      ) : (
+                        <FaEye className="text-gray-600 dark:text-gray-400 text-xl" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Total Earnings Section */}
+              <div className="flex items-center space-x-4">
+                <div>
+                  <p className="text-gray-600 dark:text-gray-400 mb-1">
+                    Total Earnings
+                  </p>
+                  <div className="flex items-center">
+                    <p className="text-green-500 text-2xl font-semibold mr-2 font-mono">
+                      {isEarningsVisible
+                        ? `KES ${Number(totalHarvestEarnings) || 0}`
+                        : `KES ${formatPlaceholder(
+                          Number(totalHarvestEarnings) || 0
+                        )}`}
+                    </p>
+                    <button
+                      onClick={toggleEarningsVisibility}
+                      className="focus:outline-none"
+                    >
+                      {isEarningsVisible ? (
+                        <FaEyeSlash className="text-gray-600 dark:text-gray-400 text-xl" />
+                      ) : (
+                        <FaEye className="text-gray-600 dark:text-gray-400 text-xl" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Total Earnings Section */}
-            <div className="flex items-center space-x-4">
-              <div>
-                <p className="text-gray-600 dark:text-gray-400 mb-1">
-                  Total Earnings
-                </p>
-                <div className="flex items-center">
-                  <p className="text-green-500 text-2xl font-semibold mr-2 font-mono">
-                    {isEarningsVisible
-                      ? `KES ${Number(totalHarvestEarnings) || 0}`
-                      : `KES ${formatPlaceholder(
-                        Number(totalHarvestEarnings) || 0
-                      )}`}
-                  </p>
-                  <button
-                    onClick={toggleEarningsVisibility}
-                    className="focus:outline-none"
-                  >
-                    {isEarningsVisible ? (
-                      <FaEyeSlash className="text-gray-600 dark:text-gray-400 text-xl" />
-                    ) : (
-                      <FaEye className="text-gray-600 dark:text-gray-400 text-xl" />
-                    )}
-                  </button>
-                </div>
-              </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {`Client Status: ${clientuser?.status}`}
+            </p>
+
+            <div className="flex items-center mt-4">
+              {clientConfig?.showTransactions && (
+                <button
+                  onClick={() => navigate("/transactions")}
+                  className="bg-blue-500 text-white px-2 py-2 rounded"
+                >
+                  View Transactions
+                </button>
+              )}
             </div>
           </div>
 
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {`Client Status: ${clientuser?.status}`}
-          </p>
-
-          <div className="flex items-center mt-4">
-            {/* <button className="bg-red-500 text-white px-2 py-2 mr-2 rounded">
-              Withdraw To Mpesa
-            </button> */}
-            {clientConfig?.showTransactions && (
-              <button
-                onClick={() => navigate("/transactions")}
-                className="bg-blue-500 text-white px-2 py-2 rounded"
-              >
-                View Transactions
-              </button>
+          {/* Recent Projects */}
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-2 flex justify-between items-center">
+              <span>My Recent Projects</span>
+              <Tooltip title="List of my projects" arrow>
+                <InfoIcon className="text-gray-500 cursor-pointer" />
+              </Tooltip>
+            </h2>
+            {isProjects && (
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {projects.length} projects available
+              </p>
             )}
+            {!isProjects && (
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                No ongoing projects available
+              </p>
+            )}
+            <button
+              className="mt-4 bg-pink-500 text-white px-2 py-2 rounded"
+              onClick={() => {
+                setSelectedItem(null);
+                setIsFormOpen(true);
+              }}
+            >
+              Add Project
+            </button>
           </div>
         </div>
 
-        {/* Recent Projects */}
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-2 flex justify-between items-center">
-            <span>My Recent Projects</span>
-            <Tooltip title="List of my projects" arrow>
-              <InfoIcon className="text-gray-500 cursor-pointer" />
-            </Tooltip>
-          </h2>
-          {isProjects && (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {projects.length} projects available
-            </p>
+        {/* Market Section */}
+        <div className="my-6">
+          <h2 className="text-xl font-bold mb-4">Projects</h2>
+          {projects.length > 0 && (
+            <>
+              {/* Responsive Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                {/* Dynamically load cards from projectsData */}
+                {projects.map((item, index) => (
+                  <Card
+                    key={index}
+                    id={item.projectid}
+                    title={item.name}
+                    addedBy={user?.name}
+                    location={item?.location}
+                    size={item.size}
+                    projectstatus={item.projectstatus}
+                    projectPlanIncluded={item.projectplan}
+                    costprojectestimation={item.costprojectestimation}
+                    imagesurl={item?.imagesurl}
+                    name={item?.name}
+                    projectname={item?.projectname}
+                    onEdit={() => handleEdit(item)}
+                    onDelete={() => handleDeleteClick(Number(item.projectid))}
+                    expenses={item?.expenses}
+                    earnings={item?.earnings}
+                    clientConfig={clientConfig}
+                  />
+                ))}
+              </div>
+            </>
           )}
-          {!isProjects && (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              No ongoing projects available
-            </p>
+          {projects.length === 0 && (
+            <>No projects added. Please add new project</>
           )}
-          <button
-            className="mt-4 bg-pink-500 text-white px-2 py-2 rounded"
-            onClick={() => {
-              setSelectedItem(null);
-              setIsFormOpen(true);
-            }}
-          >
-            Add Project
-          </button>
         </div>
-      </div>
-
-      {/* Market Section */}
-      <div className="my-6">
-        <h2 className="text-xl font-bold mb-4">Projects</h2>
-        {projects.length > 0 && (
-          <>
-            {/* Responsive Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-              {/* Dynamically load cards from projectsData */}
-              {projects.map((item, index) => (
-                <Card
-                  key={index}
-                  id={item.projectid}
-                  title={item.name}
-                  addedBy={user?.name}
-                  location={item?.location}
-                  size={item.size}
-                  projectstatus={item.projectstatus}
-                  projectPlanIncluded={item.projectplan}
-                  costprojectestimation={item.costprojectestimation}
-                  imagesurl={item?.imagesurl}
-                  name={item?.name}
-                  projectname={item?.projectname}
-                  onEdit={() => handleEdit(item)}
-                  onDelete={() => handleDeleteClick(Number(item.projectid))}
-                  expenses={item?.expenses}
-                  earnings={item?.earnings}
-                  clientConfig={clientConfig}
-                />
-              ))}
-            </div>
-          </>
-        )}
-        {projects.length === 0 && (
-          <>No projects added. Please add new project</>
-        )}
-      </div>
-      {
-        showDeleteDialog && (
+        {showDeleteDialog && (
           <ConfirmationDialog
             open={showDeleteDialog}
             title="Confirm Deletion"
@@ -418,23 +418,25 @@ const Dashboard: React.FC = () => {
             onConfirm={handleDeleteProject}
             confirmDiscard="Delete"
           />
-        )
-      }
-      {loading ? <Loader /> :
-        <>
-          <Modal isOpen={isFormOpen} onClose={handleClose} title={selectedItem ? "Edit Item" : "Add Item"}>
-            <Form
-              config={projectsConfig}
-              onClose={handleClose}
-              isOpen={isFormOpen}
-              initialValues={selectedItem || {}}
-              mode={mode}
-              onDataUpdated={refreshData}
-            />
-          </Modal>
-        </>
-      }
-    </div >
+        )}
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
+            <Modal isOpen={isFormOpen} onClose={handleClose} title={selectedItem ? "Edit Item" : "Add Item"}>
+              <Form
+                config={projectsConfig}
+                onClose={handleClose}
+                isOpen={isFormOpen}
+                initialValues={selectedItem || {}}
+                mode={mode}
+                onDataUpdated={refreshData}
+              />
+            </Modal>
+          </>
+        )}
+      </div>
+    </DataRefreshContext.Provider>
   );
 };
 

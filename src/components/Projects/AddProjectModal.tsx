@@ -6,6 +6,7 @@ import axios from "axios";
 import { useSnackbar } from "notistack";
 import { ProjectProps } from "../../types";
 import ConfirmationDialog from "../../hooks/ConfirmationDialog";
+import { useDataRefresh } from "../../hooks/DataRefreshContext";
 
 const validationSchema = Yup.object({
   projectname: Yup.string().required("Name is required"),
@@ -34,6 +35,7 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
   mode,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
+  const { refreshData } = useDataRefresh();
   const clientUser = localStorage.getItem("clientuser") || "{}";
   const userDetails = JSON.parse(clientUser);
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
@@ -77,12 +79,13 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
         });
         enqueueSnackbar("Project added successfully!", { variant: "success" });
         formik.resetForm();
+        refreshData();
+        setProjectshowModal(false);
       } catch (error) {
         enqueueSnackbar("Project creation failed. Please try again.", {
           variant: "error",
         });
       }
-      setProjectshowModal(false);
     },
   });
 
@@ -236,7 +239,7 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                  {formik.touched.size &&
+                  {formik.touched.costprojectestimation &&
                     formik.errors.costprojectestimation && (
                       <div className="text-red-500 text-sm">
                         {formik.errors.costprojectestimation}
