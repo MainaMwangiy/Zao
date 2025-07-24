@@ -106,12 +106,6 @@ const Login: React.FC = () => {
             <FcGoogle className="w-5 h-5 mr-2" />
             Sign in with Google
           </button>
-          <button
-            className="w-full flex items-center justify-center py-3 px-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300 text-gray-700 dark:text-gray-200 text-sm font-medium"
-          >
-            <FaFacebook className="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
-            Sign in with Facebook
-          </button>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
